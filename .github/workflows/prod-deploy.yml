@@ -1,0 +1,19 @@
+name: Deploy client app to production environment
+on:
+  push:
+    branches:
+      - prod
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Deploy to server(s)
+      run: |
+        mkdir -p ./tmpkeys && echo "${{ secrets.SSH_PRIVATE_KEY_PROD }}" > ./tmpkeys/key.pem && chmod 600 ./tmpkeys/key.pem
+        for HOST in ${{ vars.SSH_HOSTS_PROD }}; do
+          echo -e "\033[1mDeploying to $HOST\033[0m"
+          ssh -o StrictHostKeyChecking=no -i ./tmpkeys/key.pem ${{ vars.SSH_USERNAME_PROD }}@$HOST "/bin/bash /home/${{ vars.SSH_USERNAME_PROD }}/bin/deploy"
+        done
+        rm ./tmpkeys/key.pem
+

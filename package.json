@@ -1,0 +1,35 @@
+{
+    "name": "nuxt-app",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "nuxt build",
+        "dev": "nuxt dev",
+        "generate": "nuxt generate",
+        "preview": "nuxt preview",
+        "postinstall": "nuxt prepare"
+    },
+    "dependencies": {
+        "@headlessui/vue": "^1.7.22",
+        "@heroicons/vue": "^2.1.5",
+        "@nuxt/ui": "^2.18.4",
+        "@nuxtjs/tailwindcss": "^6.12.1",
+        "@vue-hero-icons/outline": "^1.7.2",
+        "bootstrap": "^5.3.3",
+        "bootstrap-icons": "^1.11.3",
+        "joi": "^17.13.3",
+        "nuxt": "^3.12.4",
+        "nuxt-marquee": "^1.0.4",
+        "nuxt-primevue": "^3.0.0",
+        "nuxt-swiper": "^1.2.2",
+        "swiper": "^11.1.8",
+        "vue": "latest",
+        "vue-3-slider-component": "^1.0.0",
+        "vue-inner-image-zoom": "^2.0.0",
+        "vue3-carousel-nuxt": "^1.1.2",
+        "vue3-toastify": "^0.2.2",
+        "vuetify": "^3.7.0-beta.1",
+        "vuetify-nuxt-module": "^0.16.1",
+        "vuex": "^4.1.0"
+    }
+}

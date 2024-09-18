@@ -1,0 +1,48 @@
+@font-face {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Poppins Regular'), url('./Poppins-Regular.ttf') format('woff');
+}
+
+@font-face {
+    font-family: 'Poppins-bold';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Poppins Bold'), url('./Poppins-Bold.ttf') format('woff');
+}
+
+@font-face {
+    font-family: 'poppins-extraBold';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Poppins ExtraBold'), url('./poppins-bold.ttf') format('woff');
+}
+
+@font-face {
+    font-family: 'Helvetica';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Helvetica'), url('./Helvetica.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'Helvetica-bold';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Helvetica'), url('./Helvetica-Bold.ttf') format('woff');
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Montserrat Regular'), url('./Montserrat-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: bold;
+    src: local('Montserrat Bold'), url('./Montserrat-Bold.ttf') format('truetype');
+}

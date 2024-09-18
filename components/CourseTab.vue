@@ -1,0 +1,48 @@
+<template>
+    <v-container class="m-0 py-0 px-0">
+        <v-tabs class="tab_border" v-model="activeTab" show-arrows>
+            <!-- <v-tab class="tab_content" v-for="(tab, index) in tabs" :key="index" :class="activeTab == index ? 'tab_content_selected' : 'tab_content' ">
+                {{ tab }}
+            </v-tab> -->
+            <!-- <Tooltip  text="This is a custom tooltip" /> -->
+             <span class="tooltip">Central Board of Education</span>
+            <v-tab class="tab_content" v-for="(tab, index) in tabs" :key="index"
+                :class="{ 'v-tab--selected': activeTab === index, 'tab_content_selected': activeTab == index }">
+                {{ tab }}
+            </v-tab>
+        </v-tabs>
+
+    </v-container>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const props = defineProps({
+    tabs: {
+        type: Array,
+        required: true,
+    }
+})
+
+const activeTab = ref(0)
+</script>
+
+<style scoped>
+.tooltip {
+    position: absolute;
+    left: 0;
+}
+
+.tab_content {
+    color: #757373 !important;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.tab_content_selected {
+    color: #000 !important;
+    font-weight: 600;
+    text-shadow: 4px 0px #00000025;
+}
+</style>
