@@ -27,7 +27,7 @@
   
   <style scoped>
   .tooltip-container {
-    position: relative;
+    /* position: relative; */
     display: inline-block;
   }
   

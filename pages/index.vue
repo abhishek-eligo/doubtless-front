@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 const advantages = [
     { id: '1', para: 'Visualizing concepts aids understanding by making abstract ideas concrete.', image: '/images/adv-1.png' },
     { id: '2', para: 'Tailored education program adapting to individual student needs and pace.', image: '/images/adv-2.png' },

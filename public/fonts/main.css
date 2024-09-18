@@ -767,3 +767,49 @@ p.course_2_text {
 #course-chip .v-chip__content {
     display: block;
 }
+
+#headlessui-dialog-panel-v-0-4.login_modal.px-4.py-5 {
+    padding: 50px 60px !important;
+}
+
+.login_field input {
+    padding: 15px 15px;
+    margin-bottom: 25px;
+}
+
+.login_button {
+    background-color: #00000036 !important;
+    padding: 13px 30px !important;
+    margin: 25px 0;
+    height: unset !important;
+    text-transform: capitalize !important;
+}
+
+.login_button .v-btn__content {
+    color: var(--white);
+}
+
+.loginModal_text_2 span {
+    color: var(--default_color);
+    font-weight: 500 !important;
+}
+
+.loginModal_text_2 span:hover {
+    cursor: pointer;
+}
+
+form.v-form.otp_form .v-otp-input .v-otp-input__content {
+    padding: 0 !important;
+}
+
+.v-overlay-container .loginModal .v-overlay__scrim {
+    background: #a2a1a1e0;
+    backdrop-filter: blur(2px) !important;
+    opacity: unset !important;
+}
+
+.modalCancelBtn {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
