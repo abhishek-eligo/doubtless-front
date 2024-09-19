@@ -48,9 +48,25 @@ img {
     margin: 0 !important;
 }
 
+button:hover {
+    cursor: pointer;
+}
+
 .wrapper {
     max-width: var(--wrapper_width);
     margin: 0 auto;
+}
+
+.text_align_center {
+    text-align: center;
+}
+
+.text_align_right {
+    text-align: right;
+}
+
+.text_align_left {
+    text-align: left;
 }
 
 .orangeShade {
@@ -351,11 +367,32 @@ img.ftr_link_icon {
     margin: 0 0 40px 0;
 }
 
+#course-chip:hover {
+    color: #fff !important;
+    background-color: #F87126 !important;
+    border: 1px solid var(--default_color) !important;
+    font-size: 18px !important;
+    font-weight: 500 !important;
+    line-height: 21.6px !important;
+    text-align: left !important;
+    padding: 27px 18px !important;
+    cursor: pointer;
+    width: fit-content;
+}
+
+#course-chip span {
+    font-size: 12px;
+}
+
+#course-chip:hover span {
+    color: #ffffff;
+}
+
 .bgChipActive {
     color: #fff !important;
     background-color: #F87126 !important;
     border: 1px solid var(--default_color) !important;
-    font-size: 14px !important;
+    font-size: 18px !important;
     font-weight: 500 !important;
     line-height: 21.6px !important;
     text-align: left !important;
@@ -368,7 +405,7 @@ img.ftr_link_icon {
     color: var(--default_color) !important;
     background-color: #fff !important;
     border: 1px solid var(--default_color) !important;
-    font-size: 14px !important;
+    font-size: 18px !important;
     font-weight: 500 !important;
     line-height: 21.6px !important;
     text-align: left !important;
@@ -401,7 +438,7 @@ img.ftr_link_icon {
 }
 
 .chipWidth {
-    max-width: 175px !important;
+    max-width: fit-content !important;
 }
 
 .chip_container {
@@ -442,7 +479,7 @@ img.ftr_link_icon {
     display: none;
     right: -115%;
     z-index: 2;
-    top: -13px;
+    top: -32px;
 }
 
 .description_card .course_info {
@@ -572,8 +609,20 @@ span.off_badge {
     background-repeat: no-repeat;
 }
 
-h2.learn-text {
+h2.learn_text_h {
     text-transform: capitalize;
+    margin-bottom: 5px;
+    font-size: 30px;
+    color: #424040;
+    font-weight: 500;
+}
+
+p.learn_text_p {
+    font-size: 16px;
+    font-style: italic;
+    font-weight: 800;
+    color: #424040;
+    margin-bottom: 20px !important;
 }
 
 .adv_text {
@@ -680,7 +729,7 @@ p.course_2_text {
     line-height: 22.5px;
     text-align: left;
     color: var(--black);
-    padding: 3px 0 0 0 !important;
+    padding: 3px 0 10px 0 !important;
 }
 
 .course_info ul {
@@ -695,7 +744,10 @@ p.course_2_text {
     line-height: 21px;
     text-align: left;
     color: var(--black);
-    margin: 5px 0;
+}
+
+.course_info_li_mb {
+    margin-bottom: 12px;
 }
 
 .course_info::before {
@@ -812,4 +864,57 @@ form.v-form.otp_form .v-otp-input .v-otp-input__content {
     position: absolute;
     right: 10px;
     top: 10px;
+}
+
+.input_pad input {
+    padding: 13px 15px;
+    box-shadow: unset !important;
+    border: 1px solid #ECE9E9 !important;
+}
+
+.input_pad input:hover,
+.input_pad input:focus {
+    border: 1px solid #FFA16D !important;
+}
+
+.input_pad select.form-select {
+    padding: 11px 15px;
+    box-shadow: unset !important;
+    border: 1px solid #ECE9E9 !important;
+}
+
+.input_pad select.form-select:hover,
+.input_pad select.form-select:focus {
+    border: 1px solid #FFA16D !important;
+}
+
+.form_card_bg {
+    box-shadow: 0 5px 12px 0px #d9d9d9ad !important;
+}
+
+.agree_checkbox label.v-label {
+    font-size: 18px;
+    color: #000 !important;
+    font-weight: 600;
+}
+
+.chipWidth #course-chip .v-chip__underlay {
+    background: #ffffff;
+}
+
+.v-slide-group__prev {
+    position: absolute !important;
+    top: 15px !important;
+    right: -7px !important;
+    display: unset !important;
+}
+
+.v-slide-group__next {
+    justify-content: end !important;
+    align-items: end !important;
+}
+
+.v-slide-group__prev,
+.v-slide-group__next {
+    font-size: 20px !important;
 }

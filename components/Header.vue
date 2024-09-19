@@ -59,6 +59,10 @@ const signInTwo = () => {
     signUpOtp.value = false;
     loginIsOpen.value = true;
 }
+
+const closeChoiceModal = () => {
+    isOpen.value = false;
+}
 </script>
 
 <template>
@@ -96,7 +100,9 @@ const signInTwo = () => {
                 <div class="row align-items-center">
                     <div class="col-md-4 gap-2 d-flex">
                         <!-- Logo -->
-                        <img class="logo_img" src="/images/logo_1.png" />
+                        <nuxt-link to="/">
+                            <img class="logo_img" src="/images/logo_1.png" />
+                        </nuxt-link>
 
                         <!-- Search Bar -->
                         <form class="align-items-center d-flex mb-0">
@@ -114,10 +120,10 @@ const signInTwo = () => {
                         <div class="navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav gap-3 justify-content-center flex-row">
                                 <li class="nav-item">
-                                    <nuxt-link class="nav-link" to="courses" active-class="active">Courses</nuxt-link>
+                                    <nuxt-link class="nav-link" to="/courses" active-class="active">Courses</nuxt-link>
                                 </li>
                                 <li class="nav-item">
-                                    <nuxt-link class="nav-link" to="teachOnDoubtless" active-class="active">Teach on
+                                    <nuxt-link class="nav-link" to="/teachOnDoubtless" active-class="active">Teach on
                                         Doubtless</nuxt-link>
                                 </li>
                             </ul>
@@ -149,7 +155,7 @@ const signInTwo = () => {
                     </VCol>
                     <VCol class="loginBtn px-0" md="6" cols="12">
                         <nuxt-link class="nav-link" to="/teaching/register">
-                            <UButton :ui="{ rounded: 'rounded-full' }">Join As <span>Instructor</span></UButton>
+                            <UButton @click="closeChoiceModal" :ui="{ rounded: 'rounded-full' }">Join As <span>Instructor</span></UButton>
                         </nuxt-link>
                     </VCol>
                 </VRow>
@@ -312,9 +318,6 @@ const signInTwo = () => {
     height: 20px;
 }
 
-.text_align_left {
-    text-align: left;
-}
 
 .modal_heading_pad {
     padding-bottom: 20px !important;
@@ -344,14 +347,6 @@ const signInTwo = () => {
 
 .card_title {
     margin-bottom: 20px;
-}
-
-.text_align_center {
-    text-align: center;
-}
-
-.text_align_right {
-    text-align: right;
 }
 
 .loginModal {

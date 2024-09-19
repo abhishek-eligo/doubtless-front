@@ -62,20 +62,20 @@ const courseTypes = [
         </div>
 
         <div class="wrapper">
-            <div class="container learn-section mx-0">
-                <h2 class="learn-text">did you come to learn? you're in the right place. </h2>
-                <p>Ready to expand your knowledge? You've arrived at the perfect spot. Dive in, explore, and reach your
+            <div class="learn-section">
+                <h2 class="learn_text_h">did you come to learn? you're in the right place. </h2>
+                <p class="learn_text_p">Ready to expand your knowledge? You've arrived at the perfect spot. Dive in, explore, and reach your
                     learning goals here.</p>
-                <button style="width: 200px;" class="hdr_btn mt-3">LEARN WHAT YOU WISH</button>
+                <button class="hdr_btn">LEARN WHAT YOU WISH</button>
             </div>
         </div>
 
-        <div class="section_two mb-5 pb-10 mt-5">
+        <div class="section_two pb-10">
             <div class="wrapper">
                 <h1>Enhance Your Expertise with Our<br> Comprehensive, Expert-Led
                     <span class="orangeShade">Skilled Courses</span>
                 </h1>
-                <div class="align-items-start d-flex ml-0">
+                <div class="align-items-start ml-0">
                     <SkillCourseSection />
                 </div>
             </div>
@@ -86,7 +86,7 @@ const courseTypes = [
                 <h1>Achieve Success in
                     <span class="orangeShade">Competitive Tests</span> with Our Expertly<br> Designed Study Programs
                 </h1>
-                <div class="align-items-start d-flex ml-0">
+                <div class="align-items-start ml-0">
                     <CompetitiveCourseSection />
                 </div>
             </div>

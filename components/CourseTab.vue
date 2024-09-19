@@ -5,7 +5,7 @@
                 {{ tab }}
             </v-tab> -->
             <!-- <Tooltip  text="This is a custom tooltip" /> -->
-             <span class="tooltip">Central Board of Education</span>
+             <!-- <span class="tooltip">Central Board of Education</span> -->
             <v-tab class="tab_content" v-for="(tab, index) in tabs" :key="index"
                 :class="{ 'v-tab--selected': activeTab === index, 'tab_content_selected': activeTab == index }">
                 {{ tab }}
@@ -43,6 +43,6 @@ const activeTab = ref(0)
 .tab_content_selected {
     color: #000 !important;
     font-weight: 600;
-    text-shadow: 4px 0px #00000025;
+    text-shadow: -1px 3px 3px #00000070;
 }
 </style>

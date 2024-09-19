@@ -3,11 +3,11 @@
         <div class="course-card">
             <div class="position-relative">
                 <img :src="image" alt="Course Image">
-                <span class="badge">{{ offPercent }} % off</span>
+                <!-- <span class="badge">{{ offPercent }} % off</span> -->
             </div>
             <div>
                 <h5 class="title_space mb-0 course-title">{{ title }}</h5>
-                <div class="d-flex tutorName">
+                <div class="d-flex align-center gap-2 tutorName">
                     <img class="imgSize" src="/images/tutor_pic.png" />
                     <p class="mb-0">{{ tutorName }}</p>
                 </div>
@@ -20,7 +20,7 @@
                 </div>
                 <div class="pricingSec px-3 d-flex justify-content-between">
                     <p class="mb-0">₹ 399 /- <span class="old_price">₹ 599 /-</span></p>
-                    <span class="off_badge">15% off</span>
+                    <span class="off_badge">{{ offPercent }}% off</span>
                 </div>
             </div>
         </div>
@@ -28,19 +28,19 @@
             <v-card class="course-card course_info">
                 <div class="overviewData">
                     <h1>{{ title }}</h1>
-                    <p class="orangeShade course_1_text">updated : June 2024</p>
+                    <p class="orangeShade course_1_text">updated : <span>June 2024</span></p>
                     <p class="course_2_text">by : {{ tutorName }}</p>
                     <ul>
-                        <li>Develop fine motor skills through simple cutting, coloring, and pasting projects.</li>
-                        <li>Develop fine motor skills through simple cutting, coloring, and pasting projects.</li>
-                        <li>Develop fine motor skills through simple cutting, coloring, and pasting projects.</li>
-                        <li>Develop fine motor skills through simple cutting, coloring, and pasting projects.</li>
+                        <li class="course_info_li_mb">Develop fine motor skills through simple cutting, coloring, and pasting projects.</li>
+                        <li class="course_info_li_mb">Develop fine motor skills through simple cutting, coloring, and pasting projects.</li>
+                        <li class="course_info_li_mb">Develop fine motor skills through simple cutting, coloring, and pasting projects.</li>
+                        <li class="course_info_li_mb">Develop fine motor skills through simple cutting, coloring, and pasting projects.</li>
                         <li>Develop fine motor skills through simple cutting, coloring, and pasting projects.</li>
                     </ul>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <button class="hdr_btn">view more</button>
-                    <button style="width: 122px;" class="hdr_btn">Add to cart</button>
+                    <button class="course_info_btn">view more</button>
+                    <button class="course_info_btn">Add to cart</button>
                 </div>
             </v-card>
         </div>
@@ -60,5 +60,21 @@ export default {
 </script>
 
 <style scoped>
+.course_info_btn {
+    font-size: 16px;
+    color: #F87126;
+    border: 2px solid;
+    border-radius: 4px;
+    padding: 15px 20px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
 
+.course_info_btn:hover {
+    background: #F87126;
+    color: #ffffff;
+}
+.course_1_text span {
+    font-weight: 600;
+}
 </style>
