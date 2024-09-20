@@ -1,5 +1,5 @@
 <template>
-    <div class="container d-flex flex-wrap justify-content-around mt-5">
+    <div class="d-flex flex-wrap">
         <div class="course-card">
             <div>
                 <img :src="image" alt="Course Image">

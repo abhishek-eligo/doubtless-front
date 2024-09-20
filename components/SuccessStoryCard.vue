@@ -1,7 +1,7 @@
 <template>
-    <v-container style="max-width: fit-content" class="d-flex justify-center col-md-4 py-4 m-0">
+    <div class="col-md-4 card_zindex">
       <v-card
-        class="testimonial-card mt-3"
+        class="testimonial-card"
         elevation="2"
       >
         <!-- NEET Tag -->
@@ -32,7 +32,7 @@
           :image='avatarImg'
         ></v-avatar>
       </v-card>
-    </v-container>
+    </div>
   </template>
   
   <script setup>
@@ -49,13 +49,16 @@
   </script>
   
   <style scoped>
+  .card_zindex {
+    z-index: 99;
+  }
   .testimonial-card {
     background-image: url(/images/scs_bg.png);
     background-size: cover;
     padding: 20px;
     border-radius: 2px;
     position: relative;
-    width: 358px !important;
+    width: 458px !important;
     overflow: visible;
     background-position: center;
   }
@@ -73,6 +76,9 @@
     top: 2%;
     left: -2%;
     padding: 4px 12px;
+    width: 100%;
+    max-width: 104px;
+    text-align: center;
   }
 
   .neet-tag::before {

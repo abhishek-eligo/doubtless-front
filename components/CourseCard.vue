@@ -12,10 +12,10 @@
                     <p class="mb-0">{{ tutorName }}</p>
                 </div>
                 <div class="meta tutor_meta_space">
-                    <p class="d-flex meta_text justify-content-between">{{ rating }}<img class="imgSize py-0"
+                    <p class="d-flex meta_text align-center">{{ rating }}<img class="imgSize py-0"
                             src="/images/crse_star.png" />
                     </p>
-                    <p class="d-flex meta_text tutorHatSize justify-content-between"><img
+                    <p class="d-flex meta_text tutorHatSize align-center"><img
                             src="/images/tutor_hat.png" />410 Enroll</p>
                 </div>
                 <div class="pricingSec px-3 d-flex justify-content-between">
