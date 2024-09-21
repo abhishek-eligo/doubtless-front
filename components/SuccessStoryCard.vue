@@ -51,6 +51,7 @@
   <style scoped>
   .card_zindex {
     z-index: 99;
+    margin-bottom: 35px;
   }
   .testimonial-card {
     background-image: url(/images/scs_bg.png);

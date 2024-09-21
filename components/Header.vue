@@ -130,7 +130,9 @@ const closeChoiceModal = () => {
                         </div>
                     </div>
                     <div class="col-md-2 d-flex align-center justify-content-end">
-                        <img class="cart_img" src="../public/images/cart.png" />
+                        <nuxt-link to="/cart">
+                            <img class="cart_img" src="../public/images/cart.png" />
+                        </nuxt-link>
                         <button @click="studentLogin" class="hdr_btn">Login now</button>
                     </div>
                 </div>

@@ -165,7 +165,7 @@ const tabletListData = [
 
         <div class="free_section">
             <div class="wrapper">
-                <div class="row align-items-center">
+                <div class="row">
                     <div class="col-md-4">
                         <div class="free_out_div">
                             <h2 class="free_section_h">Try <span class="orangeShade learn_big">Learning</span> for free </h2>
@@ -188,6 +188,7 @@ const tabletListData = [
                     <h1 class="success_div_h">Insights From Our<span class="orangeShade"> Valued Students</span></h1>
                     <div>
                         <AllSuccessCard />
+                        <!-- <abc /> -->
                     </div>
                 </div>
             </div>
@@ -203,7 +204,7 @@ const tabletListData = [
 .success_div {
     background: #FFF2E4;
     background-image: url('/images/success_bg.png');
-    padding: 75px 0 40px 0;
+    padding: 75px 0 49px 0;
 }
 
 .learn_big {

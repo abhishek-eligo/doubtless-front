@@ -34,7 +34,7 @@ const slideRight = () => {
     if (canSlideRight.value) {
         slidingRight.value = true;
         setTimeout(() => {
-            currentStart.value++;
+            currentStart.value += visibleCount.value;
             slidingRight.value = false;
         }, 200);
     }
@@ -44,11 +44,19 @@ const slideLeft = () => {
     if (canSlideLeft.value) {
         slidingLeft.value = true;
         setTimeout(() => {
-            currentStart.value--;
+            currentStart.value -= visibleCount.value;
             slidingLeft.value = false;
         }, 200);
     }
 }
+
+const totalPages = computed(() => {
+    return Math.ceil(allStories.value.length / visibleCount.value);
+});
+
+const currentPage = computed(() => {
+    return Math.floor(currentStart.value / visibleCount.value);
+});
 
 </script>
 
@@ -57,7 +65,7 @@ const slideLeft = () => {
         <div class="stort_btn_div">
 
             <!-- Prev Btn -->
-            <button :class="!canSlideLeft ? 'disable_btn': ''" @click="slideLeft" class="success_btn_1">
+            <button :disabled="!canSlideLeft" :class="!canSlideLeft ? 'disable_btn' : ''" @click="slideLeft" class="success_btn_1">
                 <img src="/images/success_next.png" />
             </button>
 
@@ -66,16 +74,16 @@ const slideLeft = () => {
                 <img src="/images/success_next.png" />
             </button>
         </div>
-        <SuccessStoryCard 
-            v-for="story in visibleItems"
-            :key="story.id"
-            :title="story.title"
-            :description="story.description"
-            :userName="story.userName"
-            :userDesc="story.userDesc"
-            :avatarImg="story.avatarImg"
-            :sheetDesc="story.sheetDesc"
-        />
+        <SuccessStoryCard v-for="story in visibleItems" :key="story.id" :title="story.title"
+            :description="story.description" :userName="story.userName" :userDesc="story.userDesc"
+            :avatarImg="story.avatarImg" :sheetDesc="story.sheetDesc" />
+
+        <div>
+            <div class="pagination d-flex justify-center">
+                <span v-for="(page, index) in totalPages" :key="index"
+                    :class="{ 'active': index == currentPage }"></span>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -83,6 +91,7 @@ const slideLeft = () => {
 .disable_btn {
     opacity: 0.5;
 }
+
 .stort_btn_div {
     text-align: end;
     position: absolute;
@@ -110,6 +119,7 @@ button.success_btn_2 {
 .story_card_img {
     position: relative;
 }
+
 .story_card_img::after {
     content: '';
     background-image: url(/images/success_dots.png);
@@ -118,5 +128,20 @@ button.success_btn_2 {
     right: -40px;
     width: 14%;
     height: 73%;
+}
+
+.pagination span {
+    display: inline-block;
+    position: relative;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #FDCCAB;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.pagination span.active {
+    background: #F87126;
 }
 </style>

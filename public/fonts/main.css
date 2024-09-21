@@ -36,6 +36,10 @@ body {
     font-family: var(--Montserrat);
 }
 
+button {
+    font-family: 'Roboto';
+}
+
 p {
     margin: 0 !important;
     /* font-family: var(--Montserrat); */
@@ -547,7 +551,6 @@ span.off_badge {
     font-weight: 700;
     line-height: 16px;
     width: 56px !important;
-    height: 21px !important;
     padding: 3px 10px 3px 10px !important;
 }
 
@@ -928,4 +931,8 @@ form.v-form.otp_form .v-otp-input .v-otp-input__content {
 .v-slide-group__prev,
 .v-slide-group__next {
     font-size: 20px !important;
+}
+
+.slide_cont .v-slide-group__container .v-slide-group__content {
+    column-gap: 44px !important;
 }
