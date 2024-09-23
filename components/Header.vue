@@ -80,12 +80,12 @@ const closeChoiceModal = () => {
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="row ">
-                            <div class="col-md-6 d-flex gap-1 justify-content-end">
+                        <div class="d-flex gap-4 justify-end">
+                            <div class="d-flex gap-1 justify-content-end">
                                 <img class="contact_items" src="/images/call.png" />
                                 <p class="text-white mb-0">9225894255</p>
                             </div>
-                            <div class="col-md-6 d-flex gap-1 justify-content-end">
+                            <div class="d-flex gap-1 justify-content-end">
                                 <img class="contact_items" src="/images/msg.png" />
                                 <p class="text-white mb-0">doubtlessinfo23@gmail.com</p>
                             </div>

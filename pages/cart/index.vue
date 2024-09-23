@@ -29,7 +29,9 @@ setTimeout(() => {
                                 <span class="item_sale_price">₹1,189</span>
                                 <span class="cart_ori_total">₹14,996</span>
                             </div>
-                            <button class="cart_checkout_btn">Checkout</button>
+                            <nuxt-link to="/cart/checkout">
+                                <button class="cart_checkout_btn">Checkout</button>
+                            </nuxt-link>
                         </div>
                     </VCol>
                 </VRow>
@@ -99,7 +101,7 @@ span.cart_ori_total {
 h1.cart_title {
     font-size: 30px;
     font-weight: 800;
-    text-transform: uppercase;
+    text-transform: capitalize;
     color: #000;
     margin-bottom: 20px;
 }
@@ -116,7 +118,7 @@ p.cart_text {
 }
 
 .slide-fade-enter-from {
-    transform: translateX(-100%);
+    transform: translateX(100%);
     opacity: 0;
 }
 

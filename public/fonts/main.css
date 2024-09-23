@@ -936,3 +936,130 @@ form.v-form.otp_form .v-otp-input .v-otp-input__content {
 .slide_cont .v-slide-group__container .v-slide-group__content {
     column-gap: 44px !important;
 }
+
+
+/* Cart Styling */
+
+.checkout_accord #headlessui-disclosure-button-v-0-0 {
+    padding: 15px !important;
+    background: transparent !important;
+    border-bottom: 1px solid #757373 !important;
+    color: #000 !important;
+    font-size: 23px !important;
+    line-height: 26px !important;
+    font-weight: 600;
+}
+
+.checkout_accord #headlessui-disclosure-button-v-0-0[aria-expanded="true"] {
+    background: #F6F5F4 !important;
+    border-bottom: none !important;
+}
+
+.checkout_accord #headlessui-disclosure-button-v-0-2 {
+    padding: 15px !important;
+    background: #F6F5F4 !important;
+    border-bottom: 1px solid #757373 !important;
+    color: #000 !important;
+    font-size: 23px !important;
+    line-height: 26px !important;
+    font-weight: 600;
+    border-radius: 6px;
+}
+
+.checkout_accord #headlessui-disclosure-button-v-0-4 {
+    padding: 15px !important;
+    background: #F6F5F4 !important;
+    border-bottom: 1px solid #757373 !important;
+    color: #000 !important;
+    font-size: 23px !important;
+    line-height: 26px !important;
+    font-weight: 600;
+    border-radius: 6px;
+}
+
+.checkout_email_field input {
+    padding: 14px 15px !important;
+    box-shadow: none !important;
+    border-bottom: 1px solid #000 !important;
+    border-radius: 0;
+}
+
+.iconify {
+    content: 'Login' !important;
+    background: unset !important;
+    font-size: 16px !important;
+    width: 100px !important;
+    color: #000 !important;
+    transform: unset !important;
+    height: 30px !important;
+    background-color: unset !important;
+}
+
+.checkout_accord #headlessui-disclosure-button-v-0-0::after {
+    content: 'Login';
+    padding: 12px 35px;
+    border-radius: 5px;
+    border: 2px solid #F87126;
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.checkout_accord #headlessui-disclosure-button-v-0-0[aria-expanded="true"]::after {
+    content: unset;
+}
+
+.checkout_verifyOtp .v-otp-input__content {
+    padding: 0;
+    height: auto;
+}
+
+.checkout_verifyOtp .v-otp-input__content .v-field {
+    width: 41px;
+    height: 38px !important;
+    box-shadow: none;
+    border: 1px solid #DBDBDB;
+}
+
+.login_details .v-label {
+    opacity: unset !important;
+}
+
+.signUp_input_field input {
+    padding: 10px 15px !important;
+    box-shadow: none !important;
+    border: 1px solid #DBDBDB !important;
+    border-radius: 4px !important;
+}
+
+.signUp_otp_field {
+    padding: 0 !important;
+    justify-content: start !important;
+    margin-left: 27px !important;
+}
+
+.signUp_otp_field .v-otp-input__content {
+    padding: 0 !important;
+}
+
+.signUp_otp_field .v-field {
+    width: 41px !important;
+    height: 38px !important;
+    box-shadow: none !important;
+    border: 1px solid #DBDBDB !important;
+    border-radius: 3px !important;
+}
+
+p.signUp_text {
+    font-size: 14px !important;
+    color: #63463B75 !important;
+    text-transform: capitalize !important;
+    font-weight: 500 !important;
+}
+
+.radio_div_width .v-label {
+    width: 100%!important;
+    opacity: unset !important;
+}
+
+
+/* Cart Styles End */
