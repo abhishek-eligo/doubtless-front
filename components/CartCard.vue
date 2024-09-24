@@ -32,7 +32,9 @@ const cartItems = ref([
     <div class="cart_item_card">
         <VCard v-for="(item, index) in cartItems" :key="index">
             <VCardText class="px-0 py-0 d-flex justify-between">
-                <img src="/images/cart_item.png" />
+                <div>
+                    <img src="/images/cart_item.png" />
+                </div>
                 <div class="cart_item_content">
                     <h1 class="cart_item_h">{{ item.title }}</h1>
                     <ul class="d-flex">

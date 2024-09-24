@@ -2,7 +2,7 @@
 const items = ref([
     { label: 'Login Or Sign Up', slot: 'login', defaultOpen: false },
     { label: 'Order Summary', slot: 'order-summary', defaultOpen: false },
-    { label: 'Paymetn Method', slot: 'payment-method', defaultOpen: false },
+    { label: 'Payment Method', slot: 'payment-method', defaultOpen: false },
 ])
 
 const requestOTP = ref(true);
@@ -14,7 +14,8 @@ const signUpFormOne = ref(false);
 const enterSignUpOTP = ref(false);
 const paymentSelected = ref('sms');
 const paymentMethods = ref('');
-
+const validCouponCode = ref(false);
+const isCouponApplied  =ref(false);
 
 const openVerifyOTP = () => {
     requestOTP.value = false;
@@ -55,6 +56,19 @@ const methods = [
     { value: 'push', label: 'Push notification' }
 ]
 
+const addCouponCode = () => {
+    validCouponCode.value = true;
+}
+
+const applyCouponCode = () => {
+    isCouponApplied.value = true;
+}
+
+const changeEmail = () => {
+    verifyOTP.value = false;
+    requestOTP.value = true;
+}
+
 </script>
 
 <template>
@@ -94,7 +108,7 @@ const methods = [
                                     <VForm v-if="verifyOTP == true" class="enter_email_form">
                                         <p class="enter_email_form_text">Please enter the OTP sent to
                                             rahulrajta@eligocs.com
-                                            <span class="checkout_signup_link">change</span>
+                                            <span @click="changeEmail" class="checkout_signup_link">change</span>
                                         </p>
                                         <label class="otp_label">Enter OTP</label>
                                         <v-otp-input class="checkout_verifyOtp" variant="solo" length="4"></v-otp-input>
@@ -151,11 +165,26 @@ const methods = [
                                     </VForm>
                                 </template>
                                 <template #order-summary>
-                                    <CartCard />
+                                    <VCard class="coupon_card">
+                                        <VCardTitle class="coupon_card_title d-flex">
+                                            <h3>Add Coupon</h3>
+                                            <p @click="addCouponCode" v-if="validCouponCode == false">click here to add your coupon code</p>
+                                            <p v-if="isCouponApplied == true">Coupon Applied!!!</p>
+                                        </VCardTitle>
+                                        <VCardText v-if="validCouponCode == true" class="d-flex justify-between">
+                                            <UInput class="coupon_input_field" placeholder="Add Coupon Code" />
+                                            <div>
+                                                <UButton class="coupon_remove_btn">Remove</UButton>
+                                                <UButton @click="applyCouponCode" class="coupon_apply_btn">Apply</UButton>
+                                            </div>
+                                        </VCardText>
+                                    </VCard>
+                                    <!-- <CartCard /> -->
+                                     <CheckoutSummaryCard />
                                 </template>
                                 <template #payment-method>
-                                    <VCard>
-                                        <VCardText>
+                                    <VCard class="checkout_payment_card">
+                                        <VCardText class="checkout_payment_card_text">
                                             <v-radio-group v-model="paymentMethods">
                                                 <v-radio class="radio_div_width" value="card">
                                                     <template v-slot:label>
@@ -209,15 +238,35 @@ const methods = [
                     </VCard>
                 </VCol>
                 <VCol md="4" cols="12">
-                    <VCard>
-                        <VCardTitle>
+                    <VCard class="cart_checkout_summary ml-auto mb-10">
+                        <VCardTitle class="summary_title p-0">
                             <h2>Summary</h2>
                         </VCardTitle>
-                        <VCardText>
-                            <VRow>
-                                <VCol md="6"></VCol>
-                                <VCol md="6" cols="12"></VCol>
-                            </VRow>
+                        <VCardText class="p-0">
+                                <VCol class="d-flex justify-between px-0 py-0" cols="12">
+                                    <p class="price_text">original price: </p>
+                                    <p class="price_text">₹14,996</p>
+                                </VCol>
+                                <VCol v-if="isCouponApplied == true" class="d-flex justify-between px-0 py-0" cols="12">
+                                    <p class="price_text">Coupon: </p>
+                                    <p class="price_text">-₹1,271</p>
+                                </VCol>
+                                <VCol class="d-flex justify-between discount_border_bottom px-0 py-0" cols="12">
+                                    <p class="price_text">Discounts: </p>
+                                    <p class="price_text">-₹12,751</p>
+                                </VCol>
+                                <VCol class="d-flex justify-between sumary_total_div px-0 py-0" cols="12">
+                                    <p class="summary_total_text">Total: </p>
+                                    <p class="summary_total_text">₹2,245</p>
+                                </VCol>
+                                <VCol class="px-0 py-0 check_terms_checkbox">
+                                    <v-radio value="CheckTerms">
+                                        <template v-slot:label>
+                                            <p class="checkterms_text">by completing your purchase you agree to these <span class="checterms_span">terms of services</span></p>
+                                        </template>
+                                    </v-radio>
+                                    <UButton class="chekout_complete_btn">Complete Checkout</UButton>
+                                </VCol>
                         </VCardText>
                     </VCard>
                 </VCol>
@@ -227,7 +276,104 @@ const methods = [
 </template>
 
 <style scoped>
+.coupon_card {
+    box-shadow: none;
+    border: 1px solid #F1F1F1;
+}
+
+.coupon_card_title h3 {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.coupon_card_title p {
+    font-size: 13px;
+    font-weight: 400;
+    color: #F87126;
+    text-transform: capitalize;
+    margin-left: 15px !important;
+}
+.coupon_card_title p:hover {
+    cursor: pointer;
+}
+.chekout_complete_btn {
+    width: 100%;
+    border-radius: 0;
+    justify-content: center;
+    padding: 11px;
+    font-size: 18px !important;
+    font-weight: 800;
+    background: #F87126 !important;
+    margin-top: 20px;
+}
+p.checkterms_text {
+    font-size: 14px;
+    text-transform: capitalize;
+    color: #000;
+    font-weight: 500;
+}
+
+span.checterms_span {
+    color: #F87126;
+}
+span.checterms_span:hover {
+    cursor: pointer;
+}
+.check_terms_checkbox {
+    margin-top: 33px;
+}
+.sumary_total_div {
+    margin-top: 23px;
+}
+
+p.summary_total_text {
+    font-size: 19px;
+    font-weight: 800;
+    color: #000;
+}
+.discount_border_bottom {
+    border-bottom: 1px solid #75737330;
+    padding-bottom: 10px !important;
+}
+p.price_text {
+    font-size: 17px;
+    text-transform: capitalize;
+    color: #757373;
+    font-weight: 600;
+    margin-top: 8px !important;
+}
+.cart_checkout_summary {
+    margin-top: 60px;
+    box-shadow: none;
+    padding: 20px 40px 40px 40px;
+    background: #F8F7F7;
+    max-width: 416px;
+}
+
+
+.summary_title h2 {
+    font-size: 26px;
+    font-weight: 800;
+    color: #000;
+}
+
+.checkout_payment_card {
+    box-shadow: none;
+}
+
+.checkout_payment_card_text {
+    padding: 0;
+}
+
+.radio_div_width {
+    padding: 19px 0;
+    border: 1px solid #E4E3E3;
+    border-radius: 4px;
+    background: #F5F4F4;
+    margin-bottom: 6px;
+}
 p.payment_text {
+    margin-left: 6px !important;
     text-transform: capitalize;
     font-size: 18px;
     font-weight: 600;

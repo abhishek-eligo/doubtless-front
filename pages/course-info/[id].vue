@@ -2,13 +2,15 @@
     <div>
         <div class="courseInfo_section">
             <div class="wrapper py-10">
-                <div class="d-flex justify-center">
-                    <img src="/images/OBJECTS.png" />
+                <div class="course_info_left_sec">
+                    <div class="d-flex justify-center">
+                        <img src="/images/OBJECTS.png" />
+                    </div>
+                    <h1>Fun with Numbers and Shapes<br>
+                        Early <span class="orangeShade">Math Adventurest</span></h1>
+                    <p>Explore numbers and shapes through engaging activities, building a strong foundation in early
+                        math<br> concepts.</p>
                 </div>
-                <h1>Fun with Numbers and Shapes<br>
-                    Early <span class="orangeShade">Math Adventurest</span></h1>
-                <p>Explore numbers and shapes through engaging activities, building a strong foundation in early
-                    math<br> concepts.</p>
             </div>
         </div>
         <div class="section_two">
@@ -16,16 +18,16 @@
                 <div class="row">
                     <div class="col-md-8 px-0">
                         <div>
-                            <h1>explore related <span class="orangeShade">courses</span></h1>
+                            <h1 class="course_relate_chip">explore related <span class="orangeShade">courses</span></h1>
                             <v-row class="course_info_chip">
                                 <v-col cols="2" class="chipWidth">
-                                    <v-chip class="ma-2 chipText bgChip">Drawing & Craft</v-chip>
+                                    <v-chip class="ma-2 chipText bgChipUnactive">Drawing & Craft</v-chip>
                                 </v-col>
                                 <v-col cols="2" class="chipWidth">
-                                    <v-chip class="ma-2 chipText bgChip">English</v-chip>
+                                    <v-chip class="ma-2 chipText bgChipUnactive">English</v-chip>
                                 </v-col>
                                 <v-col cols="2" class="chipWidth">
-                                    <v-chip class="ma-2 chipText bgChip">Science</v-chip>
+                                    <v-chip class="ma-2 chipText bgChipUnactive">Science</v-chip>
                                 </v-col>
                             </v-row>
                         </div>
@@ -39,7 +41,7 @@
                                 </li>
                                 <li>
                                     <img src="/images/video_tym.png" class="imgSize" />
-                                    12 pdf books 
+                                    12 pdf books
                                 </li>
                                 <li>
                                     <img src="/images/video_tym.png" class="imgSize" />
@@ -158,6 +160,15 @@
 </template>
 
 <style scoped>
+h1.course_relate_chip {
+    margin-bottom: 20px !important;
+}
+.course_info_left_sec {
+    width: 100%;
+    max-width: 686px;
+    background: #fff;
+    padding: 30px 35px;
+}
 .courseInfo_section {
     background-image: url('/images/crse_info_bg.png');
     background-size: cover;

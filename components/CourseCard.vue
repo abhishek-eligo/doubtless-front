@@ -1,5 +1,5 @@
 <template>
-    <div class="container parentCard px-0 mt-5">
+    <div class="parentCard px-0 mt-5">
         <div class="course-card">
             <div class="position-relative">
                 <img :src="image" alt="Course Image">
@@ -68,6 +68,7 @@ export default {
     padding: 15px 20px;
     text-transform: uppercase;
     font-weight: 600;
+    font-family: var(--Montserrat);
 }
 
 .course_info_btn:hover {

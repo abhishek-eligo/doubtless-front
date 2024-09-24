@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper d-flex course_gap">
+    <div class="d-flex course_gap flex-wrap justify-between">
         <CourseCard 
             v-for="course in courses"
             :key="course.id"

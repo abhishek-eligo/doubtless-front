@@ -36,6 +36,10 @@ body {
     font-family: var(--Montserrat);
 }
 
+span {
+    font-family: var(--Montserrat);
+}
+
 button {
     font-family: 'Roboto';
 }
@@ -463,7 +467,7 @@ img.ftr_link_icon {
 }
 
 .course_gap {
-    gap: 57px;
+    /* gap: 57px; */
 }
 
 .course-card img {
@@ -482,7 +486,7 @@ img.ftr_link_icon {
 .description_card {
     position: absolute;
     display: none;
-    right: -118%;
+    right: -121%;
     z-index: 2;
     top: -32px;
 }
@@ -766,12 +770,12 @@ p.course_2_text {
 .course_info::before {
     content: "";
     position: absolute;
-    width: 20px;
-    height: 20px;
-    background-image: url("/images/white_tri.png");
+    width: 30px;
+    height: 30px;
+    background-image: url(/images/white_tri.png);
     background-size: contain;
-    top: 50%;
-    left: -19px;
+    top: 37%;
+    left: -29px;
     background-position: right;
     filter: drop-shadow(-2px 0px 2px #d9d9d9a9);
 }
@@ -795,8 +799,8 @@ p.course_2_text {
 /*   Course info    */
 
 .courseInfo_section h1 {
-    color: var(--white);
-    font-size: 40px;
+    color: #757373;
+    font-size: 38px;
     font-weight: 700;
     line-height: 60px;
     text-align: center;
@@ -807,7 +811,7 @@ p.course_2_text {
     font-weight: 400;
     line-height: 30px;
     text-align: center;
-    color: var(--white);
+    color: #757373;
 }
 
 .v-row.course_info_chip {
@@ -975,6 +979,7 @@ form.v-form.otp_form .v-otp-input .v-otp-input__content {
     line-height: 26px !important;
     font-weight: 600;
     border-radius: 6px;
+    margin-bottom: 0;
 }
 
 .checkout_email_field input {
@@ -1059,6 +1064,80 @@ p.signUp_text {
 .radio_div_width .v-label {
     width: 100%!important;
     opacity: unset !important;
+}
+
+.checkout_payment_card_text .v-radio-group .v-selection-control-group {
+    background: #EDEAE847;
+}
+
+.check_terms_checkbox .v-selection-control__input {
+    justify-content: space-between;
+}
+
+.check_terms_checkbox .v-label {
+    opacity: unset !important;
+}
+
+.coupon_input_field input {
+    padding: 13px 15px;
+    box-shadow: none !important;
+    border: 1px solid #63463B46 !important;
+    border-radius: 4px;
+}
+
+.coupon_remove_btn {
+    padding: 10px 30px;
+    color: #F87126 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: 1.2px solid #F87126;
+    border-radius: 0;
+    font-size: 16px;
+    font-weight: 800;
+    font-family: var(--Helvetica);
+}
+
+.coupon_apply_btn {
+    padding: 10px 30px;
+    color: #fff !important;
+    background: #F87126 !important;
+    box-shadow: none !important;
+    border: 1.2px solid #F87126;
+    border-radius: 0;
+    font-size: 16px;
+    font-weight: 800;
+    margin-left: 15px;
+    font-family: var(--Helvetica);
+}
+
+.check_terms_checkbox .v-selection-control .v-selection-control__wrapper .v-selection-control__input i {
+    color: #F87126 !important;
+}
+
+.checkout_payment_card_text .v-input .v-input__control .v-selection-control-group i {
+    color: #F87126 !important;
+}
+
+.checkout_smry_card {
+    padding-top: 10px;
+    margin-bottom: 10px;
+    box-shadow: unset !important;
+    border-top: 1px solid #75737330 !important;
+    border-radius: 0 !important;
+}
+
+.checkout_smry_div .px-4.py-5.sm\:p-6 {
+    display: flex;
+    padding: 0 8px !important;
+    justify-content: space-between;
+}
+
+.check_terms_checkbox .v-selection-control__input:hover:before,
+.check_terms_checkbox .v-selection-control__input:active:before,
+.check_terms_checkbox .v-selection-control__input:focus:before,
+.check_terms_checkbox .v-selection-control__input:focus-visible:before,
+.check_terms_checkbox .v-selection-control__input:before {
+    content: unset;
 }
 
 

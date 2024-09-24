@@ -4,7 +4,7 @@ import { ref } from 'vue';
 const isCartVisible = ref(false);
 setTimeout(() => {
     isCartVisible.value = true;
-}, 500);
+}, 100);
 
 </script>
 
