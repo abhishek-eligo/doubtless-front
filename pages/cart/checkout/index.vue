@@ -13,6 +13,7 @@ const firstAccordian = ref(true);
 const signUpFormOne = ref(false);
 const enterSignUpOTP = ref(false);
 const paymentSelected = ref('sms');
+const paymentMethods = ref('');
 
 
 const openVerifyOTP = () => {
@@ -78,7 +79,7 @@ const methods = [
                                 <UButton class="logged_in_btn">Change</UButton>
                             </div>
                             <UAccordion class="checkout_accord" :items="items">
-                                <template v-if="firstAccordian" class="temp_accord" #login>
+                                <template v-if="firstAccordian" #login>
                                     <!-- Request Otp Login Form -->
                                     <VForm v-if="requestOTP == true" class="enter_email_form">
                                         <UInput class="checkout_email_field" placeholder="Enter Email" />
@@ -155,16 +156,46 @@ const methods = [
                                 <template #payment-method>
                                     <VCard>
                                         <VCardText>
-                                            <v-radio-group>
-                                                <v-radio class="radio_div_width" value="">
+                                            <v-radio-group v-model="paymentMethods">
+                                                <v-radio class="radio_div_width" value="card">
                                                     <template v-slot:label>
                                                         <VRow>
                                                             <VCol class="d-flex align-center" md="6">
                                                                 <img src="/images/credit_card.png" />
-                                                                <p>credit/ debit card</p>
+                                                                <p class="payment_text">credit/ debit card</p>
                                                             </VCol>
                                                             <VCol md="6" cols="12" class="text-end">
                                                                 <img src="/images/credit-card-type.png" class="ms-auto" />
+                                                            </VCol>
+                                                        </VRow>
+                                                    </template>
+                                                </v-radio>
+                                                <v-radio class="radio_div_width" value="upi">
+                                                    <template v-slot:label>
+                                                        <VRow>
+                                                            <VCol class="d-flex align-center" md="12">
+                                                                <img src="/images/upi.png"  />
+                                                                <p class="payment_text">UPI</p>
+                                                            </VCol>
+                                                        </VRow>
+                                                    </template>
+                                                </v-radio>
+                                                <v-radio class="radio_div_width" value="net">
+                                                    <template v-slot:label>
+                                                        <VRow>
+                                                            <VCol class="d-flex align-center" md="12">
+                                                                <img src="/images/net-bank.png"  />
+                                                                <p class="payment_text">net banking</p>
+                                                            </VCol>
+                                                        </VRow>
+                                                    </template>
+                                                </v-radio>
+                                                <v-radio class="radio_div_width" value="mobile">
+                                                    <template v-slot:label>
+                                                        <VRow>
+                                                            <VCol class="d-flex align-center" md="12">
+                                                                <img src="/images/mob-wallet.png"  />
+                                                                <p class="payment_text">mobile wallet</p>
                                                             </VCol>
                                                         </VRow>
                                                     </template>
@@ -178,7 +209,17 @@ const methods = [
                     </VCard>
                 </VCol>
                 <VCol md="4" cols="12">
-
+                    <VCard>
+                        <VCardTitle>
+                            <h2>Summary</h2>
+                        </VCardTitle>
+                        <VCardText>
+                            <VRow>
+                                <VCol md="6"></VCol>
+                                <VCol md="6" cols="12"></VCol>
+                            </VRow>
+                        </VCardText>
+                    </VCard>
                 </VCol>
             </VRow>
         </VContainer>
@@ -186,6 +227,12 @@ const methods = [
 </template>
 
 <style scoped>
+p.payment_text {
+    text-transform: capitalize;
+    font-size: 18px;
+    font-weight: 600;
+    color: #575656;
+}
 .signUp_continue_margin {
     margin-bottom: 15px;
 }
