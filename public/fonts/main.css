@@ -881,8 +881,8 @@ form.v-form.otp_form .v-otp-input .v-otp-input__content {
 
 .modalCancelBtn {
     position: absolute;
-    right: 10px;
-    top: 10px;
+    right: 15px;
+    top: 15px;
 }
 
 .input_pad input {
