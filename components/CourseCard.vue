@@ -39,7 +39,9 @@
                     </ul>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <button class="course_info_btn">view more</button>
+                    <nuxt-link to="/course-info/abc">
+                        <button class="course_info_btn">view more</button>
+                    </nuxt-link>
                     <button class="course_info_btn">Add to cart</button>
                 </div>
             </v-card>

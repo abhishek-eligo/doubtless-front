@@ -468,6 +468,7 @@ img.ftr_link_icon {
 
 .course_gap {
     /* gap: 57px; */
+    text-decoration: none !important;
 }
 
 .course-card img {
@@ -1142,3 +1143,33 @@ p.signUp_text {
 
 
 /* Cart Styles End */
+
+
+/* Course Info Page */
+
+.course_info_tutor_card {
+    background: #757373 !important;
+    border-radius: 0 !important;
+}
+
+.course_info_tutor_card .px-4.py-5.sm\:p-6 {
+    padding: 0 !important;
+}
+
+.review_card .px-4.py-5.sm\:p-6 {
+    padding: 21px !important;
+}
+
+.review_card_name {
+    display: flex;
+    column-gap: 10px;
+    align-items: center;
+}
+
+.duration_div .v-label {
+    width: 100%;
+    opacity: unset;
+}
+
+
+/* Course Info Page End */
