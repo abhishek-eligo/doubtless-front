@@ -1197,5 +1197,21 @@ p.signUp_text {
 
 /* Teach On Doubtless Page */
 
+.totalTabs .v-slide-group__container .v-slide-group__content {
+    justify-content: space-between;
+}
+
+.begin_tab.v-tab--selected .v-tab__slider {
+    background: #F87126 !important;
+    display: none;
+}
+
+.begin_tab .v-btn__content {
+    font-size: 24px;
+    font-weight: 600;
+    text-transform: capitalize;
+    color: #282828;
+}
+
 
 /* Teach On Doubtless Page End */
