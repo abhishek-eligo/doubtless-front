@@ -1,4 +1,6 @@
 <script setup>
+let authUserToken = ref(null);
+let authUserData = ref(null);
 const isOpen = ref(false);
 const loginIsOpen = ref(false);
 const signUpIsOpen = ref(false);
@@ -11,6 +13,22 @@ const signUpEmail = ref('');
 const signUpOtp = ref(false);
 const otpIsVerified = ref(false);
 const signUpOtpVerified = ref(false);
+const expirationTime = ref(0); // This will hold the remaining time in seconds
+const countdown = ref(0); // This will display the countdown
+let countdownInterval = null; // To store the interval ID
+const loginEmailErrorMsg = ref('');
+const signupEmailErrorMsg = ref('');
+const signupPhoneErrorMsg = ref('');
+const signupNameErrorMsg = ref('');
+const loginOTP = ref();
+
+watch([authUserToken, authUserData], ([newToken, newData]) => {
+    if (newToken === null && newData === null) {
+        console.log("User is not authenticated.");
+    } else {
+        console.log("User is authenticated.");
+    }
+});
 
 const studentLogin = () => {
     isOpen.value = true;
@@ -31,19 +49,182 @@ const signUpTwo = () => {
     signUpIsOpen.value = true;
 }
 
-const openOtpModal = () => {
-    loginIsOpen.value = false;
-    OtpModalIsOpen.value = true;
+const debounce = (func, delay) => {
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            func.apply(this, args);
+        }, delay);
+    };
 }
 
-const requestSignOtpModal = () => {
-    signUpIsOpen.value = false;
-    signUpOtp.value = true;
+const loginOtpModal = debounce(async () => {
+    if (!loginEmail.value) {
+        loginEmailErrorMsg.value = "Email is required";
+        return;
+    } else if (!isValidEmail(loginEmail.value)) {
+        loginEmailErrorMsg.value = "Please enter a valid email";
+        return;
+    }
 
+    try {
+        const response = await $fetch('http://localhost:8000/api/send-login-otp', {
+            method: "POST",
+            body: {
+                email: loginEmail.value,
+            },
+        });
+        if (response.success) {
+            if (response.otp_expiration_time >= 120) {
+                expirationTime.value = 120;
+                startCountdown(expirationTime.value);
+            }
+            loginIsOpen.value = false;
+            OtpModalIsOpen.value = true;
+        } else {
+            loginEmailErrorMsg.value = response.message;
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+}, 300); // Adjust delay as needed
+
+
+const startCountdown = (seconds) => {
+    countdown.value = seconds; // Initialize countdown
+    countdownInterval = setInterval(() => {
+        if (countdown.value > 0) {
+            countdown.value--; // Decrease countdown every second
+        } else {
+            clearInterval(countdownInterval); // Stop the countdown when it reaches 0
+        }
+    }, 1000); // Update every second
+};
+
+onBeforeUnmount(() => {
+    if (countdownInterval) {
+        clearInterval(countdownInterval);
+    }
+});
+
+const verify_otp = async () => {
+    try {
+        const response = await $fetch('http://localhost:8000/api/verify-login-otp', {
+            method: "POST",
+            body: {
+                email: loginEmail.value, // Assuming loginEmail is a reactive ref
+                otp: loginOTP.value
+            },
+        });
+        if (response.success) {
+            loginEmail.value = "";
+            loginOTP.value = "";
+            console.log(response);
+            const authCookie = useCookie('authToken');
+            authCookie.value = response.token; // Set the token in the cookie
+            authUserToken.value = authCookie.value;
+            const userCookie = useCookie('userData');
+            userCookie.value = JSON.stringify(response.user); // Store user data as a string
+            authUserData.value = userCookie.value ? JSON.parse(userCookie.value) : null;
+            otpIsVerified.value = true;
+        }
+    } catch (error) {
+        console.log(error); // Handle API errors if they exist
+        // if (error.data && error.data.errors) {
+        //     console.log(error.data.errors); 
+        // } else {
+        //     console.log(error.message || "An unknown error occurred"); 
+        // }
+    }
+};
+
+const goToDashboard = () => {
+    console.log("Go To Dashboard");
+    OtpModalIsOpen.value = false;
+    useRouter().push('/');
 }
 
-const OtpVerified = () => {
-    otpIsVerified.value = true;
+function logout() {
+    const tokenCookie = useCookie('authToken'); // Access the token cookie
+    const userCookie = useCookie('userData'); // Access the user data cookie
+
+    tokenCookie.value = null; // Clear the token from the cookie
+    userCookie.value = null; // Clear the user data from the cookie
+    authUserToken.value = null;
+    authUserData.value = null;
+    useRouter().push('/'); // Redirect to the login page
+}
+
+const isValidName = (name) => {
+    const nameRegex = /^[a-zA-Z\s'-]{2,50}$/;
+    return nameRegex.test(name);
+};
+
+const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+};
+
+const isValidPhone = (phone) => {
+    const phoneRegex = /^\d{10}$/;
+    return phoneRegex.test(phone);
+};
+
+const registerOtpModal = debounce(async () => {
+
+    if (!signUpEmail.value) {
+        signupEmailErrorMsg.value = "Email is required";
+        return;
+    } else if (!isValidEmail(signUpEmail.value)) {
+        signupEmailErrorMsg.value = "Please enter a valid email";
+        return;
+    }
+
+    if (!signUpName.value) {
+        signupNameErrorMsg.value = "Name is required";
+        return;
+    } else if (!isValidName(signUpName.value)) {
+        signupNameErrorMsg.value = "Please enter valid name";
+        return;
+    }
+
+    if (!signUpNumber.value) {
+        signupPhoneErrorMsg.value = "Phone is required";
+        return;
+    } else if (!isValidPhone(signUpNumber.value)) {
+        signupPhoneErrorMsg.value = "Please enter 10 digit mobile number";
+        return;
+    }
+
+    try {
+        const result = await $fetch('http://localhost:8000/api/send-signup-otp', {
+            method: "POST",
+            body: {
+                name: signUpName.value,
+                email: signUpEmail.value,
+                phone: signUpNumber.value,
+                role: 'student'
+            }
+        })
+        if (response.success) {
+            if (response.otp_expiration_time >= 120) {
+                expirationTime.value = 120;
+                startCountdown(expirationTime.value);
+            }
+            signUpIsOpen.value = false;
+            signUpOtp.value = true;
+        } else {
+            signupEmailErrorMsg.value = response.message;
+        }
+    } catch (e) {
+        console.log(e.data.errors);
+    }
+
+}, 300);
+
+const OtpVerified = async () => {
+    await verify_otp();
 }
 
 const verifySignUpOtp = () => {
@@ -133,7 +314,9 @@ const closeChoiceModal = () => {
                         <nuxt-link to="/cart">
                             <img class="cart_img" src="../public/images/cart.png" />
                         </nuxt-link>
-                        <button @click="studentLogin" class="hdr_btn">Login now</button>
+                        <button @click="studentLogin" class="hdr_btn"
+                            v-if="authUserToken === null || authUserData === null">Login now</button>
+                        <button @click="logout" class="hdr_btn" v-else>Logout</button>
                     </div>
                 </div>
             </div>
@@ -143,7 +326,7 @@ const closeChoiceModal = () => {
 
         <v-dialog persistent class="loginModal" v-model="isOpen">
             <VCard class="loginCard text_align_center">
-                <img class="modal_cancel_btn modalCancelBtn" src="/images/modal_cancel.png" @click="isOpen = false" />  
+                <img class="modal_cancel_btn modalCancelBtn" src="/images/modal_cancel.png" @click="isOpen = false" />
                 <VRow>
                     <VCol class="modal_heading" cols="12">
                         <h1 class="modal_heading_h">Welcome</h1>
@@ -152,11 +335,14 @@ const closeChoiceModal = () => {
                 </VRow>
                 <VRow>
                     <VCol class="loginBtn px-0" md="6">
-                        <UButton @click="openLoginModal" :ui="{ rounded: 'rounded-full' }">Join As <span>Student</span></UButton>
+                        <UButton @click="openLoginModal" :ui="{ rounded: 'rounded-full' }">Join As <span>Student</span>
+                        </UButton>
                     </VCol>
                     <VCol class="loginBtn px-0" md="6" cols="12">
                         <nuxt-link class="nav-link" to="/teaching/register">
-                            <UButton @click="closeChoiceModal" :ui="{ rounded: 'rounded-full' }">Join As <span>Instructor</span></UButton>
+                            <UButton @click="closeChoiceModal" :ui="{ rounded: 'rounded-full' }">Join As
+                                <span>Instructor</span>
+                            </UButton>
                         </nuxt-link>
                     </VCol>
                 </VRow>
@@ -165,16 +351,18 @@ const closeChoiceModal = () => {
 
         <v-dialog persistent class="loginModal" v-model="loginIsOpen">
             <VCard class="loginCard text_align_center">
-                <img class="modal_cancel_btn modalCancelBtn" src="/images/modal_cancel.png" @click="loginIsOpen = false" />  
+                <img class="modal_cancel_btn modalCancelBtn" src="/images/modal_cancel.png"
+                    @click="loginIsOpen = false" />
                 <VCardTitle class="px-0 card_title py-0">
                     <h1 class="modal_heading_h mb-4">Login</h1>
                     <p class="loginModal_text">Enter Your email to continue your<br> journey</p>
                 </VCardTitle>
                 <VCardText class="px-0 py-0">
-                    <v-form @submit.prevent.default="openOtpModal">
+                    <v-form @submit.prevent="loginOtpModal">
                         <!-- <v-text-field class="login_field" v-model="loginEmail" label="Enter Your Email">
                         </v-text-field> -->
                         <UInput class="login_field" placeholder="Enter Your Email" v-model="loginEmail" />
+                        <p class="err_msg" v-if="loginEmailErrorMsg != ''">{{ loginEmailErrorMsg }}</p>
                         <VBtn class="login_button" variant="tonal" type="submit">Request OTP
                         </VBtn>
                     </v-form>
@@ -188,18 +376,24 @@ const closeChoiceModal = () => {
 
         <v-dialog persistent class="loginModal" v-model="OtpModalIsOpen">
             <VCard class="loginCard text_align_center">
-                <img class="modal_cancel_btn modalCancelBtn" src="/images/modal_cancel.png" @click="OtpModalIsOpen = false" />
+                <img class="modal_cancel_btn modalCancelBtn" src="/images/modal_cancel.png"
+                    @click="OtpModalIsOpen = false" />
                 <VCardTitle class="px-0 card_title border_bottom mb-0 py-0">
                     <h1 class="modal_heading_h mb-0 modal_heading_pad">Login</h1>
                 </VCardTitle>
                 <VCardText class="px-0 py-0 otp_card_text">
-                    <VForm @submit.prevent.default class="otp_form">
+                    <VForm @submit.prevent="OtpVerified" class="otp_form">
                         <p class="enterOtpText text_align_center">Enter OTP</p>
-                        <v-otp-input class="py-0" variant="solo" length="4"></v-otp-input>
-                        <p v-if="otpIsVerified == false" class="otp_resend_time text_align_right">Resend OTP in: <span
-                                class="otp_resend_span">28 Second</span></p>
-                        <VBtn @click="OtpVerified" v-if="otpIsVerified == false" class="login_button" variant="tonal" type="submit">Verify OTP</VBtn>
-                        <VBtn v-if="otpIsVerified == true" class="login_button" variant="tonal" type="submit">Login</VBtn>
+                        <v-otp-input v-model="loginOTP" class="py-0" variant="solo" length="4"></v-otp-input>
+                        <p v-if="otpIsVerified == false && countdown > 0" class="otp_resend_time text_align_right">
+                            OTP will expire in: <span class="otp_resend_span">{{ countdown }} seconds</span>
+                        </p>
+                        <p v-if="otpIsVerified == false && countdown == 0"
+                            class="otp_resend text_align_right otp_resend_time" @click="loginOtpModal">Resend OTP</p>
+                        <VBtn v-if="otpIsVerified == false" class="login_button" variant="tonal" type="submit">Verify
+                            OTP</VBtn>
+                        <VBtn v-if="otpIsVerified == true" class="login_button" variant="tonal" @click="goToDashboard">
+                            Login</VBtn>
                     </VForm>
                     <div v-if="otpIsVerified == true" class="d-flex align-center verify_div gap-1 justify-center">
                         <img class="verify_img" src="/images/Check.png" />
@@ -209,7 +403,8 @@ const closeChoiceModal = () => {
                         Don't have an account ?
                         <span @click="signUpTwo">Sign Up</span>
                     </p>
-                    <p v-if="otpIsVerified == false" class="email_verify_text">verification code sent on rahulrahta@eligocs.com</p>
+                    <p v-if="otpIsVerified == false" class="email_verify_text">verification code sent on <span
+                            class="email_lower">{{ loginEmail }}</span></p>
                 </VCardText>
             </VCard>
         </v-dialog>
@@ -218,18 +413,22 @@ const closeChoiceModal = () => {
 
         <v-dialog persistent class="loginModal" v-model="signUpIsOpen">
             <VCard class="loginCard text_align_center">
-                <img class="modal_cancel_btn modalCancelBtn" src="/images/modal_cancel.png" @click="signUpIsOpen = false" />
+                <img class="modal_cancel_btn modalCancelBtn" src="/images/modal_cancel.png"
+                    @click="signUpIsOpen = false" />
                 <VCardTitle class="px-0 card_title py-0">
                     <h1 class="modal_heading_h mb-4">Sign Up</h1>
                     <p class="loginModal_text">we will need your profile details to<br> give you a better experience</p>
                 </VCardTitle>
                 <VCardText class="px-0 py-0">
-                    <v-form @submit.prevent.default="requestSignOtpModal">
+                    <v-form @submit.prevent="registerOtpModal">
                         <!-- <v-text-field class="login_field" v-model="loginEmail" label="Enter Your Email">
                         </v-text-field> -->
                         <UInput class="login_field" placeholder="Enter Your Name" v-model="signUpName" />
+                        <p class="err_msg" v-if="signupNameErrorMsg != ''">{{ signupNameErrorMsg }}</p>
                         <UInput class="login_field" placeholder="Enter Your Phone Number" v-model="signUpNumber" />
+                        <p class="err_msg" v-if="signupPhoneErrorMsg != ''">{{ signupPhoneErrorMsg }}</p>
                         <UInput class="login_field" placeholder="Enter Your Email" v-model="signUpEmail" />
+                        <p class="err_msg" v-if="signupEmailErrorMsg != ''">{{ signupEmailErrorMsg }}</p>
                         <VBtn class="login_button" variant="tonal" type="submit">Request OTP</VBtn>
                     </v-form>
                     <p class="loginModal_text_2">
@@ -242,27 +441,32 @@ const closeChoiceModal = () => {
 
         <v-dialog persistent class="loginModal" v-model="signUpOtp">
             <VCard class="loginCard text_align_center">
-                <img class="modal_cancel_btn modalCancelBtn" src="/images/modal_cancel.png" @click="signUpOtp = false" />
+                <img class="modal_cancel_btn modalCancelBtn" src="/images/modal_cancel.png"
+                    @click="signUpOtp = false" />
                 <VCardTitle class="px-0 card_title py-0">
                     <h1 class="modal_heading_h mb-4">Sign Up</h1>
                     <p class="loginModal_text">we will need your profile details to<br> give you a better experience</p>
                 </VCardTitle>
                 <VCardText class="px-0 py-0 otp_card_text">
-                    <VForm @submit.prevent.default class="otp_form">
+                    <VForm @submit.prevent class="otp_form">
                         <p class="enterOtpText text_align_center">Enter OTP</p>
                         <v-otp-input class="py-0" variant="solo" length="4"></v-otp-input>
                         <p v-if="signUpOtpVerified == false" class="otp_resend_time text_align_right mb-4">
-                            Resend OTP in: 
+                            Resend OTP in:
                             <span class="otp_resend_span">28 Second</span>
                         </p>
-                        <VBtn @click="verifySignUpOtp" v-if="signUpOtpVerified == false" style="margin: 0 !important" class="login_button" variant="tonal" type="submit">Verify OTP</VBtn>
-                        <VBtn v-if="signUpOtpVerified == true" class="login_button" variant="tonal" type="submit">Sign Up</VBtn>
+                        <VBtn @click="verifySignUpOtp" v-if="signUpOtpVerified == false" style="margin: 0 !important"
+                            class="login_button" variant="tonal" type="submit">Verify OTP</VBtn>
+                        <VBtn v-if="signUpOtpVerified == true" class="login_button" variant="tonal" type="submit">Sign
+                            Up</VBtn>
                     </VForm>
                     <div v-if="signUpOtpVerified == true" class="d-flex align-center verify_div gap-1 justify-center">
                         <img class="verify_img" src="/images/Check.png" />
                         <p class="email_verify_text" style="margin-top: 0 !important;">Verified Code</p>
                     </div>
-                    <p v-if="signUpOtpVerified == false" class="email_verify_text signUpVerify" style="margin-top: 11px !important;">your  login OTP sent to your email <span class="email_blue">rahulrajta@eligocs.com</span></p>
+                    <p v-if="signUpOtpVerified == false" class="email_verify_text signUpVerify"
+                        style="margin-top: 11px !important;">your login OTP sent to your email <span
+                            class="email_blue">rahulrajta@eligocs.com</span></p>
                     <p class="loginModal_text_2">
                         I have an account ?
                         <span @click="signInTwo">Sign In</span>
@@ -282,6 +486,20 @@ const closeChoiceModal = () => {
 </template>
 
 <style scoped>
+.otp_resend:hover {
+    cursor: pointer;
+}
+
+.err_msg {
+    color: red;
+    font-weight: 500;
+    text-align: left;
+}
+
+.email_lower {
+    text-transform: none !important;
+}
+
 img.modal_cancel_btn {
     width: 20px;
     height: 20px;
