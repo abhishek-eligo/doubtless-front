@@ -921,23 +921,6 @@ form.v-form.otp_form .v-otp-input .v-otp-input__content {
     background: #ffffff;
 }
 
-.v-slide-group__prev {
-    position: absolute !important;
-    top: 16px !important;
-    right: -7px !important;
-    display: unset !important;
-}
-
-.v-slide-group__next {
-    justify-content: end !important;
-    align-items: end !important;
-}
-
-.v-slide-group__prev,
-.v-slide-group__next {
-    font-size: 20px !important;
-}
-
 .slide_cont .v-slide-group__container .v-slide-group__content {
     column-gap: 44px !important;
 }
@@ -1173,3 +1156,46 @@ p.signUp_text {
 
 
 /* Course Info Page End */
+
+
+/* Course Tab */
+
+.v-slide-group__prev {
+    position: absolute !important;
+    top: 15px !important;
+    right: 0px !important;
+    display: unset !important;
+    min-width: 75px !important;
+}
+
+.v-slide-group__next {
+    justify-content: end !important;
+    align-items: end !important;
+    min-width: 75px !important;
+}
+
+.v-slide-group__prev,
+.v-slide-group__next {
+    font-size: 20px !important;
+}
+
+.v-slide-group__prev i::before {
+    background: #FFD3BB;
+    border-radius: 50%;
+    color: #F87126;
+}
+
+.v-slide-group__next i::before {
+    background: #FFD3BB;
+    border-radius: 50%;
+    color: #F87126;
+}
+
+
+/* Course Tab End */
+
+
+/* Teach On Doubtless Page */
+
+
+/* Teach On Doubtless Page End */

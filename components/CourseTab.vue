@@ -29,6 +29,10 @@ const activeTab = ref(0)
 </script>
 
 <style scoped>
+.tab_content:hover {
+    color: #000 !important;
+    border-bottom: 2px solid #000;
+}
 .tooltip {
     position: absolute;
     left: 0;
