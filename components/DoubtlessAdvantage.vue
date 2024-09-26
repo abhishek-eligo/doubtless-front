@@ -30,12 +30,23 @@ export default {
 </script>
 
 <style scoped>
+.adv_card::before {
+    content: '';
+    background-image: url(/images/adv_curve.png);
+    top: -41px;
+    position: absolute;
+    left: -11px;
+    width: 100%;
+    height: 100%;
+}
 .adv_card {
     width: 100%;
-    max-width: 245px;
+    max-width: 246px;
     background: #EAE8E8;
     border-radius: 49px;
     padding: 30px 10px 21px 10px;
     box-shadow: 0 7px 6px -2px #d9d9d9 !important;
+    position: relative;
+    overflow: visible;
 }
 </style>

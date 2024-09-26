@@ -143,8 +143,7 @@ const closeChoiceModal = () => {
 
         <v-dialog persistent class="loginModal" v-model="isOpen">
             <VCard class="loginCard text_align_center">
-                <UButton color="gray" variant="tonal" icon="i-heroicons-x-mark-20-solid" class="modalCancelBtn"
-                @click="isOpen = false" />
+                <img class="modal_cancel_btn modalCancelBtn" src="/images/modal_cancel.png" @click="isOpen = false" />  
                 <VRow>
                     <VCol class="modal_heading" cols="12">
                         <h1 class="modal_heading_h">Welcome</h1>
@@ -166,8 +165,7 @@ const closeChoiceModal = () => {
 
         <v-dialog persistent class="loginModal" v-model="loginIsOpen">
             <VCard class="loginCard text_align_center">
-                <UButton color="gray" variant="tonal" icon="i-heroicons-x-mark-20-solid" class="modalCancelBtn"
-                @click="loginIsOpen = false" />
+                <img class="modal_cancel_btn modalCancelBtn" src="/images/modal_cancel.png" @click="loginIsOpen = false" />  
                 <VCardTitle class="px-0 card_title py-0">
                     <h1 class="modal_heading_h mb-4">Login</h1>
                     <p class="loginModal_text">Enter Your email to continue your<br> journey</p>
@@ -190,8 +188,7 @@ const closeChoiceModal = () => {
 
         <v-dialog persistent class="loginModal" v-model="OtpModalIsOpen">
             <VCard class="loginCard text_align_center">
-                <UButton color="gray" variant="tonal" icon="i-heroicons-x-mark-20-solid" class="modalCancelBtn"
-                @click="OtpModalIsOpen = false" />
+                <img class="modal_cancel_btn modalCancelBtn" src="/images/modal_cancel.png" @click="OtpModalIsOpen = false" />
                 <VCardTitle class="px-0 card_title border_bottom mb-0 py-0">
                     <h1 class="modal_heading_h mb-0 modal_heading_pad">Login</h1>
                 </VCardTitle>
@@ -221,8 +218,7 @@ const closeChoiceModal = () => {
 
         <v-dialog persistent class="loginModal" v-model="signUpIsOpen">
             <VCard class="loginCard text_align_center">
-                <UButton color="gray" variant="tonal" icon="i-heroicons-x-mark-20-solid" class="modalCancelBtn"
-                @click="signUpIsOpen = false" />
+                <img class="modal_cancel_btn modalCancelBtn" src="/images/modal_cancel.png" @click="signUpIsOpen = false" />
                 <VCardTitle class="px-0 card_title py-0">
                     <h1 class="modal_heading_h mb-4">Sign Up</h1>
                     <p class="loginModal_text">we will need your profile details to<br> give you a better experience</p>
@@ -246,8 +242,7 @@ const closeChoiceModal = () => {
 
         <v-dialog persistent class="loginModal" v-model="signUpOtp">
             <VCard class="loginCard text_align_center">
-                <UButton color="gray" variant="tonal" icon="i-heroicons-x-mark-20-solid" class="modalCancelBtn"
-                @click="signUpOtp = false" />
+                <img class="modal_cancel_btn modalCancelBtn" src="/images/modal_cancel.png" @click="signUpOtp = false" />
                 <VCardTitle class="px-0 card_title py-0">
                     <h1 class="modal_heading_h mb-4">Sign Up</h1>
                     <p class="loginModal_text">we will need your profile details to<br> give you a better experience</p>
@@ -287,10 +282,14 @@ const closeChoiceModal = () => {
 </template>
 
 <style scoped>
-/* .modal_width #headlessui-dialog-panel-v-0-4 {
-    max-width: 100% !important;
-    width: 100% !important;
-} */
+img.modal_cancel_btn {
+    width: 20px;
+    height: 20px;
+}
+
+.modal_cancel_btn:hover {
+    cursor: pointer;
+}
 
 .signUpVerify {
     margin-bottom: 20px !important;
