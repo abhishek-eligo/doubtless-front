@@ -973,7 +973,7 @@ form.v-form.otp_form .v-otp-input .v-otp-input__content {
     border-radius: 0;
 }
 
-.iconify {
+.checkout_accord button .iconify {
     content: 'Login' !important;
     background: unset !important;
     font-size: 16px !important;
@@ -1215,3 +1215,72 @@ p.signUp_text {
 
 
 /* Teach On Doubtless Page End */
+
+
+/* COURSES PAGE */
+
+.course_filter_accord .w-full.flex.flex-col button {
+    background: transparent !important;
+    border-top: 0.5px solid #757373;
+    color: #000;
+    border-radius: 0 !important;
+}
+
+.course_filter_accord .w-full.flex.flex-col button span.text-left.break-all.line-clamp-1 {
+    font-size: 17px;
+    font-weight: 800;
+    color: #F87126;
+}
+
+.course_filter_accord .w-full.flex.flex-col button .iconify {
+    color: #A8370F !important;
+}
+
+.crse_cat .v-selection-control__wrapper .v-selection-control__input i {
+    color: #F87126 !important;
+    font-size: 16px;
+}
+
+.crse_cat .v-selection-control__wrapper .v-selection-control__input i::before {
+    background: #fff !important;
+}
+
+.crse_cat label.v-label {
+    font-size: 16px;
+    color: #000;
+    text-transform: capitalize;
+    font-weight: 500;
+    line-height: 150%;
+    opacity: unset;
+}
+
+.acadameic_accord .w-full.flex.flex-col button {
+    border-top: none !important;
+    padding: 0;
+}
+
+.acadameic_accord .w-full.flex.flex-col button span.text-left {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #F87126;
+}
+
+.course_filter_accord .w-full.flex.flex-col button div.text-sm .v-input .v-input__details {
+    display: none !important;
+}
+
+.filter_checkbox .v-input__control .v-selection-control .v-selection-control__wrapper .v-selection-control__input i::before {
+    color: #F87126;
+    opacity: unset;
+}
+
+.filter_checkbox .v-input__control .v-selection-control .v-label {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 150%;
+    color: #000;
+    opacity: unset;
+}
+
+
+/* COURSES PAGE END */
