@@ -1,17 +1,15 @@
 export default defineNuxtRouteMiddleware((to, from) => {
-    const isLoggedIn = ref(false);
+  const authToken = useCookie("authToken"); // Access the token from cookies
 
-    if(process.client){
-        isLoggedIn.value = !!localStorage.getItem('token');
-    }
-  
-    if (!isLoggedIn.value && to.path !== '/login') {
-      return navigateTo('/login');
-    }
-  
-    if (isLoggedIn.value && to.path === '/login') {
-      return navigateTo('/account');
-    }
-    
-  });
-  
+  const isLoggedIn = !!authToken.value; // Check if the token exists
+
+  if (!isLoggedIn && to.path !== "/") {
+    return navigateTo("/"); // Redirect to login if not authenticated
+  }
+
+  //if user is logged in, user can view his details 
+
+  // if (isLoggedIn && to.path === "/courses") {
+  //   return navigateTo("/courses"); // Redirect to account if already logged in
+  // }
+});

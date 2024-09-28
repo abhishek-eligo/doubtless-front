@@ -19,6 +19,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       // Here you can define any public runtime configuration
+      baseURL: process.env.BASE_URL || 'http://localhost:8000/api', // Public API URL accessible on client
     },
     // Use environment variables for server configuration
     server: {
