@@ -1,4 +1,5 @@
 <script setup>
+const { $axios, $retryRequest } = useNuxtApp();
 let authUserToken = ref(null);
 let authUserData = ref(null);
 const choiceModal = ref(false);
@@ -26,6 +27,7 @@ const signupNameErrorMsg = ref('');
 const loginOTP = ref();
 const registerOTP = ref();
 const userLoginCard = ref(false);
+
 
 watch([authUserToken, authUserData], ([newToken, newData]) => {
     if (newToken === null && newData === null) {
@@ -75,46 +77,6 @@ const debounce = (func, delay) => {
     };
 }
 
-const loginOtpModal = debounce(async () => {
-    if (!loginEmail.value) {
-        loginEmailErrorMsg.value = "Email is required";
-        return;
-    } else if (!isValidEmail(loginEmail.value)) {
-        loginEmailErrorMsg.value = "Please enter a valid email";
-        return;
-    }
-
-    try {
-        countdown.value = 0;
-        loginOTP.value = "";
-        inValidOtpMsg.value = "";
-        isInvalidOtp.value = false;
-        loginEmailErrorMsg.value = "";
-        const response = await $fetch('http://localhost:8000/api/send-login-otp', {
-            method: "POST",
-            body: {
-                email: loginEmail.value,
-            },
-        });
-        if (response.success) {
-            if (response.otp_expiration_time >= 120) {
-                expirationTime.value = 120;
-                startCountdown(expirationTime.value);
-            }
-            loginIsOpen.value = false;
-            loginOtpModalIsOpen.value = true;
-        } else {
-            loginEmailErrorMsg.value = response.message;
-        }
-    } catch (e) {
-        console.log(e.data.errors);
-        if (e.data.errors.email) {
-            loginEmailErrorMsg.value = e.data.errors.email[0];
-        }
-    }
-}, 300); // Adjust delay as needed
-
-
 const startCountdown = (seconds) => {
     countdown.value = seconds; // Initialize countdown
     countdownInterval = setInterval(() => {
@@ -132,76 +94,92 @@ onBeforeUnmount(() => {
     }
 });
 
-const verify_otp = async () => {
+const verify_login_otp = async () => {
     try {
-        //countdown.value = 0;
+        // Reset state messages
         inValidOtpMsg.value = "";
         isInvalidOtp.value = false;
         loginOtpIsVerified.value = false;
-        const response = await $fetch('http://localhost:8000/api/verify-login-otp', {
-            method: "POST",
-            body: {
-                email: loginEmail.value, // Assuming loginEmail is a reactive ref
-                otp: loginOTP.value
-            },
+
+        // Make the API request using the Axios instance
+        const response = await $axios.post('/verify-login-otp', {
+            email: loginEmail.value, // Assuming loginEmail is a reactive ref
+            otp: loginOTP.value,
         });
-        if (response.success) {
+
+        // Check the response for success
+        if (response.data.success) {
             loginOtpIsVerified.value = true;
-            console.log(response);
+            console.log(response.data);
+
+            // Set the auth token in the cookie
             const authCookie = useCookie('authToken');
-            authCookie.value = response.token; // Set the token in the cookie
+            authCookie.value = response.data.token; // Set the token in the cookie
             authUserToken.value = authCookie.value;
+
+            // Store user data as a string
             const userCookie = useCookie('userData');
-            userCookie.value = JSON.stringify(response.user); // Store user data as a string
+            userCookie.value = JSON.stringify(response.data.user);
             authUserData.value = userCookie.value ? JSON.parse(userCookie.value) : null;
         } else {
-            inValidOtpMsg.value = response.message;
+            inValidOtpMsg.value = response.data.message;
             isInvalidOtp.value = true;
         }
     } catch (error) {
-        console.log(error); // Handle API errors if they exist
-        // if (error.data && error.data.errors) {
-        //     console.log(error.data.errors); 
-        // } else {
-        //     console.log(error.message || "An unknown error occurred"); 
-        // }
+        console.error('Error verifying OTP:', error); // Log the error for debugging
+        // Optionally handle error messages from the server
+        if (error.response && error.response.data) {
+            console.error('API Error:', error.response.data.errors || error.response.data.message);
+        }
     }
 };
 
 const verify_signup_otp = async () => {
     try {
-        //countdown.value = 0;
+        // Reset state messages
         inValidOtpMsg.value = "";
         isInvalidOtp.value = false;
         signupEmailErrorMsg.value = "";
         signupPhoneErrorMsg.value = "";
-        const response = await $fetch('http://localhost:8000/api/verify-signup-otp', {
-            method: "POST",
-            body: {
-                email: signUpEmail.value, // Assuming loginEmail is a reactive ref
-                otp: registerOTP.value
-            },
+
+        // Make the API request using the Axios instance
+        const response = await $axios.post('/verify-signup-otp', {
+            email: signUpEmail.value, // Assuming signUpEmail is a reactive ref
+            otp: registerOTP.value,
         });
-        console.log(response);
-        if (response.success) {
+
+        console.log(response.data); // Log the response data
+
+        // Check the response for success
+        if (response.data.success) {
             signUpOtpIsVerified.value = true;
-            console.log(response);
+            console.log(response.data);
+
+            // Set the auth token in the cookie
             const authCookie = useCookie('authToken');
-            authCookie.value = response.token; // Set the token in the cookie
+            authCookie.value = response.data.token; // Set the token in the cookie
             authUserToken.value = authCookie.value;
+
+            // Store user data as a string
             const userCookie = useCookie('userData');
-            userCookie.value = JSON.stringify(response.user); // Store user data as a string
+            userCookie.value = JSON.stringify(response.data.user);
             authUserData.value = userCookie.value ? JSON.parse(userCookie.value) : null;
         } else {
-            inValidOtpMsg.value = response.message;
+            inValidOtpMsg.value = response.data.message;
             isInvalidOtp.value = true;
         }
-    } catch (e) {
-        console.log(e);
-        // if(e.data.errors.email){
-        //     signupEmailErrorMsg.value = e.data.errors.email[0];
-        //     signupPhoneErrorMsg.value = e.data.errors.phone[0];
-        // }
+    } catch (error) {
+        console.error('Error verifying signup OTP:', error); // Log the error for debugging
+        // Optionally handle error messages from the server
+        if (error.response && error.response.data) {
+            console.error('API Error:', error.response.data.errors || error.response.data.message);
+            if (error.response.data.errors.email) {
+                signupEmailErrorMsg.value = error.response.data.errors.email[0];
+            }
+            if (error.response.data.errors.phone) {
+                signupPhoneErrorMsg.value = error.response.data.errors.phone[0];
+            }
+        }
     }
 };
 
@@ -241,23 +219,18 @@ function logout() {
     useRouter().push('/'); // Redirect to the login page
 }
 
-const isValidName = (name) => {
-    const nameRegex = /^[a-zA-Z\s'-]{2,50}$/;
-    return nameRegex.test(name);
+const validators = {
+    name: /^[a-zA-Z\s'-]{2,50}$/,
+    email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+    phone: /^\d{10}$/,
 };
 
-const isValidEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-};
-
-const isValidPhone = (phone) => {
-    const phoneRegex = /^\d{10}$/;
-    return phoneRegex.test(phone);
-};
+const isValidName = (name) => validators.name.test(name);
+const isValidEmail = (email) => validators.email.test(email);
+const isValidPhone = (phone) => validators.phone.test(phone);
 
 const registerOtpModal = debounce(async () => {
-
+    // Validate inputs
     if (!signUpEmail.value) {
         signupEmailErrorMsg.value = "Email is required";
         return;
@@ -270,7 +243,7 @@ const registerOtpModal = debounce(async () => {
         signupNameErrorMsg.value = "Name is required";
         return;
     } else if (!isValidName(signUpName.value)) {
-        signupNameErrorMsg.value = "Please enter valid name";
+        signupNameErrorMsg.value = "Please enter a valid name";
         return;
     }
 
@@ -278,45 +251,101 @@ const registerOtpModal = debounce(async () => {
         signupPhoneErrorMsg.value = "Phone is required";
         return;
     } else if (!isValidPhone(signUpNumber.value)) {
-        signupPhoneErrorMsg.value = "Please enter 10 digit mobile number";
+        signupPhoneErrorMsg.value = "Please enter a 10-digit mobile number";
         return;
     }
 
     try {
+        // Reset error messages
         signupNameErrorMsg.value = "";
         signupPhoneErrorMsg.value = "";
         signupEmailErrorMsg.value = "";
-        const response = await $fetch('http://localhost:8000/api/send-signup-otp', {
-            method: "POST",
-            body: {
-                name: signUpName.value,
-                email: signUpEmail.value,
-                phone: signUpNumber.value,
-                role: 'student'
-            }
-        })
-        if (response.success) {
-            if (response.otp_expiration_time >= 120) {
+
+        // Make the API request using the Axios instance
+        const response = await $axios.post('/send-signup-otp', {
+            name: signUpName.value,
+            email: signUpEmail.value,
+            phone: signUpNumber.value,
+            role: 'student',
+        });
+
+        console.log(response.data); // Log the response data
+
+        // Check the response for success
+        if (response.data.success) {
+            if (response.data.otp_expiration_time >= 120) {
                 expirationTime.value = 120;
                 startCountdown(expirationTime.value);
             }
             signUpIsOpen.value = false;
             signUpOtpModalIsOpen.value = true;
         } else {
-            signupEmailErrorMsg.value = response.message;
+            signupEmailErrorMsg.value = response.data.message;
         }
-    } catch (e) {
-        console.log(e.data.errors);
-        if (e.data.errors.email) {
-            signupEmailErrorMsg.value = e.data.errors.email[0];
-            signupPhoneErrorMsg.value = e.data.errors.phone[0];
+    } catch (error) {
+        console.error('Error sending signup OTP:', error); // Log the error for debugging
+
+        // Handle specific error messages if available
+        if (error.response && error.response.data) {
+            console.error('API Error:', error.response.data.errors || error.response.data.message);
+            if (error.response.data.errors.email) {
+                signupEmailErrorMsg.value = error.response.data.errors.email[0];
+            }
+            if (error.response.data.errors.phone) {
+                signupPhoneErrorMsg.value = error.response.data.errors.phone[0];
+            }
         }
     }
-
 }, 300);
 
+const loginOtpModal = debounce(async () => {
+    // Input validation
+    if (!loginEmail.value) {
+        loginEmailErrorMsg.value = "Email is required";
+        return;
+    } else if (!isValidEmail(loginEmail.value)) {
+        loginEmailErrorMsg.value = "Please enter a valid email";
+        return;
+    }
+
+    // Reset state variables
+    countdown.value = 0;
+    loginOTP.value = "";
+    inValidOtpMsg.value = "";
+    isInvalidOtp.value = false;
+    loginEmailErrorMsg.value = "";
+
+    try {
+
+        const response = await $axios.post('/send-login-otp', {
+            email: loginEmail.value,
+        });
+
+        // Handle the response
+        if (response.data.success) {
+            if (response.data.otp_expiration_time >= 120) {
+                expirationTime.value = 120;
+                startCountdown(expirationTime.value);
+            }
+            loginIsOpen.value = false;
+            loginOtpModalIsOpen.value = true;
+        } else {
+            loginEmailErrorMsg.value = response.data.message;
+        }
+    } catch (e) {
+        // Handle errors
+        console.log(e.response?.data.errors);
+        if (e.response?.data.errors?.email) {
+            loginEmailErrorMsg.value = e.response.data.errors.email[0];
+        } else {
+            loginEmailErrorMsg.value = "An unknown error occurred. Please try again.";
+        }
+    }
+}, 300); // Adjust debounce delay as needed
+
+
 const loginOtpVerified = async () => {
-    await verify_otp();
+    await verify_login_otp();
 }
 
 const registerOtpVerified = async () => {
@@ -670,6 +699,7 @@ p.user_login_card_email {
     font-size: 25px;
     font-weight: 800;
     margin-right: 5px;
+    padding: 9px 15px;
 }
 
 .user_login_card_pos {
