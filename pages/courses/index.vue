@@ -28,6 +28,10 @@ const openClassFilterModal = () => {
 
 const filterOptions = ref([
     { id: 1, title: 'CBSE' }, { id: 2, title: 'NIOS' }, { id: 3, title: 'IB' }, { id: 4, title: 'CIE' }, { id: 5, title: 'HPBSE' }, { id: 6, title: 'MPBSE' }, { id: 7, title: 'aPBSE' }, { id: 8, title: 'BSEB' }, { id: 9, title: 'wBBSE' }, { id: 10, title: 'UPSC' },
+]);
+
+const allClasses = ref([
+    { id: 1, title: '1' }, { id: 2, title: '2' }, { id: 3, title: '3' }, { id: 4, title: '4' }, { id: 5, title: '5' }, { id: 6, title: '6' }, { id: 7, title: '7' }, { id: 8, title: '8' }, { id: 9, title: '9' }, { id: 10, title: '10' }, { id: 11, title: '11' }, { id: 12, title: '12' },
 ])
 </script>
 
@@ -49,116 +53,177 @@ const filterOptions = ref([
         </VContainer>
         <div class="courses_section_two">
             <div class="wrapper">
-                <div class="col-md-3">
-                    <VCard class="course_filter_card">
-                        <VCardTitle class="course_filter_card_title">
-                            <div class="course_filter_div">
-                                <img class="course_filter_img" src="/images/filter.png" />
-                                <h1 class="course_filter_h">Filters</h1>
-                            </div>
-                            <button class="course_filter_btn">Clear all</button>
-                        </VCardTitle>
-                        <VCardText class="course_filter_card_text">
-                            <UAccordion class="course_filter_accord" :items="items">
-                                <template #categories>
-                                    <v-radio-group v-model="selectedCategory">
-                                        <VRadio class="crse_cat" value="academic" label="academic courses" />
-                                    </v-radio-group>
-                                    <UAccordion v-if="selectedCategory == 'academic'" class="acadameic_accord"
-                                        :items="academicData">
-                                        <template #board>
-                                            <VCheckbox class="filter_checkbox" v-model="selectedBoard" value="CBSE"
-                                                label="CBSE" />
-                                            <VCheckbox class="filter_checkbox" v-model="selectedBoard" value="ICSE"
-                                                label="ICSE" />
-                                            <p @click="openBoardFilterModal" class="acadameic_accord_see_more">See More...
-                                            </p>
-                                        </template>
-                                        <template #classes>
-                                            <VCheckbox class="filter_checkbox" v-model="selectedClass" value="Class 1"
-                                                label="CBSE" />
-                                            <VCheckbox class="filter_checkbox" v-model="selectedClass" value="Class 2"
-                                                label="ICSE" />
-                                            <p @click="openClassFilterModal" class="acadameic_accord_see_more">See More...
-                                            </p>
-                                        </template>
-                                    </UAccordion>
-                                    <v-radio-group v-model="selectedCategory">
-                                        <VRadio class="crse_cat" value="skills" label="grow skills courses" />
-                                    </v-radio-group>
-                                    <v-radio-group v-model="selectedCategory">
-                                        <VRadio class="crse_cat" value="competitive" label="competitive exam courses" />
-                                    </v-radio-group>
-                                </template>
-                                <template #price></template>
-                                <template #ratings></template>
-                                <template #videoDuration></template>
-                            </UAccordion>
-                        </VCardText>
-                    </VCard>
-                    <v-dialog persistent class="filter_dialog" v-model="filterModalIsOpen">
-                        <VCard class="filter_dialog_card">
-                            <img @click="filterModalIsOpen = false" class="filter_dialog_canel_img" src="/images/modal_cancel.png" />
-                            <VCardTitle class="filter_card_title">
-                                <div class="filter_card_title_div">
-                                    <h1 class="filter_card_title_h">academic courses / board</h1>
+                <div class="row">
+                    <div class="col-md-3">
+                        <VCard class="course_filter_card">
+                            <VCardTitle class="course_filter_card_title">
+                                <div class="course_filter_div">
+                                    <img class="course_filter_img" src="/images/filter.png" />
+                                    <h1 class="course_filter_h">Filters</h1>
                                 </div>
+                                <button class="course_filter_btn">Clear all</button>
                             </VCardTitle>
-                            <VCardText class="filter_card_text">
-                                <div class="filter_card_text_div">
-                                    <div class="checkbox_div">
-                                        <!-- <label class="filter_chekbox_label">CBSE
+                            <VCardText class="course_filter_card_text">
+                                <UAccordion multiple class="course_filter_accord" :items="items">
+                                    <template #categories>
+                                        <v-radio-group class="radio_group" v-model="selectedCategory">
+                                            <VRadio class="crse_cat" value="academic" label="academic courses" />
+                                        </v-radio-group>
+                                        <UAccordion multiple v-if="selectedCategory == 'academic'" class="acadameic_accord" id="acadAccord"
+                                            :items="academicData">
+                                            <template #board>
+                                                <VCheckbox class="filter_checkbox" v-model="selectedBoard" value="CBSE"
+                                                    label="CBSE" />
+                                                <VCheckbox class="filter_checkbox" v-model="selectedBoard" value="ICSE"
+                                                    label="ICSE" />
+                                                <p @click="openBoardFilterModal" class="acadameic_accord_see_more">See
+                                                    More...
+                                                </p>
+                                            </template>
+                                            <template #classes>
+                                                <VCheckbox class="filter_checkbox" v-model="selectedClass"
+                                                    value="Class 1" label="Class 1" />
+                                                <VCheckbox class="filter_checkbox" v-model="selectedClass"
+                                                    value="Class 2" label="Class 2" />
+                                                <p @click="openClassFilterModal" class="acadameic_accord_see_more">See
+                                                    More...
+                                                </p>
+                                            </template>
+                                        </UAccordion>
+
+                                        <v-radio-group class="radio_group" v-model="selectedCategory">
+                                            <VRadio class="crse_cat" value="skills" label="grow skills courses" />
+                                        </v-radio-group>
+                                        <UAccordion multiple v-if="selectedCategory == 'skills'" class="acadameic_accord"
+                                            :items="academicData">
+                                            <template #board>
+                                                <VCheckbox class="filter_checkbox" v-model="selectedBoard" value="CBSE"
+                                                    label="CBSE" />
+                                                <VCheckbox class="filter_checkbox" v-model="selectedBoard" value="ICSE"
+                                                    label="ICSE" />
+                                                <p @click="openBoardFilterModal" class="acadameic_accord_see_more">See
+                                                    More...
+                                                </p>
+                                            </template>
+                                            <template #classes>
+                                                <VCheckbox class="filter_checkbox" v-model="selectedClass"
+                                                    value="Class 1" label="Class 1" />
+                                                <VCheckbox class="filter_checkbox" v-model="selectedClass"
+                                                    value="Class 2" label="Class 2" />
+                                                <p @click="openClassFilterModal" class="acadameic_accord_see_more">See
+                                                    More...
+                                                </p>
+                                            </template>
+                                        </UAccordion>
+
+                                        <v-radio-group class="radio_group" v-model="selectedCategory">
+                                            <VRadio class="crse_cat" value="competitive"
+                                                label="competitive exam courses" />
+                                        </v-radio-group>
+                                        <UAccordion multiple v-if="selectedCategory == 'competitive'" class="acadameic_accord"
+                                            :items="academicData">
+                                            <template #board>
+                                                <VCheckbox class="filter_checkbox" v-model="selectedBoard" value="CBSE"
+                                                    label="CBSE" />
+                                                <VCheckbox class="filter_checkbox" v-model="selectedBoard" value="ICSE"
+                                                    label="ICSE" />
+                                                <p @click="openBoardFilterModal" class="acadameic_accord_see_more">See
+                                                    More...
+                                                </p>
+                                            </template>
+                                            <template #classes>
+                                                <VCheckbox class="filter_checkbox" v-model="selectedClass"
+                                                    value="Class 1" label="Class 1" />
+                                                <VCheckbox class="filter_checkbox" v-model="selectedClass"
+                                                    value="Class 2" label="Class 2" />
+                                                <p @click="openClassFilterModal" class="acadameic_accord_see_more">See
+                                                    More...
+                                                </p>
+                                            </template>
+                                        </UAccordion>
+                                    </template>
+                                    <template #price></template>
+                                    <template #ratings></template>
+                                    <template #videoDuration></template>
+                                </UAccordion>
+                            </VCardText>
+                        </VCard>
+                        <v-dialog persistent class="filter_dialog course_dialog_card" v-model="filterModalIsOpen">
+                            <VCard class="filter_dialog_card">
+                                <img @click="filterModalIsOpen = false" class="filter_dialog_canel_img"
+                                    src="/images/modal_cancel.png" />
+                                <VCardTitle class="filter_card_title">
+                                    <div class="filter_card_title_div">
+                                        <h1 class="filter_card_title_h">academic courses / board</h1>
+                                    </div>
+                                </VCardTitle>
+                                <VCardText class="filter_card_text">
+                                    <div class="filter_card_text_div">
+                                        <div class="checkbox_div">
+                                            <!-- <label class="filter_chekbox_label">CBSE
                                             <input class="filter_chekbox" type="checkbox" />
                                             <span class="filter_checkmark"></span>
                                         </label> -->
-                                        <div v-for="(item, index) in filterOptions" :key="item.id" class="d-flex">
-                                            <div class="filter_chekbox_label">
-                                                <label>
-                                                    <input class="filter_chekbox" type="checkbox" />
-                                                    <span class="filter_checkmark"></span>
-                                                </label>
+                                            <div v-for="(item, index) in filterOptions" :key="item.id" class="d-flex">
+                                                <div class="filter_chekbox_label">
+                                                    <label>
+                                                        <input class="filter_chekbox" type="checkbox" />
+                                                        <span class="filter_checkmark"></span>
+                                                    </label>
+                                                </div>
+                                                <label class="filter_chekbox_text">{{ item.title }}</label>
                                             </div>
-                                            <label class="filter_chekbox_text">{{ item.title }}</label>
                                         </div>
                                     </div>
-                                </div>
-                            </VCardText>
-                        </VCard>
-                    </v-dialog>
+                                </VCardText>
+                            </VCard>
+                        </v-dialog>
 
-                    <v-dialog v-model="totalClassModalIsOpen">
-                        <VCard class="filter_dialog_card">
-                            <img @click="totalClassModalIsOpen = false" class="filter_dialog_canel_img" src="/images/modal_cancel.png" />
-                            <VCardTitle class="filter_card_title">
-                                <div class="filter_card_title_div">
-                                    <h1 class="filter_card_title_h">academic courses / board</h1>
-                                </div>
-                            </VCardTitle>
-                            <VCardText class="filter_card_text">
-                                <div class="filter_card_text_div">
-                                    <div class="checkbox_div">
-                                        <div v-for="(item, index) in filterOptions" :key="item.id" class="d-flex">
-                                            <div class="filter_chekbox_label">
-                                                <label>
-                                                    <input class="filter_chekbox" type="checkbox" />
-                                                    <span class="filter_checkmark"></span>
-                                                </label>
+                        <v-dialog class="course_dialog_card" v-model="totalClassModalIsOpen">
+                            <VCard class="filter_dialog_card">
+                                <img @click="totalClassModalIsOpen = false" class="filter_dialog_canel_img"
+                                    src="/images/modal_cancel.png" />
+                                <VCardTitle class="filter_card_title">
+                                    <div class="filter_card_title_div">
+                                        <h1 class="filter_card_title_h">academic courses / class</h1>
+                                    </div>
+                                </VCardTitle>
+                                <VCardText class="filter_card_text">
+                                    <div class="filter_card_text_div">
+                                        <div class="checkbox_div">
+                                            <div v-for="(item, index) in allClasses" :key="item.id" class="d-flex">
+                                                <div class="filter_chekbox_label">
+                                                    <label>
+                                                        <input class="filter_chekbox" type="checkbox" />
+                                                        <span class="filter_checkmark"></span>
+                                                    </label>
+                                                </div>
+                                                <label class="filter_chekbox_text">Class {{ item.title }}</label>
                                             </div>
-                                            <label class="filter_chekbox_text">{{ item.title }}</label>
                                         </div>
                                     </div>
-                                </div>
-                            </VCardText>
-                        </VCard>
-                    </v-dialog>
+                                </VCardText>
+                            </VCard>
+                        </v-dialog>
+                    </div>
+                    <div class="col-md-9 d-flex flex-wrap total_course_gap justify-between">
+                        <TotalCourses />
+                    </div>
                 </div>
-                <div class="col-md-9"></div>
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
+.total_course_gap {
+    row-gap: 40px;
+}
+.filter_checkbox {
+    height: unset !important;
+    --v-input-control-height: unset !important;
+}
+
 .filter_dialog_canel_img {
     position: absolute;
     width: 30px;
@@ -170,6 +235,7 @@ const filterOptions = ref([
 .filter_dialog_canel_img:hover {
     cursor: pointer;
 }
+
 label.filter_chekbox_text {
     font-size: 16px;
     font-weight: 600;
@@ -280,13 +346,7 @@ p.acadameic_accord_see_more:hover {
     cursor: pointer;
 }
 
-.acadameic_accord {
-    padding: 5px 10px 5px 24px;
-    background: #fff;
-    border-radius: 4px;
-    border-bottom: 0.5px solid #757373;
-    border-top: none
-}
+
 
 .course_filter_card_text {
     padding: 0;

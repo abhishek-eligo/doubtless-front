@@ -1265,7 +1265,7 @@ p.signUp_text {
     color: #F87126;
 }
 
-.course_filter_accord .w-full.flex.flex-col button div.text-sm .v-input .v-input__details {
+.course_filter_accord .acadameic_accord .v-input__details {
     display: none !important;
 }
 
@@ -1282,5 +1282,76 @@ p.signUp_text {
     opacity: unset;
 }
 
+.course_dialog_card .v-overlay__content {
+    justify-content: center;
+    align-items: center;
+}
+
+.radio_group .v-input__details {
+    display: none;
+}
+
+#acadAccord div .w-full.flex.flex-col[data-headlessui-state="open"] {
+    padding: 5px 10px 5px 24px;
+    background: #fff;
+    border-radius: 4px;
+    border-bottom: 0.5px solid #757373;
+    border-top: none
+}
+
 
 /* COURSES PAGE END */
+
+
+/* MY LEARNING PAGE */
+
+.mylearn_page {
+    padding: 30px 0 100px 0;
+}
+
+.myLearn_user_tabs {
+    overflow: unset !important;
+    height: 0 !important;
+}
+
+.myLearn_user_tabs .v-slide-group__container {
+    overflow: unset !important;
+    contain: unset !important;
+}
+
+.myLearn_user_tabs .v-slide-group__content {
+    display: grid;
+}
+
+.myLearn_user_tabs .v-slide-group__content button span.v-btn__content {
+    color: #000 !important;
+}
+
+.course_progress_bar {
+    border-radius: 0 !important;
+}
+
+.course_progress_bar progress {
+    color: #F87126 !important;
+    border-radius: 0 !important;
+}
+
+.progres_report_rating_star i::before {
+    color: #D39102;
+}
+
+.myLearn_user_tabs .v-slide-group__content button {
+    padding: 0 !important;
+    display: flex;
+    justify-content: start;
+    border-top: 1px solid #F8712650;
+    border-radius: 4px !important;
+    /* background: linear-gradient(90deg, rgba(248, 113, 38, 100%) 48%, rgba(247, 135, 74, 50.63%) 88%, rgba(245, 157, 104, 7) 94%); */
+}
+
+.myLearn_user_tab span.v-btn__content .v-tab__slider {
+    display: none;
+}
+
+
+/* MY LEARNING PAGE END */

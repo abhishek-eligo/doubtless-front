@@ -21,6 +21,7 @@ const signupEmailErrorMsg = ref('');
 const signupPhoneErrorMsg = ref('');
 const signupNameErrorMsg = ref('');
 const loginOTP = ref();
+const userLoginCard = ref(false);
 
 watch([authUserToken, authUserData], ([newToken, newData]) => {
     if (newToken === null && newData === null) {
@@ -29,6 +30,10 @@ watch([authUserToken, authUserData], ([newToken, newData]) => {
         console.log("User is authenticated.");
     }
 });
+
+const openLoginCard = () => {
+    userLoginCard.value = !userLoginCard.value;
+}
 
 const studentLogin = () => {
     isOpen.value = true;
@@ -146,6 +151,7 @@ const goToDashboard = () => {
 }
 
 function logout() {
+    userLoginCard.value = false;
     const tokenCookie = useCookie('authToken'); // Access the token cookie
     const userCookie = useCookie('userData'); // Access the user data cookie
 
@@ -310,13 +316,28 @@ const closeChoiceModal = () => {
                             </ul>
                         </div>
                     </div>
-                    <div class="col-md-2 d-flex align-center justify-content-end">
+                    <div class="col-md-2 d-flex user_login_card_pos align-center justify-content-end">
                         <nuxt-link to="/cart">
                             <img class="cart_img" src="../public/images/cart.png" />
                         </nuxt-link>
                         <button @click="studentLogin" class="hdr_btn"
                             v-if="authUserToken === null || authUserData === null">Login now</button>
-                        <button @click="logout" class="hdr_btn" v-else>Logout</button>
+                        <!-- <button @click="logout" class="hdr_btn" v-else>Logout</button> -->
+                        <img @click="openLoginCard" class="user_logo" v-else src="/images/user.png" />
+                        <VCard v-if="userLoginCard == true" class="user_login_card">
+                            <VCardTitle class="user_login_card_title d-flex align-center">
+                                <h5>R</h5>
+                                <div>
+                                    <p class="user_login_card_name">Rahul Rajta</p>
+                                    <p class="user_login_card_email">{{ loginEmail }}</p>
+                                </div>
+                            </VCardTitle>
+                            <VCardText class="user_login_card_text">
+                                <p class="user_login_card_p user_login_card_p_mb">My learning</p>
+                                <p class="user_login_card_p user_login_card_p_mb">Help and support</p>
+                                <p @click="logout" class="user_login_card_p">Logout</p>
+                            </VCardText>
+                        </VCard>
                     </div>
                 </div>
             </div>
@@ -486,6 +507,61 @@ const closeChoiceModal = () => {
 </template>
 
 <style scoped>
+.user_login_card_p_mb {
+    margin-bottom: 10px !important;
+}
+p.user_login_card_p {
+    font-size: 14px;
+    font-weight: 500;
+    color: #676666;
+}
+p.user_login_card_p:hover {
+    cursor: pointer;
+}
+p.user_login_card_name {
+    font-size: 18px;
+    font-weight: 600;
+    color: #000;
+}
+
+p.user_login_card_email {
+    font-size: 14px;
+    font-weight: 500;
+    color: #757373;
+}
+
+.user_login_card_text {
+    padding: 0;
+}
+.user_login_card {
+    width: 243px;
+    position: absolute;
+    top: 47px;
+    right: -32px;
+    box-shadow: 0 4px 9px #00000010;
+    padding: 10px 15px 30px 15px;
+}
+
+.user_login_card_title {
+    padding: 10px 0;
+    border-bottom: 1px solid #75737330;
+    margin-bottom: 10px;
+}
+
+.user_login_card_title h5 {
+    margin: 0;
+    width: 50px;
+    height: 50px;
+    border: 1px solid #F87126;
+    border-radius: 50%;
+    font-size: 25px;
+    font-weight: 800;
+    margin-right: 5px;
+    padding: 9px 15px;
+}
+.user_login_card_pos {
+    position: relative;
+}
 .otp_resend:hover {
     cursor: pointer;
 }
