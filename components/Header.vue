@@ -1,18 +1,22 @@
 <script setup>
+const { $axios, $retryRequest } = useNuxtApp();
 let authUserToken = ref(null);
 let authUserData = ref(null);
-const isOpen = ref(false);
+const choiceModal = ref(false);
 const loginIsOpen = ref(false);
 const signUpIsOpen = ref(false);
 const loginEmail = ref('');
-const OtpModalIsOpen = ref(false);
+const loginOtpModalIsOpen = ref(false);
+const inValidOtpMsg = ref('');
+const isInvalidOtp = ref(false);
+const isOtpFourDigit = ref(false);
 
 const signUpName = ref('');
-const signUpNumber = ref();
+const signUpNumber = ref('');
 const signUpEmail = ref('');
-const signUpOtp = ref(false);
-const otpIsVerified = ref(false);
-const signUpOtpVerified = ref(false);
+const signUpOtpModalIsOpen = ref(false);
+const loginOtpIsVerified = ref(false);
+const signUpOtpIsVerified = ref(false);
 const expirationTime = ref(0); // This will hold the remaining time in seconds
 const countdown = ref(0); // This will display the countdown
 let countdownInterval = null; // To store the interval ID
@@ -21,7 +25,9 @@ const signupEmailErrorMsg = ref('');
 const signupPhoneErrorMsg = ref('');
 const signupNameErrorMsg = ref('');
 const loginOTP = ref();
+const registerOTP = ref();
 const userLoginCard = ref(false);
+
 
 watch([authUserToken, authUserData], ([newToken, newData]) => {
     if (newToken === null && newData === null) {
@@ -31,26 +37,33 @@ watch([authUserToken, authUserData], ([newToken, newData]) => {
     }
 });
 
+watch(loginOTP, (newOTP) => {
+    //console.log("loginOTP", newOTP.length == 4);
+    isOtpFourDigit.value = newOTP.length == 4;  // Show error if OTP is not exactly 4 digits
+});
+
+watch(registerOTP, (newOTP) => {
+    //console.log("registerOTP", newOTP.length == 4);
+    isOtpFourDigit.value = newOTP.length == 4;  // Show error if OTP is not exactly 4 digits
+});
+
+const openStudentLoginModal = () => {
+    loginOtpIsVerified.value = false;
+    loginIsOpen.value = true;
+    choiceModal.value = false;
+}
+
 const openLoginCard = () => {
     userLoginCard.value = !userLoginCard.value;
 }
 
-const studentLogin = () => {
-    isOpen.value = true;
+const openChoiceModal = () => {
+    choiceModal.value = true;
 }
 
-const openLoginModal = () => {
-    loginIsOpen.value = true;
-    isOpen.value = false;
-}
-
-const signUpOne = () => {
+const openSignUp = () => {
+    signUpOtpIsVerified.value = false;
     loginIsOpen.value = false;
-    signUpIsOpen.value = true;
-}
-
-const signUpTwo = () => {
-    OtpModalIsOpen.value = false;
     signUpIsOpen.value = true;
 }
 
@@ -63,38 +76,6 @@ const debounce = (func, delay) => {
         }, delay);
     };
 }
-
-const loginOtpModal = debounce(async () => {
-    if (!loginEmail.value) {
-        loginEmailErrorMsg.value = "Email is required";
-        return;
-    } else if (!isValidEmail(loginEmail.value)) {
-        loginEmailErrorMsg.value = "Please enter a valid email";
-        return;
-    }
-
-    try {
-        const response = await $fetch('http://localhost:8000/api/send-login-otp', {
-            method: "POST",
-            body: {
-                email: loginEmail.value,
-            },
-        });
-        if (response.success) {
-            if (response.otp_expiration_time >= 120) {
-                expirationTime.value = 120;
-                startCountdown(expirationTime.value);
-            }
-            loginIsOpen.value = false;
-            OtpModalIsOpen.value = true;
-        } else {
-            loginEmailErrorMsg.value = response.message;
-        }
-    } catch (error) {
-        console.log(error.message);
-    }
-}, 300); // Adjust delay as needed
-
 
 const startCountdown = (seconds) => {
     countdown.value = seconds; // Initialize countdown
@@ -113,45 +94,120 @@ onBeforeUnmount(() => {
     }
 });
 
-const verify_otp = async () => {
+const verify_login_otp = async () => {
     try {
-        const response = await $fetch('http://localhost:8000/api/verify-login-otp', {
-            method: "POST",
-            body: {
-                email: loginEmail.value, // Assuming loginEmail is a reactive ref
-                otp: loginOTP.value
-            },
+        // Reset state messages
+        inValidOtpMsg.value = "";
+        isInvalidOtp.value = false;
+        loginOtpIsVerified.value = false;
+
+        // Make the API request using the Axios instance
+        const response = await $axios.post('/verify-login-otp', {
+            email: loginEmail.value, // Assuming loginEmail is a reactive ref
+            otp: loginOTP.value,
         });
-        if (response.success) {
-            loginEmail.value = "";
-            loginOTP.value = "";
-            console.log(response);
+
+        // Check the response for success
+        if (response.data.success) {
+            loginOtpIsVerified.value = true;
+            console.log(response.data);
+
+            // Set the auth token in the cookie
             const authCookie = useCookie('authToken');
-            authCookie.value = response.token; // Set the token in the cookie
+            authCookie.value = response.data.token; // Set the token in the cookie
             authUserToken.value = authCookie.value;
+
+            // Store user data as a string
             const userCookie = useCookie('userData');
-            userCookie.value = JSON.stringify(response.user); // Store user data as a string
+            userCookie.value = JSON.stringify(response.data.user);
             authUserData.value = userCookie.value ? JSON.parse(userCookie.value) : null;
-            otpIsVerified.value = true;
+        } else {
+            inValidOtpMsg.value = response.data.message;
+            isInvalidOtp.value = true;
         }
     } catch (error) {
-        console.log(error); // Handle API errors if they exist
-        // if (error.data && error.data.errors) {
-        //     console.log(error.data.errors); 
-        // } else {
-        //     console.log(error.message || "An unknown error occurred"); 
-        // }
+        console.error('Error verifying OTP:', error); // Log the error for debugging
+        // Optionally handle error messages from the server
+        if (error.response && error.response.data) {
+            console.error('API Error:', error.response.data.errors || error.response.data.message);
+        }
+    }
+};
+
+const verify_signup_otp = async () => {
+    try {
+        // Reset state messages
+        inValidOtpMsg.value = "";
+        isInvalidOtp.value = false;
+        signupEmailErrorMsg.value = "";
+        signupPhoneErrorMsg.value = "";
+
+        // Make the API request using the Axios instance
+        const response = await $axios.post('/verify-signup-otp', {
+            email: signUpEmail.value, // Assuming signUpEmail is a reactive ref
+            otp: registerOTP.value,
+        });
+
+        console.log(response.data); // Log the response data
+
+        // Check the response for success
+        if (response.data.success) {
+            signUpOtpIsVerified.value = true;
+            console.log(response.data);
+
+            // Set the auth token in the cookie
+            const authCookie = useCookie('authToken');
+            authCookie.value = response.data.token; // Set the token in the cookie
+            authUserToken.value = authCookie.value;
+
+            // Store user data as a string
+            const userCookie = useCookie('userData');
+            userCookie.value = JSON.stringify(response.data.user);
+            authUserData.value = userCookie.value ? JSON.parse(userCookie.value) : null;
+        } else {
+            inValidOtpMsg.value = response.data.message;
+            isInvalidOtp.value = true;
+        }
+    } catch (error) {
+        console.error('Error verifying signup OTP:', error); // Log the error for debugging
+        // Optionally handle error messages from the server
+        if (error.response && error.response.data) {
+            console.error('API Error:', error.response.data.errors || error.response.data.message);
+            if (error.response.data.errors.email) {
+                signupEmailErrorMsg.value = error.response.data.errors.email[0];
+            }
+            if (error.response.data.errors.phone) {
+                signupPhoneErrorMsg.value = error.response.data.errors.phone[0];
+            }
+        }
     }
 };
 
 const goToDashboard = () => {
     console.log("Go To Dashboard");
-    OtpModalIsOpen.value = false;
-    useRouter().push('/');
+
+    if (loginOtpIsVerified) {
+        loginOtpModalIsOpen.value = false;
+        loginEmail.value = "";
+        loginEmailErrorMsg.value = "";
+        loginOTP.value = "";
+        useRouter().push('/');
+    }
+
+    if (signUpOtpIsVerified) {
+        signUpOtpModalIsOpen.value = false;
+        signUpEmail.value = "";
+        signUpNumber.value = "";
+        signUpName.value = "";
+        signupNameErrorMsg.value = "";
+        signupEmailErrorMsg.value = "";
+        signupPhoneErrorMsg.value = "";
+        registerOTP.value = "";
+        useRouter().push('/');
+    }
 }
 
 function logout() {
-    userLoginCard.value = false;
     const tokenCookie = useCookie('authToken'); // Access the token cookie
     const userCookie = useCookie('userData'); // Access the user data cookie
 
@@ -159,26 +215,22 @@ function logout() {
     userCookie.value = null; // Clear the user data from the cookie
     authUserToken.value = null;
     authUserData.value = null;
+    userLoginCard.value = false;
     useRouter().push('/'); // Redirect to the login page
 }
 
-const isValidName = (name) => {
-    const nameRegex = /^[a-zA-Z\s'-]{2,50}$/;
-    return nameRegex.test(name);
+const validators = {
+    name: /^[a-zA-Z\s'-]{2,50}$/,
+    email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+    phone: /^\d{10}$/,
 };
 
-const isValidEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-};
-
-const isValidPhone = (phone) => {
-    const phoneRegex = /^\d{10}$/;
-    return phoneRegex.test(phone);
-};
+const isValidName = (name) => validators.name.test(name);
+const isValidEmail = (email) => validators.email.test(email);
+const isValidPhone = (phone) => validators.phone.test(phone);
 
 const registerOtpModal = debounce(async () => {
-
+    // Validate inputs
     if (!signUpEmail.value) {
         signupEmailErrorMsg.value = "Email is required";
         return;
@@ -191,7 +243,7 @@ const registerOtpModal = debounce(async () => {
         signupNameErrorMsg.value = "Name is required";
         return;
     } else if (!isValidName(signUpName.value)) {
-        signupNameErrorMsg.value = "Please enter valid name";
+        signupNameErrorMsg.value = "Please enter a valid name";
         return;
     }
 
@@ -199,42 +251,105 @@ const registerOtpModal = debounce(async () => {
         signupPhoneErrorMsg.value = "Phone is required";
         return;
     } else if (!isValidPhone(signUpNumber.value)) {
-        signupPhoneErrorMsg.value = "Please enter 10 digit mobile number";
+        signupPhoneErrorMsg.value = "Please enter a 10-digit mobile number";
         return;
     }
 
     try {
-        const result = await $fetch('http://localhost:8000/api/send-signup-otp', {
-            method: "POST",
-            body: {
-                name: signUpName.value,
-                email: signUpEmail.value,
-                phone: signUpNumber.value,
-                role: 'student'
-            }
-        })
-        if (response.success) {
-            if (response.otp_expiration_time >= 120) {
+        // Reset error messages
+        signupNameErrorMsg.value = "";
+        signupPhoneErrorMsg.value = "";
+        signupEmailErrorMsg.value = "";
+
+        // Make the API request using the Axios instance
+        const response = await $axios.post('/send-signup-otp', {
+            name: signUpName.value,
+            email: signUpEmail.value,
+            phone: signUpNumber.value,
+            role: 'student',
+        });
+
+        console.log(response.data); // Log the response data
+
+        // Check the response for success
+        if (response.data.success) {
+            if (response.data.otp_expiration_time >= 120) {
                 expirationTime.value = 120;
                 startCountdown(expirationTime.value);
             }
             signUpIsOpen.value = false;
-            signUpOtp.value = true;
+            signUpOtpModalIsOpen.value = true;
         } else {
-            signupEmailErrorMsg.value = response.message;
+            signupEmailErrorMsg.value = response.data.message;
         }
-    } catch (e) {
-        console.log(e.data.errors);
-    }
+    } catch (error) {
+        console.error('Error sending signup OTP:', error); // Log the error for debugging
 
+        // Handle specific error messages if available
+        if (error.response && error.response.data) {
+            console.error('API Error:', error.response.data.errors || error.response.data.message);
+            if (error.response.data.errors.email) {
+                signupEmailErrorMsg.value = error.response.data.errors.email[0];
+            }
+            if (error.response.data.errors.phone) {
+                signupPhoneErrorMsg.value = error.response.data.errors.phone[0];
+            }
+        }
+    }
 }, 300);
 
-const OtpVerified = async () => {
-    await verify_otp();
+const loginOtpModal = debounce(async () => {
+    // Input validation
+    if (!loginEmail.value) {
+        loginEmailErrorMsg.value = "Email is required";
+        return;
+    } else if (!isValidEmail(loginEmail.value)) {
+        loginEmailErrorMsg.value = "Please enter a valid email";
+        return;
+    }
+
+    // Reset state variables
+    countdown.value = 0;
+    loginOTP.value = "";
+    inValidOtpMsg.value = "";
+    isInvalidOtp.value = false;
+    loginEmailErrorMsg.value = "";
+
+    try {
+
+        const response = await $axios.post('/send-login-otp', {
+            email: loginEmail.value,
+        });
+
+        // Handle the response
+        if (response.data.success) {
+            if (response.data.otp_expiration_time >= 120) {
+                expirationTime.value = 120;
+                startCountdown(expirationTime.value);
+            }
+            loginIsOpen.value = false;
+            loginOtpModalIsOpen.value = true;
+        } else {
+            loginEmailErrorMsg.value = response.data.message;
+        }
+    } catch (e) {
+        // Handle errors
+        console.log(e.response?.data.errors);
+        if (e.response?.data.errors?.email) {
+            loginEmailErrorMsg.value = e.response.data.errors.email[0];
+        } else {
+            loginEmailErrorMsg.value = "An unknown error occurred. Please try again.";
+        }
+    }
+}, 300); // Adjust debounce delay as needed
+
+
+const loginOtpVerified = async () => {
+    await verify_login_otp();
 }
 
-const verifySignUpOtp = () => {
-    signUpOtpVerified.value = true;
+const registerOtpVerified = async () => {
+    await verify_signup_otp();
 }
 
 const signInOne = () => {
@@ -243,13 +358,25 @@ const signInOne = () => {
 }
 
 const signInTwo = () => {
-    signUpOtp.value = false;
+    signUpOtpModalIsOpen.value = false;
     loginIsOpen.value = true;
 }
 
 const closeChoiceModal = () => {
-    isOpen.value = false;
+    choiceModal.value = false;
 }
+
+onMounted(() => {
+    const tokenCookie = useCookie('authToken'); // Access the token cookie
+    const userCookie = useCookie('userData'); // Access the user data cookie
+    if (tokenCookie.value != undefined && userCookie.value != undefined) {
+        authUserToken.value = tokenCookie.value;
+        authUserData.value = userCookie.value;
+    } else {
+        authUserToken.value = null;
+        authUserData.value = null;
+    }
+});
 </script>
 
 <template>
@@ -316,20 +443,19 @@ const closeChoiceModal = () => {
                             </ul>
                         </div>
                     </div>
-                    <div class="col-md-2 d-flex user_login_card_pos align-center justify-content-end">
+                    <div class="col-md-2 d-flex align-center justify-content-end">
                         <nuxt-link to="/cart">
                             <img class="cart_img" src="../public/images/cart.png" />
                         </nuxt-link>
-                        <button @click="studentLogin" class="hdr_btn"
+                        <button @click="openChoiceModal" class="hdr_btn"
                             v-if="authUserToken === null || authUserData === null">Login now</button>
-                        <!-- <button @click="logout" class="hdr_btn" v-else>Logout</button> -->
                         <img @click="openLoginCard" class="user_logo" v-else src="/images/user.png" />
                         <VCard v-if="userLoginCard == true" class="user_login_card">
                             <VCardTitle class="user_login_card_title d-flex align-center">
-                                <h5>R</h5>
+                                <h5>{{ authUserData?.name.slice(0, 1) }}</h5>
                                 <div>
-                                    <p class="user_login_card_name">Rahul Rajta</p>
-                                    <p class="user_login_card_email">{{ loginEmail }}</p>
+                                    <p class="user_login_card_name">{{ authUserData?.name }}</p>
+                                    <p class="user_login_card_email">{{ authUserData?.email }}</p>
                                 </div>
                             </VCardTitle>
                             <VCardText class="user_login_card_text">
@@ -338,6 +464,7 @@ const closeChoiceModal = () => {
                                 <p @click="logout" class="user_login_card_p">Logout</p>
                             </VCardText>
                         </VCard>
+                        <!-- <button @click="logout" class="hdr_btn" v-else>Logout</button> -->
                     </div>
                 </div>
             </div>
@@ -345,9 +472,10 @@ const closeChoiceModal = () => {
 
         <!-- 👉 Login Modals -->
 
-        <v-dialog persistent class="loginModal" v-model="isOpen">
+        <v-dialog persistent class="loginModal" v-model="choiceModal">
             <VCard class="loginCard text_align_center">
-                <img class="modal_cancel_btn modalCancelBtn" src="/images/modal_cancel.png" @click="isOpen = false" />
+                <img class="modal_cancel_btn modalCancelBtn" src="/images/modal_cancel.png"
+                    @click="choiceModal = false" />
                 <VRow>
                     <VCol class="modal_heading" cols="12">
                         <h1 class="modal_heading_h">Welcome</h1>
@@ -356,7 +484,8 @@ const closeChoiceModal = () => {
                 </VRow>
                 <VRow>
                     <VCol class="loginBtn px-0" md="6">
-                        <UButton @click="openLoginModal" :ui="{ rounded: 'rounded-full' }">Join As <span>Student</span>
+                        <UButton @click="openStudentLoginModal" :ui="{ rounded: 'rounded-full' }">Join As
+                            <span>Student</span>
                         </UButton>
                     </VCol>
                     <VCol class="loginBtn px-0" md="6" cols="12">
@@ -389,42 +518,45 @@ const closeChoiceModal = () => {
                     </v-form>
                     <p class="loginModal_text_2">
                         Don't have an account ?
-                        <span @click="signUpOne">Sign Up</span>
+                        <span @click="openSignUp">Sign Up</span>
                     </p>
                 </VCardText>
             </VCard>
         </v-dialog>
 
-        <v-dialog persistent class="loginModal" v-model="OtpModalIsOpen">
+        <v-dialog persistent class="loginModal" v-model="loginOtpModalIsOpen">
             <VCard class="loginCard text_align_center">
                 <img class="modal_cancel_btn modalCancelBtn" src="/images/modal_cancel.png"
-                    @click="OtpModalIsOpen = false" />
+                    @click="loginOtpModalIsOpen = false" />
                 <VCardTitle class="px-0 card_title border_bottom mb-0 py-0">
                     <h1 class="modal_heading_h mb-0 modal_heading_pad">Login</h1>
                 </VCardTitle>
                 <VCardText class="px-0 py-0 otp_card_text">
-                    <VForm @submit.prevent="OtpVerified" class="otp_form">
+                    <VForm @submit.prevent="loginOtpVerified" class="otp_form">
                         <p class="enterOtpText text_align_center">Enter OTP</p>
                         <v-otp-input v-model="loginOTP" class="py-0" variant="solo" length="4"></v-otp-input>
-                        <p v-if="otpIsVerified == false && countdown > 0" class="otp_resend_time text_align_right">
+                        <p v-if="loginOtpIsVerified == false && countdown > 0" class="otp_resend_time text_align_right">
                             OTP will expire in: <span class="otp_resend_span">{{ countdown }} seconds</span>
                         </p>
-                        <p v-if="otpIsVerified == false && countdown == 0"
+                        <p v-if="loginOtpIsVerified == false && countdown == 0"
                             class="otp_resend text_align_right otp_resend_time" @click="loginOtpModal">Resend OTP</p>
-                        <VBtn v-if="otpIsVerified == false" class="login_button" variant="tonal" type="submit">Verify
-                            OTP</VBtn>
-                        <VBtn v-if="otpIsVerified == true" class="login_button" variant="tonal" @click="goToDashboard">
+                        <VBtn v-if="loginOtpIsVerified == false" class="login_button" variant="tonal" type="submit"
+                            :disabled="!isOtpFourDigit">Verify OTP</VBtn>
+                        <VBtn v-if="loginOtpIsVerified == true" class="login_button" variant="tonal"
+                            @click="goToDashboard">
                             Login</VBtn>
                     </VForm>
-                    <div v-if="otpIsVerified == true" class="d-flex align-center verify_div gap-1 justify-center">
+                    <div v-if="loginOtpIsVerified == true" class="d-flex align-center verify_div gap-1 justify-center">
                         <img class="verify_img" src="/images/Check.png" />
                         <p class="email_verify_text" style="margin-top: 0 !important;">Verified Code</p>
                     </div>
+                    <v-alert v-if="isInvalidOtp" border="top" type="error" variant="outlined" prominent>{{ inValidOtpMsg
+                        }}</v-alert>
                     <p class="loginModal_text_2">
                         Don't have an account ?
-                        <span @click="signUpTwo">Sign Up</span>
+                        <span @click="openSignUp">Sign Up</span>
                     </p>
-                    <p v-if="otpIsVerified == false" class="email_verify_text">verification code sent on <span
+                    <p v-if="loginOtpIsVerified == false" class="email_verify_text">verification code sent on <span
                             class="email_lower">{{ loginEmail }}</span></p>
                 </VCardText>
             </VCard>
@@ -460,34 +592,40 @@ const closeChoiceModal = () => {
             </VCard>
         </v-dialog>
 
-        <v-dialog persistent class="loginModal" v-model="signUpOtp">
+        <v-dialog persistent class="loginModal" v-model="signUpOtpModalIsOpen">
             <VCard class="loginCard text_align_center">
                 <img class="modal_cancel_btn modalCancelBtn" src="/images/modal_cancel.png"
-                    @click="signUpOtp = false" />
+                    @click="signUpOtpModalIsOpen = false" />
                 <VCardTitle class="px-0 card_title py-0">
                     <h1 class="modal_heading_h mb-4">Sign Up</h1>
                     <p class="loginModal_text">we will need your profile details to<br> give you a better experience</p>
                 </VCardTitle>
                 <VCardText class="px-0 py-0 otp_card_text">
-                    <VForm @submit.prevent class="otp_form">
+                    <VForm @submit.prevent="registerOtpVerified" class="otp_form">
                         <p class="enterOtpText text_align_center">Enter OTP</p>
-                        <v-otp-input class="py-0" variant="solo" length="4"></v-otp-input>
-                        <p v-if="signUpOtpVerified == false" class="otp_resend_time text_align_right mb-4">
-                            Resend OTP in:
-                            <span class="otp_resend_span">28 Second</span>
+                        <v-otp-input class="py-0" v-model="registerOTP" variant="solo" length="4"></v-otp-input>
+                        <p v-if="signUpOtpIsVerified == false && countdown > 0"
+                            class="otp_resend_time text_align_right">
+                            OTP will expire in: <span class="otp_resend_span">{{ countdown }} seconds</span>
                         </p>
-                        <VBtn @click="verifySignUpOtp" v-if="signUpOtpVerified == false" style="margin: 0 !important"
-                            class="login_button" variant="tonal" type="submit">Verify OTP</VBtn>
-                        <VBtn v-if="signUpOtpVerified == true" class="login_button" variant="tonal" type="submit">Sign
-                            Up</VBtn>
+                        <p v-if="signUpOtpIsVerified == false && countdown == 0"
+                            class="otp_resend text_align_right otp_resend_time" @click="registerOtpModal">Resend OTP</p>
+                        <VBtn v-if="signUpOtpIsVerified == false" style="margin: 0 !important" class="login_button"
+                            variant="tonal" type="submit" :disabled="!isOtpFourDigit">Verify OTP</VBtn>
+                        <VBtn v-if="signUpOtpIsVerified == true" class="login_button" variant="tonal"
+                            @click="goToDashboard">
+                            Sign Up</VBtn>
                     </VForm>
-                    <div v-if="signUpOtpVerified == true" class="d-flex align-center verify_div gap-1 justify-center">
+                    <div v-if="signUpOtpIsVerified == true" class="d-flex align-center verify_div gap-1 justify-center">
                         <img class="verify_img" src="/images/Check.png" />
                         <p class="email_verify_text" style="margin-top: 0 !important;">Verified Code</p>
                     </div>
-                    <p v-if="signUpOtpVerified == false" class="email_verify_text signUpVerify"
+                    <v-alert v-if="isInvalidOtp" border="top" type="error" variant="outlined" prominent>{{ inValidOtpMsg
+                        }}</v-alert>
+                    <p v-if="signUpOtpIsVerified == false" class="email_verify_text signUpVerify"
                         style="margin-top: 11px !important;">your login OTP sent to your email <span
-                            class="email_blue">rahulrajta@eligocs.com</span></p>
+                            class="email_blue">{{ signUpEmail }}</span></p>
+
                     <p class="loginModal_text_2">
                         I have an account ?
                         <span @click="signInTwo">Sign In</span>
@@ -510,14 +648,17 @@ const closeChoiceModal = () => {
 .user_login_card_p_mb {
     margin-bottom: 10px !important;
 }
+
 p.user_login_card_p {
     font-size: 14px;
     font-weight: 500;
     color: #676666;
 }
+
 p.user_login_card_p:hover {
     cursor: pointer;
 }
+
 p.user_login_card_name {
     font-size: 18px;
     font-weight: 600;
@@ -533,6 +674,7 @@ p.user_login_card_email {
 .user_login_card_text {
     padding: 0;
 }
+
 .user_login_card {
     width: 243px;
     position: absolute;
@@ -559,9 +701,11 @@ p.user_login_card_email {
     margin-right: 5px;
     padding: 9px 15px;
 }
+
 .user_login_card_pos {
     position: relative;
 }
+
 .otp_resend:hover {
     cursor: pointer;
 }
