@@ -469,6 +469,7 @@ img.ftr_link_icon {
 .course_gap {
     /* gap: 57px; */
     text-decoration: none !important;
+    margin-top: 45px;
 }
 
 .course-card img {
@@ -1351,6 +1352,12 @@ p.signUp_text {
 
 .myLearn_user_tab span.v-btn__content .v-tab__slider {
     display: none;
+}
+
+.order_table .v-data-table-header__content span {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: capitalize;
 }
 
 

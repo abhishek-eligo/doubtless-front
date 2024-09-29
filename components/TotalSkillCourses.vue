@@ -6,7 +6,7 @@
             :image="course.image"
             :title="course.title"
             :rating="course.rating"
-            :offPercent="course.offPercent",
+            :offPercent="course.offPercent"
             :tutorName="course.tutorName"
          />
     </div>

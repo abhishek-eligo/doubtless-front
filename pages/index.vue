@@ -1,11 +1,5 @@
 <script setup>
-const advantages = [
-    { id: '1', para: 'Visualizing concepts aids understanding by making abstract ideas concrete.', image: '/images/adv-1.png' },
-    { id: '2', para: 'Tailored education program adapting to individual student needs and pace.', image: '/images/adv-2.png' },
-    { id: '3', para: "Personalized, focused care tailored uniquely to each individual's needs.", image: '/images/adv-3.png' },
-    { id: '4', para: 'Online courses let you explore fields and hobbies before committing fully.', image: '/images/adv-4.png' },
-    { id: '5', para: 'Courses in your language use familiar examples, making learning easier.', image: '/images/adv-3.png' },
-]
+
 
 const courseTypes = [
     { id: '1', title: 'free courses', text: 'expert-led, and interactive.' },
@@ -149,8 +143,8 @@ const tabletListData = [
         <div class="section_two mb-5 pb-10 mt-5">
             <div class="wrapper">
                 <h1 style="text-align: center;">get the <span class="orangeShade">doubtless</span> advantage</h1>
-                <div class="d-flex justify-between">
-                    <DoubtlessAdvantage v-for="adv in advantages" :key="adv.id" :image="adv.image" :para="adv.para" />
+                <div>
+                    <DoubtlessAdvantage  />
                 </div>
             </div>
         </div>

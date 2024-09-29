@@ -369,6 +369,8 @@ button.course_filter_btn {
 .course_filter_card {
     padding: 15px;
     background: #F8F8F7;
+    position: sticky;
+    top: 0;
 }
 
 .course_filter_div {
