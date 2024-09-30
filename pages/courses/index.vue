@@ -1,4 +1,5 @@
 <script setup>
+const { $axios, $retryRequest } = useNuxtApp();
 const items = ref([
     { label: 'Categories', slot: 'categories', defaultOpen: true },
     { label: 'Price', slot: 'price', defaultOpen: false },
@@ -26,13 +27,29 @@ const openClassFilterModal = () => {
     totalClassModalIsOpen.value = true;
 }
 
-const filterOptions = ref([
-    { id: 1, title: 'CBSE' }, { id: 2, title: 'NIOS' }, { id: 3, title: 'IB' }, { id: 4, title: 'CIE' }, { id: 5, title: 'HPBSE' }, { id: 6, title: 'MPBSE' }, { id: 7, title: 'aPBSE' }, { id: 8, title: 'BSEB' }, { id: 9, title: 'wBBSE' }, { id: 10, title: 'UPSC' },
-]);
+const allBoards = ref([]);
+const slicedBoards = ref([]);
+const getAllBoards = async () => {
+    const response = await $axios.get('/boards/all');
+    // console.log('All Boards', response.data.data);
+    allBoards.value = response.data.data;
+    slicedBoards.value = response.data.data.slice(0, 2);
+}
 
-const allClasses = ref([
-    { id: 1, title: '1' }, { id: 2, title: '2' }, { id: 3, title: '3' }, { id: 4, title: '4' }, { id: 5, title: '5' }, { id: 6, title: '6' }, { id: 7, title: '7' }, { id: 8, title: '8' }, { id: 9, title: '9' }, { id: 10, title: '10' }, { id: 11, title: '11' }, { id: 12, title: '12' },
-])
+
+const allClasses = ref([]);
+const slicedClasses = ref([]);
+const getAllClasses = async () => {
+    const response = await $axios.get('/studentclasses/all');
+    // console.log('All Classes', response.data.data);
+    allClasses.value = response.data.data;
+    slicedClasses.value = response.data.data.slice(0, 2);
+}
+
+onMounted(() => {
+    getAllBoards();
+    getAllClasses();
+})
 </script>
 
 <template>
@@ -69,22 +86,23 @@ const allClasses = ref([
                                         <v-radio-group class="radio_group" v-model="selectedCategory">
                                             <VRadio class="crse_cat" value="academic" label="academic courses" />
                                         </v-radio-group>
-                                        <UAccordion multiple v-if="selectedCategory == 'academic'" class="acadameic_accord" id="acadAccord"
-                                            :items="academicData">
+                                        <UAccordion multiple v-if="selectedCategory == 'academic'"
+                                            class="acadameic_accord" id="acadAccord" :items="academicData">
                                             <template #board>
-                                                <VCheckbox class="filter_checkbox" v-model="selectedBoard" value="CBSE"
-                                                    label="CBSE" />
-                                                <VCheckbox class="filter_checkbox" v-model="selectedBoard" value="ICSE"
-                                                    label="ICSE" />
-                                                <p @click="openBoardFilterModal" class="acadameic_accord_see_more">See
-                                                    More...
-                                                </p>
+                                                <VCheckbox v-for="(board, index) in slicedBoards" :key="index"
+                                                    class="filter_checkbox" v-model="selectedBoard" :value="board.name"
+                                                    :label="board.name" 
+                                                    />
+                                                    <p @click="openBoardFilterModal" class="acadameic_accord_see_more">
+                                                        See
+                                                        More...
+                                                    </p>
                                             </template>
                                             <template #classes>
-                                                <VCheckbox class="filter_checkbox" v-model="selectedClass"
-                                                    value="Class 1" label="Class 1" />
-                                                <VCheckbox class="filter_checkbox" v-model="selectedClass"
-                                                    value="Class 2" label="Class 2" />
+                                                <VCheckbox v-for="(board, index) in slicedClasses" :key="index"
+                                                    class="filter_checkbox" v-model="selectedClass" :value="board.name"
+                                                    :label="board.name" 
+                                                    />
                                                 <p @click="openClassFilterModal" class="acadameic_accord_see_more">See
                                                     More...
                                                 </p>
@@ -94,8 +112,8 @@ const allClasses = ref([
                                         <v-radio-group class="radio_group" v-model="selectedCategory">
                                             <VRadio class="crse_cat" value="skills" label="grow skills courses" />
                                         </v-radio-group>
-                                        <UAccordion multiple v-if="selectedCategory == 'skills'" class="acadameic_accord"
-                                            :items="academicData">
+                                        <UAccordion multiple v-if="selectedCategory == 'skills'"
+                                            class="acadameic_accord" :items="academicData">
                                             <template #board>
                                                 <VCheckbox class="filter_checkbox" v-model="selectedBoard" value="CBSE"
                                                     label="CBSE" />
@@ -120,8 +138,8 @@ const allClasses = ref([
                                             <VRadio class="crse_cat" value="competitive"
                                                 label="competitive exam courses" />
                                         </v-radio-group>
-                                        <UAccordion multiple v-if="selectedCategory == 'competitive'" class="acadameic_accord"
-                                            :items="academicData">
+                                        <UAccordion multiple v-if="selectedCategory == 'competitive'"
+                                            class="acadameic_accord" :items="academicData">
                                             <template #board>
                                                 <VCheckbox class="filter_checkbox" v-model="selectedBoard" value="CBSE"
                                                     label="CBSE" />
@@ -164,14 +182,14 @@ const allClasses = ref([
                                             <input class="filter_chekbox" type="checkbox" />
                                             <span class="filter_checkmark"></span>
                                         </label> -->
-                                            <div v-for="(item, index) in filterOptions" :key="item.id" class="d-flex">
+                                            <div v-for="(item, index) in allBoards" :key="item.id" class="d-flex">
                                                 <div class="filter_chekbox_label">
                                                     <label>
                                                         <input class="filter_chekbox" type="checkbox" />
                                                         <span class="filter_checkmark"></span>
                                                     </label>
                                                 </div>
-                                                <label class="filter_chekbox_text">{{ item.title }}</label>
+                                                <label class="filter_chekbox_text">{{ item.name }}</label>
                                             </div>
                                         </div>
                                     </div>
@@ -198,7 +216,7 @@ const allClasses = ref([
                                                         <span class="filter_checkmark"></span>
                                                     </label>
                                                 </div>
-                                                <label class="filter_chekbox_text">Class {{ item.title }}</label>
+                                                <label class="filter_chekbox_text">{{ item.name }}</label>
                                             </div>
                                         </div>
                                     </div>
@@ -206,7 +224,7 @@ const allClasses = ref([
                             </VCard>
                         </v-dialog>
                     </div>
-                    <div class="col-md-9 d-flex flex-wrap total_course_gap justify-between">
+                    <div class="col-md-9">
                         <TotalCourses />
                     </div>
                 </div>
@@ -219,6 +237,7 @@ const allClasses = ref([
 .total_course_gap {
     row-gap: 40px;
 }
+
 .filter_checkbox {
     height: unset !important;
     --v-input-control-height: unset !important;
