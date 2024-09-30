@@ -182,7 +182,7 @@ onMounted(() => {
                                             <input class="filter_chekbox" type="checkbox" />
                                             <span class="filter_checkmark"></span>
                                         </label> -->
-                                            <div v-for="(item, index) in allBoards" :key="item.id" class="d-flex">
+                                            <div v-for="(item) in allBoards" :key="item.id" class="d-flex">
                                                 <div class="filter_chekbox_label">
                                                     <label>
                                                         <input class="filter_chekbox" type="checkbox" />
@@ -209,7 +209,7 @@ onMounted(() => {
                                 <VCardText class="filter_card_text">
                                     <div class="filter_card_text_div">
                                         <div class="checkbox_div">
-                                            <div v-for="(item, index) in allClasses" :key="item.id" class="d-flex">
+                                            <div v-for="(item) in allClasses" :key="item.id" class="d-flex">
                                                 <div class="filter_chekbox_label">
                                                     <label>
                                                         <input class="filter_chekbox" type="checkbox" />
