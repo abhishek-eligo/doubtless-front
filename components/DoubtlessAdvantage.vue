@@ -53,6 +53,8 @@
     </div>
 </template>
 
+<script>
+</script>
 
 <style scoped>
 .curve_img_1::before {
