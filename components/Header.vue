@@ -459,7 +459,9 @@ onMounted(() => {
                                 </div>
                             </VCardTitle>
                             <VCardText class="user_login_card_text">
-                                <p class="user_login_card_p user_login_card_p_mb">My learning</p>
+                                <nuxt-link class="no_txt_deco" :to="`/my-learning/${authUserData?.id}`">
+                                    <p class="user_login_card_p user_login_card_p_mb">My learning</p>
+                                </nuxt-link>
                                 <p class="user_login_card_p user_login_card_p_mb">Help and support</p>
                                 <p @click="logout" class="user_login_card_p">Logout</p>
                             </VCardText>
@@ -654,6 +656,9 @@ p.user_login_card_p {
     font-weight: 500;
     color: #676666;
 }
+.no_txt_deco {
+    text-decoration: none;
+}
 
 p.user_login_card_p:hover {
     cursor: pointer;
@@ -678,10 +683,11 @@ p.user_login_card_email {
 .user_login_card {
     width: 243px;
     position: absolute;
-    top: 47px;
-    right: -32px;
+    top: 102px;
+    right: 50px;
     box-shadow: 0 4px 9px #00000010;
     padding: 10px 15px 30px 15px;
+    z-index: 99;
 }
 
 .user_login_card_title {
