@@ -15,8 +15,8 @@
                     <p class="d-flex meta_text align-center">{{ rating }}<img class="imgSize py-0"
                             src="/images/crse_star.png" />
                     </p>
-                    <p class="d-flex meta_text tutorHatSize align-center"><img
-                            src="/images/tutor_hat.png" />410 Enroll</p>
+                    <p class="d-flex meta_text tutorHatSize align-center"><img src="/images/tutor_hat.png" />410 Enroll
+                    </p>
                 </div>
                 <div class="pricingSec px-3 d-flex justify-content-between">
                     <p class="mb-0">₹ 399 /- <span class="old_price">₹ 599 /-</span></p>
@@ -31,37 +31,83 @@
                     <p class="orangeShade course_1_text">updated : <span>June 2024</span></p>
                     <p class="course_2_text">by : {{ tutorName }}</p>
                     <ul>
-                        <li class="course_info_li_mb">Develop fine motor skills through simple cutting, coloring, and pasting projects.</li>
-                        <li class="course_info_li_mb">Develop fine motor skills through simple cutting, coloring, and pasting projects.</li>
-                        <li class="course_info_li_mb">Develop fine motor skills through simple cutting, coloring, and pasting projects.</li>
-                        <li class="course_info_li_mb">Develop fine motor skills through simple cutting, coloring, and pasting projects.</li>
-                        <li>Develop fine motor skills through simple cutting, coloring, and pasting projects.</li>
+                        <li class="course_info_li_mb">Develop fine motor skills through simple cutting, coloring, and
+                            pasting projects.</li>
+                        <li class="course_info_li_mb">Develop fine motor skills through simple cutting, coloring, and
+                            pasting projects.</li>
                     </ul>
+                    <div class="duration_price_div">
+                        <div v-for="(item, index) in courseDurationType" :key="index"
+                            class="d-flex align-center duration_mt justify-between">
+                            <label class="radio_container d-flex align-center">
+
+                                <input v-model="courseDuration" :value="item.id" class="duration_radio" type="radio" />
+                                <span class="duration_radio_span checkmark"></span>
+                                <p class="duration_month">{{ item.title }} Month</p>
+                            </label>
+                            <div class="d-flex align-center">
+                                <p class="duration_sp">₹{{ item.salePrice }} /-</p>
+                                <p class="duration_op">₹{{ item.originalPrice }}</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="d-flex justify-content-between">
                     <nuxt-link to="/course-info/abc">
                         <button class="course_info_btn">view more</button>
                     </nuxt-link>
-                    <button class="course_info_btn">Add to cart</button>
+                    <button @click="addToCart" :disabled="!courseDuration" v-if="cartAdd == false && cartUpdated == false" :class="{'disabled-button': !courseDuration}" class="course_info_btn">Add to cart</button>
+                    <button v-if="cartAdd == true" class="course_info_btn">
+                        <img class="loader_rotate_size" src="/images/cart_loader.png" />
+                    </button>
+                    <button disabled v-if="cartUpdated == true" class="course_info_btn">Added to cart</button>
                 </div>
             </v-card>
         </div>
     </div>
 </template>
 
-<script>
-export default {
-    props: {
-        image: String,
-        title: String,
-        rating: String,
-        offPercent: String,
-        tutorName: String
-    }
+
+<script setup>
+const props = defineProps({
+  image: String,
+  title: String,
+  rating: String,
+  offPercent: String,
+  tutorName: String,
+});
+
+// Reactive data using ref
+const courseDuration = ref('');
+const courseDurationType = ref([
+  { id: 1, title: '3', salePrice: '399', originalPrice: '580' },
+  { id: 2, title: '6', salePrice: '890', originalPrice: '1280' },
+  { id: 3, title: '12', salePrice: '1280', originalPrice: '1590' },
+]);
+
+const cartAdd = ref(false);
+const cartUpdated = ref(false);
+
+const addToCart = () => {
+    cartAdd.value = true;
+    setTimeout(() => {
+        cartAdd.value = false;
+        cartUpdated.value = true;
+    }, 2000)
 }
+
+watch(courseDuration, () => {
+    // Reset to default state whenever the user selects a different radio button
+    cartAdd.value = false;
+    cartUpdated.value = false;
+});
 </script>
 
 <style scoped>
+.loader_rotate_size {
+    width: 10px;
+    height: 10px;
+}
 .course_info_btn {
     font-size: 16px;
     color: #F87126;
@@ -77,6 +123,7 @@ export default {
     background: #F87126;
     color: #ffffff;
 }
+
 .course_1_text span {
     font-weight: 600;
 }

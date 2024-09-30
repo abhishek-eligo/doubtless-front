@@ -54,23 +54,21 @@ const doubtlessDetails = ref([
 
                     <VCard class="teach_card before_card_curve_2">
                         <VCardTitle class="d-flex justify-center teach_card_title">
-                            <img src="/images/tob_icon_1.png" />
+                            <img src="/images/tob_icon_2.png" />
                         </VCardTitle>
                         <VCardText class="teach_card_text">
-                            <h3 class="teach_card_text_h">Teach Your Way</h3>
-                            <p class="teach_card_text_p">Empower yourself to share knowledge and skills with others
-                                through personalized and engaging teaching methods.</p>
+                            <h3 class="teach_card_text_h">Inspire Learners</h3>
+                            <p class="teach_card_text_p">Empower your journey with expert-led courses, unlocking new skills and possibilities for a brighter future.</p>
                         </VCardText>
                     </VCard>
 
                     <VCard class="teach_card before_card_curve_3">
                         <VCardTitle class="d-flex justify-center teach_card_title">
-                            <img src="/images/tob_icon_1.png" />
+                            <img src="/images/tob_icon_3.png" />
                         </VCardTitle>
                         <VCardText class="teach_card_text">
-                            <h3 class="teach_card_text_h">Teach Your Way</h3>
-                            <p class="teach_card_text_p">Empower yourself to share knowledge and skills with others
-                                through personalized and engaging teaching methods.</p>
+                            <h3 class="teach_card_text_h">Get Rewarded</h3>
+                            <p class="teach_card_text_p">Earn recognition and rewards as you guide students to success, making a meaningful impact on their academic journey.</p>
                         </VCardText>
                     </VCard>
                 </div>
@@ -235,6 +233,18 @@ const doubtlessDetails = ref([
     font-size: 16px;
     font-weight: 500;
     text-transform: uppercase;
+}
+
+.tob_join_tutor_btn:hover {
+    color: #fff !important;
+    border: 2.3px solid #F87126;
+    background: #F87126 !important;
+    border-radius: 4.6px;
+    padding: 17px 31px;
+    font-size: 16px;
+    font-weight: 500;
+    text-transform: uppercase;
+    transition: 0.3s;
 }
 .tob_join_tutor {
     text-align: center;
@@ -457,7 +467,7 @@ p.teach_card_text_p {
 .teach_card {
     max-width: 371px;
     background: #F0EFEF;
-    border-radius: 70px;
+    border-radius: 49px;
     box-shadow: 0px 4px 4px #00000025 !important;
     text-align: center;
     padding: 60px 45px 29px 45px;
@@ -488,6 +498,14 @@ h1.teach_us_h {
     border-radius: 0;
     font-size: 20px;
     font-weight: 600;
+    border: 1px solid #000;
+}
+
+.teach_us_btn:hover {
+    background: #fff !important;
+    color: #000 !important;
+    border: 1px solid #000;
+    transition: 0.3s;
 }
 
 p.teach_us_p {

@@ -219,6 +219,7 @@ const tabletListData = [
 .free_btn:hover {
     background-color: var(--default_color);
     color: var(--white);
+    transition: 0.3s;
 }
 
 .learning_card {
