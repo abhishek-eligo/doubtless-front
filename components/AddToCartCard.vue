@@ -47,7 +47,7 @@ watch(courseDuration, () => {
             </div>
             <button @click="addToCart" :disabled="!courseDuration" v-if="cartAdd == false && cartUpdated == false" :class="{'disabled-button': !courseDuration}" class="add_cart_btn">Add To Cart</button>
             <button v-if="cartAdd == true" class="add_cart_btn d-flex justify-center">
-                <img src="/images/cart_loader.png" />
+                <img class="loader_rotate" src="/images/cart_loader.png" />
             </button>
             <button disabled v-if="cartUpdated == true" class="add_cart_btn">Added To Cart</button>
         </VCardText>
@@ -157,6 +157,9 @@ p.duration_op {
 .add_cart_card {
     max-width: 403px;
     padding: 12px 16px;
+    position: sticky;
+    top: 10%;
+    margin-bottom: 47px;
 }
 
 .add_cart_title {
@@ -180,5 +183,19 @@ p.add_cart_title_p {
     font-weight: 400;
     color: #000;
     margin-bottom: 8px !important;
+}
+.loader_rotate {
+    width: 28px;
+    height: 28px;
+    animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

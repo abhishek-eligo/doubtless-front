@@ -120,5 +120,5 @@ p.my_learn_card_p {
     background: transparent;
     border: 1px solid #757373;
 }
-
 </style>
+

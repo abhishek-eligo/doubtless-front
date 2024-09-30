@@ -1,5 +1,5 @@
 <template>
-    <div class="parentCard px-0 mt-5">
+    <div class="parentCard px-0">
         <div class="course-card">
             <div class="position-relative">
                 <img :src="image" alt="Course Image">

@@ -469,6 +469,7 @@ img.ftr_link_icon {
 .course_gap {
     /* gap: 57px; */
     text-decoration: none !important;
+    margin-top: 45px;
 }
 
 .course-card img {
@@ -973,7 +974,7 @@ form.v-form.otp_form .v-otp-input .v-otp-input__content {
     border-radius: 0;
 }
 
-.iconify {
+.checkout_accord button .iconify {
     content: 'Login' !important;
     background: unset !important;
     font-size: 16px !important;
@@ -1197,5 +1198,167 @@ p.signUp_text {
 
 /* Teach On Doubtless Page */
 
+.totalTabs .v-slide-group__container .v-slide-group__content {
+    justify-content: space-between;
+}
+
+.begin_tab.v-tab--selected .v-tab__slider {
+    background: #F87126 !important;
+    display: none;
+}
+
+.begin_tab .v-btn__content {
+    font-size: 24px;
+    font-weight: 600;
+    text-transform: capitalize;
+    color: #282828;
+}
+
 
 /* Teach On Doubtless Page End */
+
+
+/* COURSES PAGE */
+
+.course_filter_accord .w-full.flex.flex-col button {
+    background: transparent !important;
+    border-top: 0.5px solid #757373;
+    color: #000;
+    border-radius: 0 !important;
+}
+
+.course_filter_accord .w-full.flex.flex-col button span.text-left.break-all.line-clamp-1 {
+    font-size: 17px;
+    font-weight: 800;
+    color: #F87126;
+}
+
+.course_filter_accord .w-full.flex.flex-col button .iconify {
+    color: #A8370F !important;
+}
+
+.crse_cat .v-selection-control__wrapper .v-selection-control__input i {
+    color: #F87126 !important;
+    font-size: 16px;
+}
+
+.crse_cat .v-selection-control__wrapper .v-selection-control__input i::before {
+    background: #fff !important;
+}
+
+.crse_cat label.v-label {
+    font-size: 16px;
+    color: #000;
+    text-transform: capitalize;
+    font-weight: 500;
+    line-height: 150%;
+    opacity: unset;
+}
+
+.acadameic_accord .w-full.flex.flex-col button {
+    border-top: none !important;
+    padding: 0;
+}
+
+.acadameic_accord .w-full.flex.flex-col button span.text-left {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #F87126;
+}
+
+.course_filter_accord .acadameic_accord .v-input__details {
+    display: none !important;
+}
+
+.filter_checkbox .v-input__control .v-selection-control .v-selection-control__wrapper .v-selection-control__input i::before {
+    color: #F87126;
+    opacity: unset;
+}
+
+.filter_checkbox .v-input__control .v-selection-control .v-label {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 150%;
+    color: #000;
+    opacity: unset;
+}
+
+.course_dialog_card .v-overlay__content {
+    justify-content: center;
+    align-items: center;
+}
+
+.radio_group .v-input__details {
+    display: none;
+}
+
+#acadAccord div .w-full.flex.flex-col[data-headlessui-state="open"] {
+    padding: 5px 10px 5px 24px;
+    background: #fff;
+    border-radius: 4px;
+    border-bottom: 0.5px solid #757373;
+    border-top: none
+}
+
+
+/* COURSES PAGE END */
+
+
+/* MY LEARNING PAGE */
+
+.mylearn_page {
+    padding: 30px 0 100px 0;
+}
+
+.myLearn_user_tabs {
+    overflow: unset !important;
+    height: 0 !important;
+}
+
+.myLearn_user_tabs .v-slide-group__container {
+    overflow: unset !important;
+    contain: unset !important;
+}
+
+.myLearn_user_tabs .v-slide-group__content {
+    display: grid;
+}
+
+.myLearn_user_tabs .v-slide-group__content button span.v-btn__content {
+    color: #000 !important;
+}
+
+.course_progress_bar {
+    border-radius: 0 !important;
+}
+
+.course_progress_bar progress {
+    color: #F87126 !important;
+    border-radius: 0 !important;
+}
+
+.progres_report_rating_star i::before {
+    color: #D39102;
+}
+
+.myLearn_user_tabs .v-slide-group__content button {
+    padding: 0 !important;
+    display: flex;
+    justify-content: start;
+    border-top: 1px solid #F8712650;
+    border-radius: 4px !important;
+    /* background: linear-gradient(90deg, rgba(248, 113, 38, 100%) 48%, rgba(247, 135, 74, 50.63%) 88%, rgba(245, 157, 104, 7) 94%); */
+}
+
+.myLearn_user_tab span.v-btn__content .v-tab__slider {
+    display: none;
+}
+
+.order_table .v-data-table-header__content span {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+
+/* MY LEARNING PAGE END */
