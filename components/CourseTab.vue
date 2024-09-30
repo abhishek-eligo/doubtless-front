@@ -1,22 +1,18 @@
 <template>
     <v-container class="m-0 py-0 px-0">
-        <v-tabs class="tab_border" v-model="activeTab" show-arrows>
-            <!-- <v-tab class="tab_content" v-for="(tab, index) in tabs" :key="index" :class="activeTab == index ? 'tab_content_selected' : 'tab_content' ">
-                {{ tab }}
-            </v-tab> -->
+        <v-tabs class="tab_border" v-model="activeTab" show-arrows @update:modelValue="onTabSelected">
             <!-- <Tooltip  text="This is a custom tooltip" /> -->
              <!-- <span class="tooltip">Central Board of Education</span> -->
             <v-tab class="tab_content" v-for="(tab, index) in tabs" :key="index"
                 :class="{ 'v-tab--selected': activeTab === index, 'tab_content_selected': activeTab == index }">
-                {{ tab }}
+                {{ tab.name }}
             </v-tab>
         </v-tabs>
-
     </v-container>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, defineEmits  } from 'vue'
 
 const props = defineProps({
     tabs: {
@@ -26,6 +22,17 @@ const props = defineProps({
 })
 
 const activeTab = ref(0)
+
+// Emit event
+const emit = defineEmits(['tabSelected'])
+
+// Method to handle tab selection
+const onTabSelected = (value) => {
+    const selectedTab = props.tabs[value]
+    if (selectedTab) {
+        emit('tabSelected', selectedTab.slug) // Emit the selected tab's slug
+    }
+}
 </script>
 
 <style scoped>

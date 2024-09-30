@@ -53,23 +53,6 @@
     </div>
 </template>
 
-<script>
-export default {
-    props: {
-        image: String,
-        para: String
-    },
-    data() {
-        advantages: [
-            { id: '1', para: 'Visualizing concepts aids understanding by making abstract ideas concrete.', image: '/images/adv-1.png' },
-            { id: '2', para: 'Tailored education program adapting to individual student needs and pace.', image: '/images/adv-2.png' },
-            { id: '3', para: "Personalized, focused care tailored uniquely to each individual's needs.", image: '/images/adv-3.png' },
-            { id: '4', para: 'Online courses let you explore fields and hobbies before committing fully.', image: '/images/adv-4.png' },
-            { id: '5', para: 'Courses in your language use familiar examples, making learning easier.', image: '/images/adv-3.png' },
-        ]
-    }
-}
-</script>
 
 <style scoped>
 .curve_img_1::before {

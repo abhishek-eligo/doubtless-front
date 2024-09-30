@@ -6,8 +6,8 @@
           <div class="chipWidth px-0 py-0" v-for="(item, index) in visibleItems" :key="index"
             :class="{ slideLeft: slidingLeft, slideRight: slidingRight }">
             <v-chip id="course-chip" :class="selectedChip === index ? 'bgChipActive' : 'bgChipUnactive'"
-              @click="setActiveChip(index)">
-              {{ item }}
+              @click="setActiveChip(index, item.slug)">
+              {{ item.name }}
               <br />
               <span :class="selectedChip != index ? 'chip_text_color' : ''">Learn All Courses</span>
             </v-chip>
@@ -34,6 +34,8 @@
 <script setup>
 import { ref, computed } from 'vue';
 
+// const selectedChipIndex = ref(0);
+
 const props = defineProps({
   items: {
     type: Array,
@@ -42,6 +44,10 @@ const props = defineProps({
   visibleCount: {
     type: Number,
     default: 9,
+  },
+  reset: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -56,6 +62,12 @@ const visibleItems = computed(() => {
 
 const canSlideRight = computed(() => {
   return currentStart.value + props.visibleCount < props.items.length;
+});
+
+watch(() => props.reset, (newValue) => {
+  if (newValue) {
+    selectedChip.value = 0;
+  }
 });
 
 const canSlideLeft = computed(() => {
@@ -82,9 +94,16 @@ const slideLeft = () => {
   }
 };
 
-// Set the clicked chip as active
-const setActiveChip = (index) => {
+const emit = defineEmits(['chipSelected'])
+
+const setActiveChip = (index, slug) => {
   selectedChip.value = index;
+  if (slug) {
+    emit('chipSelected', slug);  // Emit the selected chip's slug
+    console.log('Selected Chip Slug:', slug);  // Log the slug of the selected chip
+  } else {
+    console.error('Slug is undefined for this chip.'); // Error handling if slug is missing
+  }
 };
 </script>
 

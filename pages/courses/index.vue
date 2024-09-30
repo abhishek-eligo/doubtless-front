@@ -206,7 +206,7 @@ const allClasses = ref([
                             </VCard>
                         </v-dialog>
                     </div>
-                    <div class="col-md-9 d-flex flex-wrap total_course_gap justify-between">
+                    <div class="col-md-9">
                         <TotalCourses />
                     </div>
                 </div>
@@ -216,9 +216,7 @@ const allClasses = ref([
 </template>
 
 <style scoped>
-.total_course_gap {
-    row-gap: 40px;
-}
+
 .filter_checkbox {
     height: unset !important;
     --v-input-control-height: unset !important;
