@@ -460,6 +460,9 @@ onMounted(() => {
                             </VCardTitle>
                             <VCardText class="user_login_card_text">
                                 <p class="user_login_card_p user_login_card_p_mb">My learning</p>
+                                <nuxt-link :to="`/my-learning/${authUserData?.id}`">
+                                    <p class="user_login_card_p user_login_card_p_mb">My learning</p>
+                                </nuxt-link>
                                 <p class="user_login_card_p user_login_card_p_mb">Help and support</p>
                                 <p @click="logout" class="user_login_card_p">Logout</p>
                             </VCardText>
