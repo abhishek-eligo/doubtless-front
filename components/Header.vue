@@ -448,7 +448,7 @@ onMounted(() => {
                             <img class="cart_img" src="../public/images/cart.png" />
                         </nuxt-link>
                         <button @click="openChoiceModal" class="hdr_btn"
-                            v-if="authUserToken === null || authUserData === null">Login now</button>
+                            v-if="authUserToken === null && authUserData === null">Login now</button>
                         <img @click="openLoginCard" class="user_logo" v-else src="/images/user.png" />
                         <VCard v-if="userLoginCard == true" class="user_login_card">
                             <VCardTitle class="user_login_card_title d-flex align-center">

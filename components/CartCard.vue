@@ -26,6 +26,11 @@ const cartItems = ref([
         originalPrice: '3099',
     }
 ])
+
+const removeItem = (indexToRemove) => {
+    console.log(indexToRemove);
+    cartItems.value.splice(indexToRemove, 1);
+}
 </script>
 
 <template>
@@ -53,7 +58,7 @@ const cartItems = ref([
                     <div class="cart_price">
                         <p class="cart_sale_price">₹{{ item.salePrice }}</p>
                         <p class="cart_orignal_price">₹{{ item.originalPrice }}</p>
-                        <button class="cart_remove_item">Remove</button>
+                        <button class="cart_remove_item" @click="removeItem(index)">Remove</button>
                     </div>
                 </div>
             </VCardText>
