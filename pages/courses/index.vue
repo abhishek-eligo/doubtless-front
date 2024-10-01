@@ -70,8 +70,8 @@ onMounted(() => {
         </VContainer>
         <div class="courses_section_two">
             <div class="wrapper">
-                <div class="row">
-                    <div class="col-md-3">
+                <div class="row flex-wrap gap-5">
+                    <div class="col-md-3 px-0">
                         <VCard class="course_filter_card">
                             <VCardTitle class="course_filter_card_title">
                                 <div class="course_filter_div">
@@ -224,7 +224,7 @@ onMounted(() => {
                             </VCard>
                         </v-dialog>
                     </div>
-                    <div class="col-md-9">
+                    <div class="col-md-9 px-0">
                         <TotalCourses />
                     </div>
                 </div>
@@ -236,6 +236,7 @@ onMounted(() => {
 <style scoped>
 .total_course_gap {
     row-gap: 40px;
+    column-gap: 40px;
 }
 
 .filter_checkbox {
@@ -390,6 +391,7 @@ button.course_filter_btn {
     background: #F8F8F7;
     position: sticky;
     top: 0;
+    box-shadow: 0 4px 11px #00000025;
 }
 
 .course_filter_div {

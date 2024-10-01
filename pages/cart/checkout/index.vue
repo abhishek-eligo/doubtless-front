@@ -3,7 +3,7 @@ const items = ref([
     { label: 'Login Or Sign Up', slot: 'login', defaultOpen: false },
     { label: 'Order Summary', slot: 'order-summary', defaultOpen: false },
     { label: 'Payment Method', slot: 'payment-method', defaultOpen: false },
-])
+]);
 
 const requestOTP = ref(true);
 const verifyOTP = ref(false);
@@ -15,7 +15,7 @@ const enterSignUpOTP = ref(false);
 const paymentSelected = ref('sms');
 const paymentMethods = ref('');
 const validCouponCode = ref(false);
-const isCouponApplied  =ref(false);
+const isCouponApplied = ref(false);
 
 const openVerifyOTP = () => {
     requestOTP.value = false;
@@ -27,6 +27,7 @@ const openVerifyOTP = () => {
 const openLoginVerify = () => {
     verfiedOTPcontent.value = true;
 }
+
 
 const loginSubmit = () => {
     firstAccordian.value = false;
@@ -69,6 +70,61 @@ const changeEmail = () => {
     requestOTP.value = true;
 }
 
+const tokenCookie = useCookie('authToken'); // Access the token cookie
+const userCookie = useCookie('userData'); // Access the user data cookie
+
+const loggedUserName = ref('');
+const loggedUserNumber = ref('');
+
+const checkLogin = () => {
+    if (tokenCookie.value && userCookie.value) {
+        loginComplete.value = true;
+        firstAccordian.value = false;
+        items.value = [
+            { label: 'Order Summary', slot: 'order-summary', defaultOpen: false },
+            { label: 'Payment Method', slot: 'payment-method', defaultOpen: false },
+        ];
+        const responseData = userCookie.value;
+        loggedUserName.value = responseData.name;
+        loggedUserNumber.value = responseData.phone;
+
+        // Remove the CSS rule for the ::after pseudo-element
+        const styleSheets = document.styleSheets;
+        for (let i = 0; i < styleSheets.length; i++) {
+            const sheet = styleSheets[i];
+            const rules = sheet.cssRules || sheet.rules;
+            for (let j = 0; j < rules.length; j++) {
+                const rule = rules[j];
+                if (rule.selectorText === ".checkout_accord #headlessui-disclosure-button-v-0-0::after") {
+                    sheet.deleteRule(j); // Remove the rule
+                    break;
+                }
+            }
+        }
+    }
+}
+
+onMounted(() => {
+    checkLogin();
+})
+
+const checkToken = () => {
+    if (tokenCookie.value) {
+        console.log('Check Token', tokenCookie.value)
+    } else {
+        console.log('No Token');
+    }
+    if (userCookie.value) {
+        console.log('Check Cookie', userCookie.value)
+    } else {
+        console.log('No Cookie')
+    }
+}
+
+onMounted(() => {
+    checkToken();
+})
+
 </script>
 
 <template>
@@ -88,7 +144,7 @@ const changeEmail = () => {
                                         <img src="/images/checkout-icon-btn.png" />
                                         <h2 class="login_slot_label">Login</h2>
                                     </div>
-                                    <p>Rahul Rajta <span>+91 98787 73889</span></p>
+                                    <p>{{ loggedUserName }} <span>+91 {{ loggedUserNumber }}</span></p>
                                 </div>
                                 <UButton class="logged_in_btn">Change</UButton>
                             </div>
@@ -164,23 +220,25 @@ const changeEmail = () => {
                                         </UButton>
                                     </VForm>
                                 </template>
-                                <template #order-summary>
+                                <template class="order_smry" #order-summary>
                                     <VCard class="coupon_card">
                                         <VCardTitle class="coupon_card_title d-flex">
                                             <h3>Add Coupon</h3>
-                                            <p @click="addCouponCode" v-if="validCouponCode == false">click here to add your coupon code</p>
+                                            <p @click="addCouponCode" v-if="validCouponCode == false">click here to add
+                                                your coupon code</p>
                                             <p v-if="isCouponApplied == true">Coupon Applied!!!</p>
                                         </VCardTitle>
                                         <VCardText v-if="validCouponCode == true" class="d-flex justify-between">
                                             <UInput class="coupon_input_field" placeholder="Add Coupon Code" />
                                             <div>
                                                 <UButton class="coupon_remove_btn">Remove</UButton>
-                                                <UButton @click="applyCouponCode" class="coupon_apply_btn">Apply</UButton>
+                                                <UButton @click="applyCouponCode" class="coupon_apply_btn">Apply
+                                                </UButton>
                                             </div>
                                         </VCardText>
                                     </VCard>
                                     <!-- <CartCard /> -->
-                                     <CheckoutSummaryCard />
+                                    <CheckoutSummaryCard />
                                 </template>
                                 <template #payment-method>
                                     <VCard class="checkout_payment_card">
@@ -194,7 +252,8 @@ const changeEmail = () => {
                                                                 <p class="payment_text">credit/ debit card</p>
                                                             </VCol>
                                                             <VCol md="6" cols="12" class="text-end">
-                                                                <img src="/images/credit-card-type.png" class="ms-auto" />
+                                                                <img src="/images/credit-card-type.png"
+                                                                    class="ms-auto" />
                                                             </VCol>
                                                         </VRow>
                                                     </template>
@@ -203,7 +262,7 @@ const changeEmail = () => {
                                                     <template v-slot:label>
                                                         <VRow>
                                                             <VCol class="d-flex align-center" md="12">
-                                                                <img src="/images/upi.png"  />
+                                                                <img src="/images/upi.png" />
                                                                 <p class="payment_text">UPI</p>
                                                             </VCol>
                                                         </VRow>
@@ -213,7 +272,7 @@ const changeEmail = () => {
                                                     <template v-slot:label>
                                                         <VRow>
                                                             <VCol class="d-flex align-center" md="12">
-                                                                <img src="/images/net-bank.png"  />
+                                                                <img src="/images/net-bank.png" />
                                                                 <p class="payment_text">net banking</p>
                                                             </VCol>
                                                         </VRow>
@@ -223,7 +282,7 @@ const changeEmail = () => {
                                                     <template v-slot:label>
                                                         <VRow>
                                                             <VCol class="d-flex align-center" md="12">
-                                                                <img src="/images/mob-wallet.png"  />
+                                                                <img src="/images/mob-wallet.png" />
                                                                 <p class="payment_text">mobile wallet</p>
                                                             </VCol>
                                                         </VRow>
@@ -243,30 +302,31 @@ const changeEmail = () => {
                             <h2>Summary</h2>
                         </VCardTitle>
                         <VCardText class="p-0">
-                                <VCol class="d-flex justify-between px-0 py-0" cols="12">
-                                    <p class="price_text">original price: </p>
-                                    <p class="price_text">₹14,996</p>
-                                </VCol>
-                                <VCol v-if="isCouponApplied == true" class="d-flex justify-between px-0 py-0" cols="12">
-                                    <p class="price_text">Coupon: </p>
-                                    <p class="price_text">-₹1,271</p>
-                                </VCol>
-                                <VCol class="d-flex justify-between discount_border_bottom px-0 py-0" cols="12">
-                                    <p class="price_text">Discounts: </p>
-                                    <p class="price_text">-₹12,751</p>
-                                </VCol>
-                                <VCol class="d-flex justify-between sumary_total_div px-0 py-0" cols="12">
-                                    <p class="summary_total_text">Total: </p>
-                                    <p class="summary_total_text">₹2,245</p>
-                                </VCol>
-                                <VCol class="px-0 py-0 check_terms_checkbox">
-                                    <v-radio value="CheckTerms">
-                                        <template v-slot:label>
-                                            <p class="checkterms_text">by completing your purchase you agree to these <span class="checterms_span">terms of services</span></p>
-                                        </template>
-                                    </v-radio>
-                                    <UButton class="chekout_complete_btn">Complete Checkout</UButton>
-                                </VCol>
+                            <VCol class="d-flex justify-between px-0 py-0" cols="12">
+                                <p class="price_text">original price: </p>
+                                <p class="price_text">₹14,996</p>
+                            </VCol>
+                            <VCol v-if="isCouponApplied == true" class="d-flex justify-between px-0 py-0" cols="12">
+                                <p class="price_text">Coupon: </p>
+                                <p class="price_text">-₹1,271</p>
+                            </VCol>
+                            <VCol class="d-flex justify-between discount_border_bottom px-0 py-0" cols="12">
+                                <p class="price_text">Discounts: </p>
+                                <p class="price_text">-₹12,751</p>
+                            </VCol>
+                            <VCol class="d-flex justify-between sumary_total_div px-0 py-0" cols="12">
+                                <p class="summary_total_text">Total: </p>
+                                <p class="summary_total_text">₹2,245</p>
+                            </VCol>
+                            <VCol class="px-0 py-0 check_terms_checkbox">
+                                <v-radio value="CheckTerms">
+                                    <template v-slot:label>
+                                        <p class="checkterms_text">by completing your purchase you agree to these <span
+                                                class="checterms_span">terms of services</span></p>
+                                    </template>
+                                </v-radio>
+                                <UButton class="chekout_complete_btn">Complete Checkout</UButton>
+                            </VCol>
                         </VCardText>
                     </VCard>
                 </VCol>
@@ -293,9 +353,11 @@ const changeEmail = () => {
     text-transform: capitalize;
     margin-left: 15px !important;
 }
+
 .coupon_card_title p:hover {
     cursor: pointer;
 }
+
 .chekout_complete_btn {
     width: 100%;
     border-radius: 0;
@@ -306,6 +368,7 @@ const changeEmail = () => {
     background: #F87126 !important;
     margin-top: 20px;
 }
+
 p.checkterms_text {
     font-size: 14px;
     text-transform: capitalize;
@@ -316,12 +379,15 @@ p.checkterms_text {
 span.checterms_span {
     color: #F87126;
 }
+
 span.checterms_span:hover {
     cursor: pointer;
 }
+
 .check_terms_checkbox {
     margin-top: 33px;
 }
+
 .sumary_total_div {
     margin-top: 23px;
 }
@@ -331,10 +397,12 @@ p.summary_total_text {
     font-weight: 800;
     color: #000;
 }
+
 .discount_border_bottom {
     border-bottom: 1px solid #75737330;
     padding-bottom: 10px !important;
 }
+
 p.price_text {
     font-size: 17px;
     text-transform: capitalize;
@@ -342,6 +410,7 @@ p.price_text {
     font-weight: 600;
     margin-top: 8px !important;
 }
+
 .cart_checkout_summary {
     margin-top: 60px;
     box-shadow: none;
@@ -372,6 +441,7 @@ p.price_text {
     background: #F5F4F4;
     margin-bottom: 6px;
 }
+
 p.payment_text {
     margin-left: 6px !important;
     text-transform: capitalize;
@@ -379,6 +449,7 @@ p.payment_text {
     font-weight: 600;
     color: #575656;
 }
+
 .signUp_continue_margin {
     margin-bottom: 15px;
 }

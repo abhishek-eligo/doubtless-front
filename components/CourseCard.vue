@@ -8,7 +8,7 @@
             <div>
                 <h5 class="title_space mb-0 course-title">{{ title }}</h5>
                 <div class="d-flex align-center gap-2 tutorName">
-                    <img class="imgSize" src="/images/tutor_pic.png" />
+                    <img class="imgSize_tutor_board" src="/images/tutor_pic.png" />
                     <p class="mb-0">{{ tutorName }}</p>
                 </div>
                 <div class="meta tutor_meta_space">
@@ -30,12 +30,13 @@
                     <h1>{{ title }}</h1>
                     <p class="orangeShade course_1_text">updated : <span>June 2024</span></p>
                     <p class="course_2_text">by : {{ tutorName }}</p>
-                    <ul>
+                    <p v-html="desc" class="html_desc"></p>
+                    <!-- <ul>
                         <li class="course_info_li_mb">Develop fine motor skills through simple cutting, coloring, and
                             pasting projects.</li>
                         <li class="course_info_li_mb">Develop fine motor skills through simple cutting, coloring, and
                             pasting projects.</li>
-                    </ul>
+                    </ul> -->
                     <div class="duration_price_div">
                         <div v-for="(item, index) in courseDurationType" :key="index"
                             class="d-flex align-center duration_mt justify-between">
@@ -75,14 +76,19 @@ const props = defineProps({
   rating: String,
   offPercent: String,
   tutorName: String,
+  desc: String,
 });
 
 // Reactive data using ref
 const courseDuration = ref('');
 const courseDurationType = ref([
-  { id: 1, title: '3', salePrice: '399', originalPrice: '580' },
-  { id: 2, title: '6', salePrice: '890', originalPrice: '1280' },
-  { id: 3, title: '12', salePrice: '1280', originalPrice: '1590' },
+//   { id: 1, title: '3', salePrice: '399', originalPrice: '580' },
+//   { id: 2, title: '6', salePrice: '890', originalPrice: '1280' },
+//   { id: 3, title: '12', salePrice: '1280', originalPrice: '1590' },
+{
+    id: '',
+    title: ''
+}
 ]);
 
 const cartAdd = ref(false);
@@ -109,7 +115,7 @@ watch(courseDuration, () => {
     height: 10px;
 }
 .course_info_btn {
-    font-size: 16px;
+    font-size: 14px;
     color: #F87126;
     border: 2px solid;
     border-radius: 4px;
@@ -122,6 +128,8 @@ watch(courseDuration, () => {
 .course_info_btn:hover {
     background: #F87126;
     color: #ffffff;
+    transition: 0.3s;
+    border: 2px solid;
 }
 
 .course_1_text span {

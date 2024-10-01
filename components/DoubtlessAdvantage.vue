@@ -12,7 +12,7 @@
     <div class="d-flex flex-wrap justify-between">
         <VCard class="adv_card curve_img_1">
             <VCardTitle class="d-flex justify-center">
-                <img src="/images/adv-1.png" />
+                <img class="adv-card-size" src="/images/adv-1.png" />
             </VCardTitle>
             <VCardText class="px-0 py-0">
                 <p class="adv_text">Visualizing concepts aids understanding by making abstract ideas concrete.</p>
@@ -20,7 +20,7 @@
         </VCard>
         <VCard class="adv_card curve_img_2">
             <VCardTitle class="d-flex justify-center">
-                <img src="/images/adv-2.png" />
+                <img class="adv-card-size" src="/images/adv-2.png" />
             </VCardTitle>
             <VCardText class="px-0 py-0">
                 <p class="adv_text">Tailored education program adapting to individual student needs and pace.</p>
@@ -28,7 +28,7 @@
         </VCard>
         <VCard class="adv_card curve_img_3">
             <VCardTitle class="d-flex justify-center">
-                <img src="/images/adv-3.png" />
+                <img class="adv-card-size" src="/images/adv-3.png" />
             </VCardTitle>
             <VCardText class="px-0 py-0">
                 <p class="adv_text">Personalized, focused care tailored uniquely to each individual's needs.</p>
@@ -36,7 +36,7 @@
         </VCard>
         <VCard class="adv_card curve_img_4">
             <VCardTitle class="d-flex justify-center">
-                <img src="/images/adv-4.png" />
+                <img class="adv-card-size" src="/images/adv-4.png" />
             </VCardTitle>
             <VCardText class="px-0 py-0">
                 <p class="adv_text">Online courses let you explore fields and hobbies before committing fully.</p>
@@ -44,7 +44,7 @@
         </VCard>
         <VCard class="adv_card curve_img_5">
             <VCardTitle class="d-flex justify-center">
-                <img src="/images/adv-3.png" />
+                <img class="adv-card-size" src="/images/adv-3.png" />
             </VCardTitle>
             <VCardText class="px-0 py-0">
                 <p class="adv_text">Courses in your language use familiar examples, making learning easier.</p>
@@ -57,6 +57,10 @@
 </script>
 
 <style scoped>
+.adv-card-size {
+    width: 69px;
+    height: 65px;
+}
 .curve_img_1::before {
     content: '';
     background-image: url(/images/adv_curve.png);
