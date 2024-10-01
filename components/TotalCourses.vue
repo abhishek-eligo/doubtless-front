@@ -18,7 +18,7 @@ const courses = ref([
 ]);
 </script>
 <template>
-    <div class="d-flex flex-wrap total_course_gap justify-between">
+    <div class="d-flex flex-wrap total_course_gap">
         <CourseCard v-for="course in courses" :key="course.id" :image="course.image" :title="course.title"
         :rating="course.rating" :offPercent="course.offPercent" :tutorName="course.tutorName" />
     </div>

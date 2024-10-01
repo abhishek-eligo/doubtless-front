@@ -5,12 +5,12 @@
         <div class="d-flex gap-3">
           <div class="chipWidth px-0 py-0" v-for="(item, index) in visibleItems" :key="index"
             :class="{ slideLeft: slidingLeft, slideRight: slidingRight }">
-            <v-chip id="course-chip" :class="selectedChip === index ? 'bgChipActive' : 'bgChipUnactive'"
+            <v-btn class="chip-button" id="course-chip" :class="selectedChip === index ? 'bgChipActive' : 'bgChipUnactive'"
               @click="setActiveChip(index, item.slug)">
               {{ item.name }}
               <br />
               <span :class="selectedChip != index ? 'chip_text_color' : ''">Learn All Courses</span>
-            </v-chip>
+            </v-btn>
           </div>
         </div>
       </v-col>
@@ -108,6 +108,11 @@ const setActiveChip = (index, slug) => {
 </script>
 
 <style scoped>
+.chip-button {
+    border-radius: 50px;
+    padding: 10px 30px !important;
+    height: unset !important;
+}
 .chip-carousel {
   align-items: center;
 }

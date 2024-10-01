@@ -55,5 +55,6 @@ const onTabSelected = (value) => {
     color: #000 !important;
     font-weight: 600;
     text-shadow: -1px 3px 3px #00000070;
+    border-bottom: 2px solid #000;
 }
 </style>
