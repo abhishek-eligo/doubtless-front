@@ -70,8 +70,8 @@ onMounted(() => {
         </VContainer>
         <div class="courses_section_two">
             <div class="wrapper">
-                <div class="row flex-wrap gap-5">
-                    <div class="col-md-3 px-0">
+                <div class="row flex-wrap">
+                    <div class="col-md-3">
                         <VCard class="course_filter_card">
                             <VCardTitle class="course_filter_card_title">
                                 <div class="course_filter_div">
@@ -224,7 +224,7 @@ onMounted(() => {
                             </VCard>
                         </v-dialog>
                     </div>
-                    <div class="col-md-9 px-0">
+                    <div class="col-md-9">
                         <TotalCourses />
                     </div>
                 </div>

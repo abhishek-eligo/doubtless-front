@@ -4,7 +4,7 @@
         <CourseChip :items="competitiveCourseChip" @chipSelected="handleChipChange" :reset="resetChipIndex" />
         <!-- <TotalCompetitiveCourses /> -->
         <div class="d-flex course_gap flex-wrap justify-between">
-            <CourseCard v-for="course in courses" :key="course.id" :desc="course.description" :image="course.image" :title="course.title"
+            <CourseCard v-for="course in courses" :key="course.id" :desc="course.description" :image="course.image" :title="course.title" :productVariants="course.product_variants"
                 :rating="course.rating" :offPercent="course.offPercent" :tutorName="course.tutorName" />
         </div>
     </div>
@@ -33,21 +33,25 @@ const getCompetitiveCourses = async () => {
         return {
             id: course.id,
             lead_node_slug: course.lead_node_slug,
-            description: course.description,
+            description: course.description.slice(0, 150),
             image: course.product_image[0].file_path,
             tutorName: course.tutor.name,
             title: course.title,
-            product_variants: course.variants.map(obj => {
-                let newObj = {};
-                    newObj.id = obj.id;
-                    newObj.title = obj.attribute_values[0].name;
-                    newObj.price = obj.price;
-                return newObj;
+            product_variants: course.variants.map(variant => {
+                return {
+                    id: variant.id,
+                    title: variant.attribute_values,
+                    price: variant.price,
+                    offPercent: variant.off_percent,
+                    salePrice: variant.sale_price
+                };
             })
         }
     })
+    const leadNodeSlug = mappedCourses.map(obj => obj.lead_node_slug == courseChipSlugName.value);
+    console.log('SLUG Value', leadNodeSlug);
+
     courses.value = mappedCourses;
-    console.log('asdsadad', product_variants)
 }
 // Your method to handle tab change
 const handleTabChange = async (selectedTab) => {

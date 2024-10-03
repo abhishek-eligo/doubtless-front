@@ -19,8 +19,8 @@
                     </p>
                 </div>
                 <div class="pricingSec px-3 d-flex justify-content-between">
-                    <p class="mb-0">₹ 399 /- <span class="old_price">₹ 599 /-</span></p>
-                    <span class="off_badge">{{ offPercent }}% off</span>
+                    <p class="mb-0">₹ {{ selectedVariant.salePrice > 0 ? selectedVariant.salePrice  : selectedVariant.price }} /- <span v-if="selectedVariant.salePrice" class="old_price">₹ {{ selectedVariant.price  }} /-</span></p>
+                    <span class="off_badge">{{ selectedVariant.offPercent }}% off</span>
                 </div>
             </div>
         </div>
@@ -31,24 +31,18 @@
                     <p class="orangeShade course_1_text">updated : <span>June 2024</span></p>
                     <p class="course_2_text">by : {{ tutorName }}</p>
                     <p v-html="desc" class="html_desc"></p>
-                    <!-- <ul>
-                        <li class="course_info_li_mb">Develop fine motor skills through simple cutting, coloring, and
-                            pasting projects.</li>
-                        <li class="course_info_li_mb">Develop fine motor skills through simple cutting, coloring, and
-                            pasting projects.</li>
-                    </ul> -->
                     <div class="duration_price_div">
-                        <div v-for="(item, index) in courseDurationType" :key="index"
+                        <div v-for="(variant, index) in productVariants" :key="index"
                             class="d-flex align-center duration_mt justify-between">
                             <label class="radio_container d-flex align-center">
 
-                                <input v-model="courseDuration" :value="item.id" class="duration_radio" type="radio" />
+                                <input v-model="courseDuration" :value="variant.id" class="duration_radio" type="radio" />
                                 <span class="duration_radio_span checkmark"></span>
-                                <p class="duration_month">{{ item.title }} Month</p>
+                                <p class="duration_month">{{ variant.title }} Month</p>
                             </label>
                             <div class="d-flex align-center">
-                                <p class="duration_sp">₹{{ item.salePrice }} /-</p>
-                                <p class="duration_op">₹{{ item.originalPrice }}</p>
+                                <p class="duration_sp">₹{{ variant.salePrice > 0 ? variant.salePrice : variant.price }} /-</p>
+                                <p v-if="variant.salePrice" class="duration_op">₹{{ variant.price }}</p>
                             </div>
                         </div>
                     </div>
@@ -74,39 +68,44 @@ const props = defineProps({
   image: String,
   title: String,
   rating: String,
-  offPercent: String,
+  price: Number,
   tutorName: String,
   desc: String,
+  productVariants: Array
 });
 
-// Reactive data using ref
 const courseDuration = ref('');
-const courseDurationType = ref([
-//   { id: 1, title: '3', salePrice: '399', originalPrice: '580' },
-//   { id: 2, title: '6', salePrice: '890', originalPrice: '1280' },
-//   { id: 3, title: '12', salePrice: '1280', originalPrice: '1590' },
-{
-    id: '',
-    title: ''
-}
-]);
-
+const selectedVariant = ref({});
 const cartAdd = ref(false);
 const cartUpdated = ref(false);
 
-const addToCart = () => {
-    cartAdd.value = true;
-    setTimeout(() => {
-        cartAdd.value = false;
-        cartUpdated.value = true;
-    }, 2000)
-}
-
-watch(courseDuration, () => {
-    // Reset to default state whenever the user selects a different radio button
-    cartAdd.value = false;
-    cartUpdated.value = false;
+// Automatically select the first variant as the default
+onMounted(() => {
+  if (props.productVariants) {
+    courseDuration.value = props.productVariants[0].id;
+    selectedVariant.value = props.productVariants[0];
+  }
 });
+
+// Watch for changes in courseDuration to update the selected variant details
+watch(courseDuration, (newValue) => {
+  const variant = props.productVariants.find(v => v.id === newValue);
+  if (variant) {
+    selectedVariant.value = variant;
+  }
+
+  // Reset to default state whenever the user selects a different radio button
+  cartAdd.value = false;
+  cartUpdated.value = false;
+});
+
+const addToCart = () => {
+  cartAdd.value = true;
+  setTimeout(() => {
+    cartAdd.value = false;
+    cartUpdated.value = true;
+  }, 2000);
+};
 </script>
 
 <style scoped>
