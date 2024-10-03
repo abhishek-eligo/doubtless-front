@@ -36,7 +36,7 @@
                             class="d-flex align-center duration_mt justify-between">
                             <label class="radio_container d-flex align-center">
 
-                                <input v-model="courseDuration" :value="variant.id" class="duration_radio" type="radio" />
+                                <input v-model="courseDuration" :value="variant.variantId" class="duration_radio" type="radio" />
                                 <span class="duration_radio_span checkmark"></span>
                                 <p class="duration_month">{{ variant.title }} Month</p>
                             </label>
@@ -64,6 +64,7 @@
 
 
 <script setup>
+const { $axios } = useNuxtApp();
 const props = defineProps({
   image: String,
   title: String,
@@ -78,18 +79,24 @@ const courseDuration = ref('');
 const selectedVariant = ref({});
 const cartAdd = ref(false);
 const cartUpdated = ref(false);
+const userId = ref('');
 
 // Automatically select the first variant as the default
 onMounted(() => {
+    const tokenCookie = useCookie('authToken'); // Access the token cookie
+    const userCookie = useCookie('userData'); // Access the user data cookie
+    userId.value = userCookie.value?.id ? userCookie.value?.id : '';
+    console.log("USER IDDDDDDDDD"+userId.value);
   if (props.productVariants) {
-    courseDuration.value = props.productVariants[0].id;
+    courseDuration.value = props.productVariants[0].variantId;
+    console.log("DJHDGHDG",props.productVariants[0].variantId, props.productVariants[0]);
     selectedVariant.value = props.productVariants[0];
   }
 });
 
 // Watch for changes in courseDuration to update the selected variant details
 watch(courseDuration, (newValue) => {
-  const variant = props.productVariants.find(v => v.id === newValue);
+  const variant = props.productVariants.find(v => v.variantId === newValue);
   if (variant) {
     selectedVariant.value = variant;
   }
@@ -99,13 +106,62 @@ watch(courseDuration, (newValue) => {
   cartUpdated.value = false;
 });
 
-const addToCart = () => {
+const debounce = (func, delay) => {
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            func.apply(this, args);
+        }, delay);
+    };
+}
+
+const addToCart = debounce(async() => {
   cartAdd.value = true;
-  setTimeout(() => {
-    cartAdd.value = false;
-    cartUpdated.value = true;
-  }, 2000);
-};
+
+    console.log(selectedVariant.value);
+
+    let cartItem = {
+        'user_id' : userId.value,
+        'product_id' : selectedVariant.value.productId,
+        'variant_id' : selectedVariant.value.variantId,
+        'quantity' : 1,
+        'is_digital' : true,
+        'price' :  selectedVariant.value.salePrice > 0 ? selectedVariant.value.salePrice : selectedVariant.value.price
+    };
+
+    try {
+        // Reset error messages
+
+        // Make the API request using the Axios instance
+        const response = await $axios.post('/cart/add-item', cartItem);
+
+        console.log(response.data); // Log the response data
+
+        // Check the response for success
+        if (response.data.success) {
+            cartAdd.value = false;
+            cartUpdated.value = true;
+        } else {
+
+        }
+    } catch (error) {
+        console.error('Error sending signup OTP:', error); // Log the error for debugging
+
+        // Handle specific error messages if available
+        // if (error.response && error.response.data) {
+        //     console.error('API Error:', error.response.data.errors || error.response.data.message);
+        //     if (error.response.data.errors.email) {
+        //         signupEmailErrorMsg.value = error.response.data.errors.email[0];
+        //     }
+        //     if (error.response.data.errors.phone) {
+        //         signupPhoneErrorMsg.value = error.response.data.errors.phone[0];
+        //     }
+        // }
+    }
+
+    console.log("cartItem",cartItem);
+}, 3000);
 </script>
 
 <style scoped>

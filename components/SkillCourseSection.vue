@@ -26,17 +26,19 @@ const handleTabChange = async (selectedTab) => {
         resetChipIndex.value = false;
     }, 100);
     courseTabSlugName.value = selectedTab;
-    await getSubCategory(courseTabSlugName.value)
+    await getSubCategory(courseTabSlugName.value);
+    await getSkillCourses();
 }
 
 // State to reset the chip index
 const resetChipIndex = ref(false);
 
-const handleChipChange = (selectedChip) => {
+const handleChipChange = async (selectedChip) => {
     // Execute your logic based on selectedTab
     console.log("CHIP", selectedChip);
     courseChipSlugName.value = selectedChip;
     getProduct(courseTabSlugName.value, courseChipSlugName.value);
+    await getSkillCourses();
 }
 
 const skillTabs = ref([]);
@@ -52,22 +54,25 @@ const getSkillCategoryCourse = async () => {
     });
 }
 const getSkillCourses = async () => {
-    const response = await $axios.get("/courses/published_product?course_category_id=3");
-    console.log('CC:- ', response.data.data);
+    courses.value = [];
+    const response = await $axios.get("/courses/all_published_course?course_category_id=3");
+    console.log('SC:- ', response.data.data);
     const courseData = response.data.data;
-    console.log('Courses Data', courseData)
+    console.log('Courses Data', courseData, courseChipSlugName.value)
     let product_variants = [];
     const mappedCourses = courseData.map(course => {
         return {
             id: course.id,
-            lead_node_slug: course.lead_node_slug,
+            parent_node_slug: course.parent_node_slug,
+            leaf_node_slug: course.leaf_node_slug,
             description: course.description.slice(0, 150),
             image: course.product_image[0].file_path,
             tutorName: course.tutor.name,
             title: course.title,
             product_variants: course.variants.map(variant => {
                 return {
-                    id: variant.id,
+                    variantId: variant.id,
+                    productId: variant.product_id,
                     title: variant.attribute_values,
                     price: variant.price,
                     offPercent: variant.off_percent,
@@ -76,16 +81,16 @@ const getSkillCourses = async () => {
             })
         }
     })
-    const leadNodeSlug = mappedCourses.map(obj => obj.lead_node_slug == courseChipSlugName.value);
-    console.log('SLUG Value', leadNodeSlug);
-    console.log('mappedCourses', mappedCourses)
-    courses.value = mappedCourses;
+    // console.log('mappedCourses', mappedCourses)
+    const filteredCourses = mappedCourses.filter(course => course.leaf_node_slug === courseChipSlugName.value && course.parent_node_slug === courseTabSlugName.value);
+    console.log('filteredCourses', filteredCourses)
+    courses.value = filteredCourses;
 }
 
 onMounted(async () => {
     await getSkillCategoryCourse();
     await getSubCategory(courseTabSlugName.value);
-    getSkillCourses();
+    await getSkillCourses();
 })
 
 const skillCourseChip = ref([]);

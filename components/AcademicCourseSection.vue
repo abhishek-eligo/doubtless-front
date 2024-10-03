@@ -30,22 +30,24 @@ const classNames = ref([]);
 
 const courses = ref([]);
 const getAcademicCourses = async () => {
-    const response = await $axios.get("/courses/published_product?course_category_id=1");
-    console.log('CC:- ', response.data.data);
+    const response = await $axios.get("/courses/all_published_course?course_category_id=1");
+    // console.log('CC:- ', response.data.data);
     const courseData = response.data.data;
-    console.log('Courses Data', courseData)
+    console.log('acad Courses Data', courseData)
     let product_variants = [];
     const mappedCourses = courseData.map(course => {
         return {
             id: course.id,
-            lead_node_slug: course.lead_node_slug,
+            leaf_node_slug: course.leaf_node_slug,
+            parent_node_slug: course.parent_node_slug,
             description: course.description.slice(0, 150),
             image: course.product_image[0].file_path,
             tutorName: course.tutor.name,
             title: course.title,
             product_variants: course.variants.map(variant => {
                 return {
-                    id: variant.id,
+                    variantId: variant.id,
+                    productId: variant.product_id,
                     title: variant.attribute_values,
                     price: variant.price,
                     offPercent: variant.off_percent,
@@ -54,7 +56,10 @@ const getAcademicCourses = async () => {
             })
         }
     })
-    courses.value = mappedCourses;
+    console.log('acad maped courses', mappedCourses);
+    const filteredCourses = mappedCourses.filter(course => course.leaf_node_slug == selectedChipSlug.value && course.parent_node_slug == selectedTabSlug.value);
+    console.log('acad filteredCourses', filteredCourses)
+    courses.value = filteredCourses;
 }
 
 
@@ -87,10 +92,11 @@ const getAllClasses = async () => {
 };
 
 // Handle tab selection
-const onTabSelected = (slug) => {
+const onTabSelected = async (slug) => {
   selectedTabSlug.value = slug;
   console.log('Selected Tab Slug:', selectedTabSlug.value);
-  logTabAndChip();  // Log tab and chip slug together
+  logTabAndChip();
+  await getAcademicCourses();
 
   // Reset chip index to 0 whenever a new tab is selected
   resetChipIndex.value = true;
@@ -100,10 +106,11 @@ const onTabSelected = (slug) => {
 };
 
 // Handle chip selection
-const onChipSelected = (slug) => {
+const onChipSelected = async (slug) => {
   selectedChipSlug.value = slug;
   console.log('Selected Chip Slug:', selectedChipSlug.value);
-  logTabAndChip();  // Log tab and chip slug together
+  logTabAndChip();
+  await getAcademicCourses();
 };
 
 // Log both tab and chip slugs together
@@ -111,10 +118,10 @@ const logTabAndChip = () => {
   console.log(`Active Tab Slug: ${selectedTabSlug.value}, Active Chip Slug: ${selectedChipSlug.value}`);
 };
 
-onMounted(() => {
-  getAllBoards();
-  getAllClasses();
-  getAcademicCourses();
+onMounted(async () => {
+  await getAllBoards();
+  await getAllClasses();
+  await getAcademicCourses();
 });
 </script>
 

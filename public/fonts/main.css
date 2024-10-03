@@ -356,6 +356,7 @@ img.ftr_link_icon {
 
 .playButton:hover {
     color: var(--white);
+    transition: 0.3s;
 }
 
 .container_one p {
