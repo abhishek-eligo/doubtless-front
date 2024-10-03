@@ -1428,6 +1428,7 @@ p.signUp_text {
     background-color: #F4CCB5;
     border-radius: 50%;
     border: 1px solid #757373;
+    padding: 1.1px 1px;
 }
 
 .checkmark:after {

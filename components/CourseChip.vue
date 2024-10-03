@@ -112,6 +112,7 @@ const setActiveChip = (index, slug) => {
     border-radius: 50px;
     padding: 10px 30px !important;
     height: unset !important;
+    box-shadow: unset;
 }
 .chip-carousel {
   align-items: center;
