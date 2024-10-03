@@ -14,9 +14,6 @@
           </div>
         </div>
       </v-col>
-
-
-
       <v-col class="arrow_button justify-content-end" cols="1">
         <!-- 👉 Prev Button -->
         <v-btn  v-if="canSlideLeft" icon @click="slideLeft">
@@ -128,6 +125,7 @@ const setActiveChip = (index, slug) => {
 
 .chip_text_color {
   color: #797979;
+  text-transform: capitalize;
 }
 
 @keyframes slideToLeft {

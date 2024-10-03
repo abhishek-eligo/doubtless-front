@@ -17,29 +17,26 @@ const { $axios } = useNuxtApp();
 const courseTabSlugName = ref('');
 const courseChipSlugName = ref('');
 
-const courses = ref([
-    // { id: '1', image: '/images/comp-1.png', tutorName: 'Dr. Myra Raj', title: 'Union and State Governments Roles and Responsibilities', rating: '4.7', offPercent: '40' },
-    // { id: '2', image: '/images/comp-2.png', tutorName: 'Khan Sir', title: 'Economic Geography of India Resources and Industries', rating: '4.3', offPercent: '40' },
-    // { id: '3', image: '/images/comp-3.png', tutorName: 'Vidyapheet', title: 'Economic History of India Pre and Post-Colonial', rating: '4.3', offPercent: '40' },
-    // { id: '4', image: '/images/course-4.png', tutorName: 'Dods', title: 'Creative Expressions Drawing & Craft for Kids', rating: '4.3', offPercent: '40' },
-]);
+const courses = ref([]);
 const getCompetitiveCourses = async () => {
-    const response = await $axios.get("/courses/published_product?course_category_id=2");
-    console.log('CC:- ', response.data.data);
+    const response = await $axios.get("/courses/all_published_course?course_category_id=2");
+    // console.log('CC:- ', response.data.data);
     const courseData = response.data.data;
-    console.log('Courses Data', courseData)
+    // console.log('Courses Data', courseData)
     let product_variants = [];
     const mappedCourses = courseData.map(course => {
         return {
             id: course.id,
-            lead_node_slug: course.lead_node_slug,
+            leaf_node_slug: course.leaf_node_slug,
+            parent_node_slug: course.parent_node_slug,
             description: course.description.slice(0, 150),
             image: course.product_image[0].file_path,
             tutorName: course.tutor.name,
             title: course.title,
             product_variants: course.variants.map(variant => {
                 return {
-                    id: variant.id,
+                    variantId: variant.id,
+                    productId: variant.product_id,
                     title: variant.attribute_values,
                     price: variant.price,
                     offPercent: variant.off_percent,
@@ -48,10 +45,10 @@ const getCompetitiveCourses = async () => {
             })
         }
     })
-    const leadNodeSlug = mappedCourses.map(obj => obj.lead_node_slug == courseChipSlugName.value);
-    console.log('SLUG Value', leadNodeSlug);
-
-    courses.value = mappedCourses;
+    console.log('comp maped courses', mappedCourses);
+    const filteredCourses = mappedCourses.filter(course => course.leaf_node_slug == courseChipSlugName.value && course.parent_node_slug == courseTabSlugName.value);
+    console.log('Competitve filteredCourses', filteredCourses)
+    courses.value = filteredCourses;
 }
 // Your method to handle tab change
 const handleTabChange = async (selectedTab) => {
@@ -62,7 +59,8 @@ const handleTabChange = async (selectedTab) => {
         resetChipIndex.value = false;
     }, 100);
     courseTabSlugName.value = selectedTab;
-    await getSubCategory(selectedTab)
+    await getSubCategory(courseTabSlugName.value);
+    await getCompetitiveCourses();
 }
 
 const productVariants = ref([]);
@@ -84,12 +82,19 @@ const getCompetitiveCategoryCourse = async () => {
 const resetChipIndex = ref(false);
 
 
-const handleChipChange = (selectedChip) => {
+const handleChipChange = async (selectedChip) => {
     // Execute your logic based on selectedTab
     console.log("CHIP", selectedChip);
     courseChipSlugName.value = selectedChip;
     getProduct(courseTabSlugName.value, courseChipSlugName.value);
+    await getCompetitiveCourses();
 }
+
+onMounted(async () => {
+    await getCompetitiveCategoryCourse();
+    await getSubCategory(courseTabSlugName.value);
+    await getCompetitiveCourses();
+})
 
 const competitiveCourseChip = ref([]);
 
@@ -104,11 +109,7 @@ const getSubCategory = async (slugTemp) => {
     });
 }
 
-onMounted(async () => {
-    await getCompetitiveCategoryCourse();
-    await getSubCategory(courseTabSlugName.value);
-    await getCompetitiveCourses();
-})
+
 
 const getProduct = (tabSlug, chipSlug) => {
     console.log(tabSlug, chipSlug);
