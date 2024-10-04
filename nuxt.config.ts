@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: false },
   modules: [// "@nuxtjs/tailwindcss",
-  "nuxt-swiper", "vuetify-nuxt-module", "nuxt-marquee", "vue3-carousel-nuxt", '@nuxt/ui', '@element-plus/nuxt'],
+  "nuxt-swiper", "vuetify-nuxt-module", "nuxt-marquee", "vue3-carousel-nuxt", '@nuxt/ui', '@element-plus/nuxt', '@pinia/nuxt'],
   plugins: [
     '~/plugins/vue3-toastify.js'
   ],
@@ -15,6 +15,9 @@ export default defineNuxtConfig({
   ],
   build: {
     transpile: ['@heroicons/vue'],
+  },
+  alias: {
+    pinia: "/node_modules/@pinia/nuxt/node_modules/pinia/dist/pinia.mjs"
   },
   runtimeConfig: {
     public: {

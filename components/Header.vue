@@ -1,5 +1,8 @@
 <script setup>
 const { $axios, $retryRequest } = useNuxtApp();
+import { useAuthStore } from '~/stores/auth'
+
+const authStore = useAuthStore()
 let authUserToken = ref(null);
 let authUserData = ref(null);
 const choiceModal = ref(false);
@@ -26,16 +29,24 @@ const signupPhoneErrorMsg = ref('');
 const signupNameErrorMsg = ref('');
 const loginOTP = ref();
 const registerOTP = ref();
-const userLoginCard = ref(false);
+const userLoginCard = ref(false); 
 
+// watch([authUserToken, authUserData], ([newToken, newData]) => {
+//     if (newToken === null && newData === null) {
+//         console.log("User is not authenticated.");
+//     } else {
+//         console.log("User is authenticated.");
+//     }
+// });
 
-watch([authUserToken, authUserData], ([newToken, newData]) => {
-    if (newToken === null && newData === null) {
-        console.log("User is not authenticated.");
-    } else {
-        console.log("User is authenticated.");
-    }
-});
+// Watch for changes in auth store's token and user state
+// watch([() => authStore.token, () => authStore.user], ([newToken, newUser]) => {
+//     if (newToken === null && newUser === null) {
+//         console.log("User is not authenticated.");
+//     } else {
+//         console.log("User is authenticated.");
+//     }
+// });
 
 watch(loginOTP, (newOTP) => {
     //console.log("loginOTP", newOTP.length == 4);
@@ -102,28 +113,25 @@ const verify_login_otp = async () => {
         loginOtpIsVerified.value = false;
 
         // Make the API request using the Axios instance
-        const response = await $axios.post('/verify-login-otp', {
+        const response = await authStore.verifyLoginOtp({
             email: loginEmail.value, // Assuming loginEmail is a reactive ref
             otp: loginOTP.value,
         });
 
+        console.log("User Data:", authStore.user, "Auth Token:", authStore.token);
+
         // Check the response for success
-        if (response.data.success) {
+        if (response.success) {
             loginOtpIsVerified.value = true;
-            console.log(response.data);
-
-            // Set the auth token in the cookie
-            const authCookie = useCookie('authToken');
-            authCookie.value = response.data.token; // Set the token in the cookie
-            authUserToken.value = authCookie.value;
-
-            // Store user data as a string
-            const userCookie = useCookie('userData');
-            userCookie.value = JSON.stringify(response.data.user);
-            authUserData.value = userCookie.value ? JSON.parse(userCookie.value) : null;
         } else {
-            inValidOtpMsg.value = response.data.message;
-            isInvalidOtp.value = true;
+            if (authStore.otpStatus === 'OTP_INVALID') {
+                inValidOtpMsg.value = response.message;
+                isInvalidOtp.value = true;
+            }
+            if (authStore.otpStatus === 'OTP_EXPIRED') {
+                inValidOtpMsg.value = response.message;
+                isInvalidOtp.value = true;
+            }
         }
     } catch (error) {
         console.error('Error verifying OTP:', error); // Log the error for debugging
@@ -143,30 +151,25 @@ const verify_signup_otp = async () => {
         signupPhoneErrorMsg.value = "";
 
         // Make the API request using the Axios instance
-        const response = await $axios.post('/verify-signup-otp', {
+        const response = await authStore.verifySignUpOtp({
             email: signUpEmail.value, // Assuming signUpEmail is a reactive ref
             otp: registerOTP.value,
         });
 
-        console.log(response.data); // Log the response data
+        console.log("User Data:", authStore.user, "Auth Token:", authStore.token);
 
         // Check the response for success
-        if (response.data.success) {
+        if (response.success) {
             signUpOtpIsVerified.value = true;
-            console.log(response.data);
-
-            // Set the auth token in the cookie
-            const authCookie = useCookie('authToken');
-            authCookie.value = response.data.token; // Set the token in the cookie
-            authUserToken.value = authCookie.value;
-
-            // Store user data as a string
-            const userCookie = useCookie('userData');
-            userCookie.value = JSON.stringify(response.data.user);
-            authUserData.value = userCookie.value ? JSON.parse(userCookie.value) : null;
         } else {
-            inValidOtpMsg.value = response.data.message;
-            isInvalidOtp.value = true;
+            if (authStore.otpStatus === 'OTP_INVALID') {
+                inValidOtpMsg.value = response.message;
+                isInvalidOtp.value = true;
+            }
+            if (authStore.otpStatus === 'OTP_EXPIRED') {
+                inValidOtpMsg.value = response.message;
+                isInvalidOtp.value = true;
+            }
         }
     } catch (error) {
         console.error('Error verifying signup OTP:', error); // Log the error for debugging
@@ -208,14 +211,8 @@ const goToDashboard = () => {
 }
 
 function logout() {
-    const tokenCookie = useCookie('authToken'); // Access the token cookie
-    const userCookie = useCookie('userData'); // Access the user data cookie
-
-    tokenCookie.value = null; // Clear the token from the cookie
-    userCookie.value = null; // Clear the user data from the cookie
-    authUserToken.value = null;
-    authUserData.value = null;
     userLoginCard.value = false;
+    authStore.logout();
     useRouter().push('/'); // Redirect to the login page
 }
 
@@ -230,7 +227,7 @@ const isValidEmail = (email) => validators.email.test(email);
 const isValidPhone = (phone) => validators.phone.test(phone);
 
 const registerOtpModal = debounce(async () => {
-    // Validate inputs
+
     if (!signUpEmail.value) {
         signupEmailErrorMsg.value = "Email is required";
         return;
@@ -261,26 +258,26 @@ const registerOtpModal = debounce(async () => {
         signupPhoneErrorMsg.value = "";
         signupEmailErrorMsg.value = "";
 
-        // Make the API request using the Axios instance
-        const response = await $axios.post('/send-signup-otp', {
+        // Use authStore.requestOtp for sending the OTP
+        const responseMessage = await authStore.sendSignUpOtp({
             name: signUpName.value,
             email: signUpEmail.value,
             phone: signUpNumber.value,
             role: 'student',
         });
 
-        console.log(response.data); // Log the response data
-
-        // Check the response for success
-        if (response.data.success) {
-            if (response.data.otp_expiration_time >= 120) {
+        console.log(responseMessage); // Log the response message from the store
+        console.log("RADHEY RADHEY KRISHNA", authStore.otpStatus, authStore.expirationTime);
+        // Assuming `authStore.requestOtp` resolves with OTP expiration details
+        if (authStore.otpStatus === 'OTP_SENT') {
+            if (authStore.expirationTime >= 120) {
                 expirationTime.value = 120;
                 startCountdown(expirationTime.value);
             }
             signUpIsOpen.value = false;
             signUpOtpModalIsOpen.value = true;
         } else {
-            signupEmailErrorMsg.value = response.data.message;
+            signupEmailErrorMsg.value = "OTP sending failed. Please try again.";
         }
     } catch (error) {
         console.error('Error sending signup OTP:', error); // Log the error for debugging
@@ -316,22 +313,25 @@ const loginOtpModal = debounce(async () => {
     loginEmailErrorMsg.value = "";
 
     try {
-
-        const response = await $axios.post('/send-login-otp', {
+        const responseMessage = await authStore.sendLoginOtp({
             email: loginEmail.value,
         });
 
+        console.log(responseMessage); // Log the response message from the store
+        console.log("RADHEY RADHEY KRISHNA", authStore.otpStatus, authStore.expirationTime);
+
         // Handle the response
-        if (response.data.success) {
-            if (response.data.otp_expiration_time >= 120) {
+        if (authStore.otpStatus === 'OTP_SENT') {
+            if (authStore.expirationTime >= 120) {
                 expirationTime.value = 120;
                 startCountdown(expirationTime.value);
             }
             loginIsOpen.value = false;
             loginOtpModalIsOpen.value = true;
         } else {
-            loginEmailErrorMsg.value = response.data.message;
+            loginEmailErrorMsg.value = response.message;
         }
+
     } catch (e) {
         // Handle errors
         console.log(e.response?.data.errors);
@@ -366,16 +366,8 @@ const closeChoiceModal = () => {
     choiceModal.value = false;
 }
 
-onMounted(() => {
-    const tokenCookie = useCookie('authToken'); // Access the token cookie
-    const userCookie = useCookie('userData'); // Access the user data cookie
-    if (tokenCookie.value != undefined && userCookie.value != undefined) {
-        authUserToken.value = tokenCookie.value;
-        authUserData.value = userCookie.value;
-    } else {
-        authUserToken.value = null;
-        authUserData.value = null;
-    }
+onMounted(async () => {
+    await authStore.restoreAuthFromCookies();
 });
 </script>
 
@@ -383,8 +375,8 @@ onMounted(() => {
     <div>
         <div class="top-header">
             <div class="wrapper">
-                <div class="row align-items-center">
-                    <div class="col-md-8">
+                <div class="d-flex flex-wrap justify-content-md-between justify-center align-items-center">
+                    <div class="">
                         <div class="banner text-white">
                             <div class="slider-container">
                                 <p class="header_text mb-0">Learn Anytime, Anywhere Get Your Tablet and Start Mastering
@@ -393,7 +385,7 @@ onMounted(() => {
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="">
                         <div class="d-flex gap-4 justify-end">
                             <div class="d-flex gap-1 justify-content-end">
                                 <img class="contact_items" src="/images/call.png" />
@@ -401,7 +393,7 @@ onMounted(() => {
                             </div>
                             <div class="d-flex gap-1 justify-content-end">
                                 <img class="contact_items" src="/images/msg.png" />
-                                <p class="text-white mb-0">doubtlessinfo23@gmail.com</p>
+                                <p class="text-white mailto:mb-0">doubtlessinfo23@gmail.com</p>
                             </div>
                         </div>
                     </div>
@@ -411,8 +403,8 @@ onMounted(() => {
 
         <div class="bottom_header">
             <div class="wrapper">
-                <div class="row align-items-center">
-                    <div class="col-md-4 gap-2 d-flex">
+                <div class="d-flex flex-wrap login_card_pos justify-content-md-between justify-center align-items-center">
+                    <div class="gap-2 d-flex">
                         <!-- Logo -->
                         <nuxt-link to="/">
                             <img class="logo_img" src="/images/logo_1.png" />
@@ -429,7 +421,7 @@ onMounted(() => {
                             </div>
                         </form>
                     </div>
-                    <div class="col-md-6">
+                    <div class="">
                         <!-- Navbar Links -->
                         <div class="navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav gap-3 justify-content-center flex-row">
@@ -447,25 +439,29 @@ onMounted(() => {
                         <nuxt-link to="/cart">
                             <img class="cart_img" src="../public/images/cart.png" />
                         </nuxt-link>
-                        <button @click="openChoiceModal" class="hdr_btn"
-                            v-if="authUserToken === null && authUserData === null">Login now</button>
+
+                        <button @click="openChoiceModal" class="hdr_btn" v-if="!authStore.isAuthenticated">Login now</button>
                         <img @click="openLoginCard" class="user_logo" v-else src="/images/user.png" />
-                        <VCard v-if="userLoginCard == true" class="user_login_card">
+
+                        <!-- User Login Card -->
+                        <VCard v-if="userLoginCard" class="user_login_card">
+                            
                             <VCardTitle class="user_login_card_title d-flex align-center">
-                                <h5>{{ authUserData?.name.slice(0, 1) }}</h5>
+                                <h5>{{ authStore.user?.name.slice(0, 1) }}</h5>
                                 <div>
-                                    <p class="user_login_card_name">{{ authUserData?.name }}</p>
-                                    <p class="user_login_card_email">{{ authUserData?.email }}</p>
+                                    <p class="user_login_card_name">{{ authStore.user?.name }}</p>
+                                    <p class="user_login_card_email">{{ authStore.user?.email }}</p>
                                 </div>
                             </VCardTitle>
                             <VCardText class="user_login_card_text">
-                                <nuxt-link class="no_txt_deco" :to="`/my-learning/${authUserData?.id}`">
+                                <nuxt-link class="no_txt_deco" :to="`/my-learning/${authStore.user?.id}`">
                                     <p class="user_login_card_p user_login_card_p_mb">My learning</p>
                                 </nuxt-link>
                                 <p class="user_login_card_p user_login_card_p_mb">Help and support</p>
                                 <p @click="logout" class="user_login_card_p">Logout</p>
                             </VCardText>
                         </VCard>
+
                         <!-- <button @click="logout" class="hdr_btn" v-else>Logout</button> -->
                     </div>
                 </div>
@@ -656,6 +652,7 @@ p.user_login_card_p {
     font-weight: 500;
     color: #676666;
 }
+
 .no_txt_deco {
     text-decoration: none;
 }

@@ -1,5 +1,10 @@
 <script setup>
+import { useAuthStore } from '~/stores/auth'
 
+const authStore = useAuthStore()
+
+// Fetch user data on app load
+//authStore.fetchUser()
 </script>
 <style></style>
 
