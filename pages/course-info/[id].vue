@@ -31,7 +31,7 @@ const courseTutorVariants = ref([
                     <h1>Fun with Numbers and Shapes<br>
                         Early <span class="orangeShade">Math Adventurest</span></h1>
                     <p>Explore numbers and shapes through engaging activities, building a strong foundation in early
-                        math<br> concepts.</p>
+                        math concepts.</p>
                 </div>
             </div>
         </div>
@@ -137,7 +137,7 @@ const courseTutorVariants = ref([
                             Students appreciate my clear explanations and responsive feedback. I am committed to
                             continuous professional development to stay current with educational trends. For course
                             inquiries or collaborations,<br>
-                            please contact me at <span class="blue_email">amayrasinghteh32@gmail.com.</span>
+                            please contact me at <span mailto:class="blue_email">amayrasinghteh32@gmail.com.</span>
                         </p>
 
                         <div class="featured_review_div">
@@ -254,6 +254,13 @@ img.crseTypeimgSize {
     font-family: var(--Montserrat);
 }
 
+.course_related_chip:hover {
+    background: #F87126 !important;
+    border: 1px solid #F87126;
+    color: #fff !important;
+    transition: 0.3s;
+}
+
 .course_related_chip .v-chip__content {
     color: #F87126;
     font-size: 18px;
@@ -266,9 +273,9 @@ h1.course_relate_chip {
 
 .course_info_left_sec {
     width: 100%;
-    max-width: 686px;
+    max-width: 728px;
     background: #fff;
-    padding: 30px 35px;
+    padding: 30px 20px;
 }
 
 .courseInfo_section {
