@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 :root {
+    --Poppins: 'Poppins';
     --Montserrat: "Montserrat";
     --Helvetica: 'Helvetica';
     --Roboto: 'Roboto', sans-serif;
@@ -64,6 +65,7 @@ button:hover {
 .wrapper {
     max-width: var(--wrapper_width);
     margin: 0 auto;
+    padding: 0 15px;
 }
 
 .text_align_center {
@@ -1329,6 +1331,28 @@ p.signUp_text {
     border-bottom: 0.5px solid #757373;
 }
 
+.filter_choice_chip .v-chip__content {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 120%;
+}
+
+.filter_choice_chip button i::after {
+    display: none;
+}
+
+.filter_choice_chip button i::before {
+    content: '✖';
+    color: #fff;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+button.v-chip__close {
+    margin-left: 20px !important;
+}
+
 
 /* COURSES PAGE END */
 
@@ -1421,7 +1445,7 @@ p.signUp_text {
 }
 
 .checkmark {
-    position: absolute;
+    position: relative;
     top: 0;
     left: 0;
     height: 12px;
@@ -1429,7 +1453,7 @@ p.signUp_text {
     background-color: #F4CCB5;
     border-radius: 50%;
     border: 1px solid #757373;
-    padding: 1.1px 1px;
+    padding: 1px 2px;
 }
 
 .checkmark:after {
@@ -1443,10 +1467,12 @@ p.signUp_text {
 }
 
 .radio_container .checkmark:after {
-    width: 7px;
-    height: 7px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
     background: #F87126;
+    top: 2px;
+    right: 2px;
 }
 
 .add_cart_btn {

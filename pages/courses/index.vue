@@ -55,7 +55,7 @@ onMounted(() => {
 <template>
     <div>
         <VContainer class="px-0 py-0 courses_section_one">
-            <VRow class="justify-content-around align-center">
+            <VRow class="justify-content-around align-center m-0">
                 <div class="course_pg_div">
                     <div class="d-flex justify-center">
                         <img class="course_pg_img" src="/images/OBJECTS.png" />
@@ -70,8 +70,20 @@ onMounted(() => {
         </VContainer>
         <div class="courses_section_two">
             <div class="wrapper">
+                <div class="filter_chip_div">
+                    <v-chip class="filter_choice_chip" closable>
+                        Class - 1
+                    </v-chip>
+                    <v-chip class="filter_choice_chip" closable>
+                        Class - 1
+                    </v-chip>
+                    <v-chip class="filter_choice_chip" closable>
+                        Class - 1
+                    </v-chip>
+                    <USkeleton class="w-[250px]" />
+                </div>
                 <div class="row flex-wrap">
-                    <div class="col-md-3">
+                    <div class="col-lg-3">
                         <VCard class="course_filter_card">
                             <VCardTitle class="course_filter_card_title">
                                 <div class="course_filter_div">
@@ -91,18 +103,16 @@ onMounted(() => {
                                             <template #board>
                                                 <VCheckbox v-for="(board, index) in slicedBoards" :key="index"
                                                     class="filter_checkbox" v-model="selectedBoard" :value="board.name"
-                                                    :label="board.name" 
-                                                    />
-                                                    <p @click="openBoardFilterModal" class="acadameic_accord_see_more">
-                                                        See
-                                                        More...
-                                                    </p>
+                                                    :label="board.name" />
+                                                <p @click="openBoardFilterModal" class="acadameic_accord_see_more">
+                                                    See
+                                                    More...
+                                                </p>
                                             </template>
                                             <template #classes>
                                                 <VCheckbox v-for="(board, index) in slicedClasses" :key="index"
                                                     class="filter_checkbox" v-model="selectedClass" :value="board.name"
-                                                    :label="board.name" 
-                                                    />
+                                                    :label="board.name" />
                                                 <p @click="openClassFilterModal" class="acadameic_accord_see_more">See
                                                     More...
                                                 </p>
@@ -224,7 +234,7 @@ onMounted(() => {
                             </VCard>
                         </v-dialog>
                     </div>
-                    <div class="col-md-9">
+                    <div class="col-lg-9">
                         <TotalCourses />
                     </div>
                 </div>
@@ -234,6 +244,19 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.filter_choice_chip {
+    padding: 8px 20px !important;
+    background: #F87126;
+}
+.filter_chip_div {
+    margin-bottom: 40px;
+    border-bottom: 1px solid #F87126;
+    padding: 0 12px 12px 12px;
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 14px;
+    row-gap: 14px;
+}
 .total_course_gap {
     row-gap: 40px;
     column-gap: 40px;
@@ -401,7 +424,7 @@ button.course_filter_btn {
 }
 
 .courses_section_two {
-    padding-top: 30px;
+    margin-top: 30px;
     padding-bottom: 30px;
 }
 
@@ -415,7 +438,8 @@ button.course_filter_btn {
 .courses_section_one {
     min-width: 100%;
     background-image: url(/images/course_page_bg.png);
-    background-size: cover
+    background-size: cover;
+    padding: 55px 0 !important;
 }
 
 .course_pg_div {
