@@ -76,6 +76,7 @@ const getCompetitiveCategoryCourse = async () => {
         newObj.slug = obj.slug;
         return newObj;
     });
+    await getSubCategory(courseTabSlugName.value);
 }
 
 // State to reset the chip index
@@ -107,6 +108,10 @@ const getSubCategory = async (slugTemp) => {
         newObj.slug = obj.slug;
         return newObj;
     });
+    if (competitiveCourseChip.value.length > 0) {
+        courseChipSlugName.value = competitiveCourseChip.value[0].slug;
+        await getCompetitiveCourses(); // Call filtering after setting default chip
+    }
 }
 
 

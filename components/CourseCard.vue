@@ -2,7 +2,7 @@
     <div class="parentCard px-0">
         <div class="course-card">
             <div class="position-relative">
-                <img :src="image" alt="Course Image">
+                <img class="course_card_image" :src="image" alt="Course Image">
                 <!-- <span class="badge">{{ offPercent }} % off</span> -->
             </div>
             <div>
@@ -165,6 +165,15 @@ const addToCart = debounce(async() => {
 </script>
 
 <style scoped>
+p.html_desc {
+    margin-bottom: 10px !important;
+}
+img.course_card_image {
+    height: 100%;
+    max-height: 215px;
+    object-fit: cover;
+    object-position: center top;
+}
 .loader_rotate_size {
     width: 10px;
     height: 10px;

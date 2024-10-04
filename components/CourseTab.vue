@@ -1,5 +1,5 @@
 <template>
-    <v-container class="m-0 py-0 px-0">
+    <div class="m-0 py-0 px-0">
         <v-tabs class="tab_border" v-model="activeTab" show-arrows @update:modelValue="onTabSelected">
             <!-- <Tooltip  text="This is a custom tooltip" /> -->
              <!-- <span class="tooltip">Central Board of Education</span> -->
@@ -8,7 +8,7 @@
                 {{ tab.name }}
             </v-tab>
         </v-tabs>
-    </v-container>
+    </div>
 </template>
 
 <script setup>

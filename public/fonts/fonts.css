@@ -46,3 +46,27 @@
     font-weight: bold;
     src: local('Montserrat Bold'), url('./Montserrat-Bold.ttf') format('truetype');
 }
+
+@font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 600;
+    /* Semi-Bold */
+    src: local('Montserrat SemiBold'), url('./Montserrat-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 500;
+    /* Medium */
+    src: local('Montserrat Medium'), url('./Montserrat-Medium.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 800;
+    /* Extra-Bold */
+    src: local('Montserrat ExtraBold'), url('./Montserrat-ExtraBold.ttf') format('truetype');
+}

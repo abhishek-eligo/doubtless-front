@@ -1,6 +1,8 @@
 <template>
   <div>
-    <CourseTab :tabs="boardNames" @tabSelected="onTabSelected" />
+    <USkeleton v-if="tabLoading" class="course_tab_loader" />
+    <CourseTab v-else :tabs="boardNames" @tabSelected="onTabSelected" />
+    <USkeleton class="course_chip_loader" />
     <CourseChip :items="classNames" @chipSelected="onChipSelected" :reset="resetChipIndex" />
     <!-- <TotalAcademicCourses /> -->
     <div class="d-flex course_gap flex-wrap justify-between">
@@ -15,6 +17,8 @@
 import { ref, onMounted } from 'vue';
 const { $axios } = useNuxtApp();
 
+const tabLoading = ref(true);
+
 // State to store slugs
 const selectedTabSlug = ref('');
 const selectedChipSlug = ref('');
@@ -24,44 +28,45 @@ const resetChipIndex = ref(false);
 
 // Board names data
 const boardNames = ref([]);
-
-// Class names data
 const classNames = ref([]);
 
 const courses = ref([]);
-const getAcademicCourses = async () => {
-    const response = await $axios.get("/courses/all_published_course?course_category_id=1");
-    // console.log('CC:- ', response.data.data);
-    const courseData = response.data.data;
-    console.log('acad Courses Data', courseData)
-    let product_variants = [];
-    const mappedCourses = courseData.map(course => {
-        return {
-            id: course.id,
-            leaf_node_slug: course.leaf_node_slug,
-            parent_node_slug: course.parent_node_slug,
-            description: course.description.slice(0, 150),
-            image: course.product_image[0].file_path,
-            tutorName: course.tutor.name,
-            title: course.title,
-            product_variants: course.variants.map(variant => {
-                return {
-                    variantId: variant.id,
-                    productId: variant.product_id,
-                    title: variant.attribute_values,
-                    price: variant.price,
-                    offPercent: variant.off_percent,
-                    salePrice: variant.sale_price
-                };
-            })
-        }
-    })
-    console.log('acad maped courses', mappedCourses);
-    const filteredCourses = mappedCourses.filter(course => course.leaf_node_slug == selectedChipSlug.value && course.parent_node_slug == selectedTabSlug.value);
-    console.log('acad filteredCourses', filteredCourses)
-    courses.value = filteredCourses;
-}
 
+// Fetch and filter courses based on selected tab and chip slugs
+const getAcademicCourses = async () => {
+  if (!selectedTabSlug.value || !selectedChipSlug.value) {
+    return;
+  }
+
+  const response = await $axios.get("/courses/all_published_course?course_category_id=1");
+  const courseData = response.data.data;
+
+  const mappedCourses = courseData.map(course => ({
+    id: course.id,
+    leaf_node_slug: course.leaf_node_slug,
+    parent_node_slug: course.parent_node_slug,
+    description: course.description.slice(0, 150),
+    image: course.product_image[0].file_path,
+    tutorName: course.tutor.name,
+    title: course.title,
+    product_variants: course.variants.map(variant => ({
+      variantId: variant.id,
+      productId: variant.product_id,
+      title: variant.attribute_values,
+      price: variant.price,
+      offPercent: variant.off_percent,
+      salePrice: variant.sale_price,
+    }))
+  }));
+
+  // Filter based on both tab and chip slugs
+  const filteredCourses = mappedCourses.filter(course =>
+    course.leaf_node_slug === selectedChipSlug.value &&
+    course.parent_node_slug === selectedTabSlug.value
+  );
+
+  courses.value = filteredCourses;
+}
 
 // Get all boards from API
 const getAllBoards = async () => {
@@ -72,6 +77,12 @@ const getAllBoards = async () => {
       name: obj.name,
       slug: obj.slug,
     }));
+
+    // Set the first board as the default selected tab
+    if (boardNames.value.length > 0) {
+      selectedTabSlug.value = boardNames.value[0].slug;
+    }
+    tabLoading.value = false;
   } catch (error) {
     console.error('Error fetching boards:', error);
   }
@@ -86,6 +97,11 @@ const getAllClasses = async () => {
       name: obj.name,
       slug: obj.slug,
     }));
+
+    // Set the first class as the default selected chip
+    if (classNames.value.length > 0) {
+      selectedChipSlug.value = classNames.value[0].slug;
+    }
   } catch (error) {
     console.error('Error fetching classes:', error);
   }
@@ -95,7 +111,6 @@ const getAllClasses = async () => {
 const onTabSelected = async (slug) => {
   selectedTabSlug.value = slug;
   console.log('Selected Tab Slug:', selectedTabSlug.value);
-  logTabAndChip();
   await getAcademicCourses();
 
   // Reset chip index to 0 whenever a new tab is selected
@@ -109,15 +124,10 @@ const onTabSelected = async (slug) => {
 const onChipSelected = async (slug) => {
   selectedChipSlug.value = slug;
   console.log('Selected Chip Slug:', selectedChipSlug.value);
-  logTabAndChip();
   await getAcademicCourses();
 };
 
-// Log both tab and chip slugs together
-const logTabAndChip = () => {
-  console.log(`Active Tab Slug: ${selectedTabSlug.value}, Active Chip Slug: ${selectedChipSlug.value}`);
-};
-
+// On component mount, fetch data and ensure the first tab and chip are selected
 onMounted(async () => {
   await getAllBoards();
   await getAllClasses();
@@ -125,6 +135,17 @@ onMounted(async () => {
 });
 </script>
 
-
-
-<style scoped></style>
+<style scoped>
+.course_chip_loader {
+  width: 70%;
+    height: 40px;
+    border-radius: 0;
+    background: #E4E8EB !important;
+}
+.course_tab_loader {
+    width: 70%;
+    height: 40px;
+    border-radius: 0;
+    background: #E4E8EB !important;
+}
+</style>

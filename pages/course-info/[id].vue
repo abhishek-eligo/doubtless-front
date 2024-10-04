@@ -136,8 +136,8 @@ const courseTutorVariants = ref([
                             enhance student engagement.
                             Students appreciate my clear explanations and responsive feedback. I am committed to
                             continuous professional development to stay current with educational trends. For course
-                            inquiries or collaborations,<br>
-                            please contact me at <span mailto:class="blue_email">amayrasinghteh32@gmail.com.</span>
+                            inquiries or collaborations,
+                            please contact me at <span class="blue_email">amayrasinghteh32@gmail.com.</span>
                         </p>
 
                         <div class="featured_review_div">

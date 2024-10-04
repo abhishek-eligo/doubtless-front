@@ -59,7 +59,7 @@
     padding: 20px;
     border-radius: 2px;
     position: relative;
-    width: 458px !important;
+    width: 100% !important;
     overflow: visible;
     background-position: center;
   }

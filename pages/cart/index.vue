@@ -1,6 +1,46 @@
 <script setup>
 import { ref } from 'vue';
 
+const cartItems = ref([
+  {
+    id: 1,
+    title: 'Union and State Governments Roles and Responsibilities',
+    by: 'by chris haroun',
+    students: '1.5 million students',
+    rating: '#1 best selling business',
+    hours: '49 total hours',
+    lectures: '307',
+    level: 'beginner',
+    valid: '6',
+    salePrice: '259',
+    originalPrice: '2199',
+  },
+  {
+    id: 2,
+    title: 'Union and State Governments Roles and Responsibilities',
+    by: 'by chris haroun',
+    students: '1.5 million students',
+    rating: '#1 best selling business',
+    hours: '57 total hours',
+    lectures: '389',
+    level: 'beginner',
+    valid: '3',
+    salePrice: '389',
+    originalPrice: '3099',
+  }
+]);
+
+const handleUpdateCart = (indexToRemove) => {
+  // Remove the item from the cartItems array in the parent component
+  cartItems.value.splice(indexToRemove, 1);
+};
+
+onMounted(() => {
+    if (cartItems.value.length > 0) {
+        console.log('Bum Bum Bhole')
+    }
+})
+
 const isCartVisible = ref(false);
 setTimeout(() => {
     isCartVisible.value = true;
@@ -12,15 +52,15 @@ setTimeout(() => {
     <transition name="slide-fade">
         <div v-if="isCartVisible" class="wrapper">
             <VContainer class="cart_container">
-                <VRow>
+                <VRow v-if="cartItems.length > 0">
                     <VCol class="cart_left_col" md="9">
                         <VCard>
                             <VCardTitle class="px-0 py-0">
                                 <h1 class="cart_title">shopping cart</h1>
-                                <p class="cart_text">2 courses in cart</p>
+                                <p class="cart_text">{{ cartItems.length }} courses in cart</p>
                             </VCardTitle>
                         </VCard>
-                        <CartCard />
+                        <CartCard :cartItems="cartItems" @updateCart="handleUpdateCart" />
                     </VCol>
                     <VCol md="3" cols="12">
                         <div class="checkout_card">
@@ -35,12 +75,64 @@ setTimeout(() => {
                         </div>
                     </VCol>
                 </VRow>
+                <VRow v-else>
+                    <VCol cols="12" class="no_cart_item">
+                        <h1 class="cart_title cart_title_start">shopping cart</h1>
+                        <div class="no_cart_img_div">
+                            <img class="no_cart_img" src="/images/nocart.png" />
+                        </div>
+                        <h2 class="no_cart_h">your checkout has no items.</h2>
+                        <button class="no_cart_btn">Buy courses</button>
+                    </VCol>
+                </VRow>
             </VContainer>
         </div>
     </transition>
 </template>
 
 <style scoped>
+.cart_title_start {
+    text-align: left;
+}
+
+button.no_cart_btn {
+    background: #F87126;
+    padding: 10px 46px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 800;
+    text-transform: capitalize;
+    font-family: var(--Helvetica);
+    margin-top: 30px;
+    border: 2px solid #F87126;
+    line-height: 150%;
+    letter-spacing: 2px;
+}
+
+button.no_cart_btn:hover {
+    background: #fff;
+    color: #F87126;
+    border: 2px solid #F87126;
+    transition: 0.3s;
+    font-size: 16px;
+    font-weight: 800;
+    text-transform: capitalize;
+    font-family: var(--Helvetica);
+}
+.no_cart_img_div {
+    display: flex;
+    justify-content: center;
+}
+
+h2.no_cart_h {
+    text-transform: capitalize;
+    font-size: 23px;
+    font-weight: 800;
+    margin-top: 10px;
+}
+.no_cart_item {
+    text-align: center;
+}
 .cart_checkout_btn {
     font-size: 18px;
     text-transform: uppercase;
@@ -52,12 +144,15 @@ setTimeout(() => {
     padding: 10px 0;
     border: 2px solid #F87126;
     margin-top: 22px;
+    line-height: 150%;
+    letter-spacing: 2px;
 }
 
 .cart_checkout_btn:hover {
     background: #fff;
     color: #F87126;
     border: 2px solid #F87126;
+    transition: 0.3s;
 }
 
 .checkout_card {
@@ -91,6 +186,7 @@ span.cart_ori_total {
     padding: 0;
     margin-top: 25px;
     border-top: 5px solid #F87126;
+    margin-bottom: 25px;
 }
 
 .cart_container .cart_left_col .v-card--variant-elevated {
@@ -109,6 +205,9 @@ h1.cart_title {
 p.cart_text {
     font-size: 17px;
     font-weight: 800;
+    text-transform: capitalize;
+    line-height: 150%;
+    color: #000;
 }
 
 /* Slide-fade transition */

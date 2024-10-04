@@ -9,7 +9,7 @@
             </div>
         </div>
     </div> -->
-    <div class="d-flex flex-wrap justify-between">
+    <div class="d-flex flex-wrap justify-content-around dbCard_gap">
         <VCard class="adv_card curve_img_1">
             <VCardTitle class="d-flex justify-center">
                 <img class="adv-card-size" src="/images/adv-1.png" />
@@ -57,6 +57,10 @@
 </script>
 
 <style scoped>
+
+.dbCard_gap {
+    row-gap: 60px;
+}
 .adv-card-size {
     width: 69px;
     height: 65px;

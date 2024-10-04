@@ -61,7 +61,7 @@ const currentPage = computed(() => {
 </script>
 
 <template>
-    <div class="row story_card_img">
+    <div class="row flex-wrap story_card_img">
         <div class="stort_btn_div">
 
             <!-- Prev Btn -->
