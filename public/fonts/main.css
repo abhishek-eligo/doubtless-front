@@ -508,6 +508,7 @@ img.ftr_link_icon {
     right: -121%;
     z-index: 2;
     top: -22px;
+    width: 390px;
 }
 
 .description_card .course_info {
@@ -636,6 +637,7 @@ span.off_badge {
     background-image: url('/images/learn-bg.png');
     background-size: cover;
     background-repeat: no-repeat;
+    margin-top: 60px;
 }
 
 h2.learn_text_h {
@@ -744,6 +746,7 @@ p.learn_text_p {
     width: 363px !important;
     position: relative !important;
     overflow: unset !important;
+    margin-left: 26px;
 }
 
 .overviewData {

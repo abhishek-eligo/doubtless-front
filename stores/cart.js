@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { useAuthStore } from './auth' // Import the auth store
 
 export const useCartStore = defineStore('cart', {
   state: () => ({
@@ -22,11 +23,19 @@ export const useCartStore = defineStore('cart', {
 
       const config = useRuntimeConfig(); // Get runtime config
       const baseURL = config.public.baseURL; // Access baseURL
+
+      const authStore = useAuthStore(); // Access the auth store
+      const token = authStore.token; // Get the token from the auth store
+      console.log("RADHA",token);
       try {
         const response = await $fetch(`${baseURL}/cart/add-item`, {
           method: 'POST',
-          body: cartItem,
-        });
+          headers: {
+              'Authorization': `Bearer ${token}`, // Include the Authorization header
+              'Content-Type': 'application/json', // Set content type to application/json
+          },
+          body: cartItem, // Make sure cartItem is an object that matches the expected structure
+      });
 
         // Handle response data
         if (response.success) {
