@@ -5,11 +5,13 @@
     <USkeleton v-if="chipLoading" class="course_chip_loader" />
     <CourseChip v-else :items="classNames" @chipSelected="onChipSelected" :reset="resetChipIndex" />
     <!-- <TotalAcademicCourses /> -->
-    <div v-if="cardLoading">
-      <USkeleton class="course_card_top_loader" />
-      <USkeleton class="course_card_middle_loader" />
-      <USkeleton class="course_card_end_loader" />
-      <USkeleton class="course_card_end_loader" />
+    <div class="d-flex justify-between" v-if="cardLoading">
+      <div v-for="(loader, index) in cardLoaders" :key="index">
+        <USkeleton class="course_card_top_loader" />
+        <USkeleton class="course_card_middle_loader" />
+        <USkeleton class="course_card_end_loader" />
+        <USkeleton class="course_card_end_loader" />
+      </div>
     </div>
     <div class="d-flex course_gap flex-wrap justify-between">
       <CourseCard v-for="course in courses" :key="course.id" :desc="course.description" :image="course.image"
@@ -23,6 +25,7 @@
 import { ref, onMounted } from 'vue';
 const { $axios } = useNuxtApp();
 
+const cardLoaders = ref(4)
 const tabLoading = ref(true);
 const chipLoading = ref(true);
 const cardLoading = ref(true);
@@ -145,6 +148,4 @@ onMounted(async () => {
 });
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
