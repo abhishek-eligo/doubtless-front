@@ -1,8 +1,8 @@
 import { useAuthStore } from '~/stores/auth';
 export default defineNuxtRouteMiddleware((to, from) => {
-    const authStore = useAuthStore()
+  const authStore = useAuthStore()
 
-    if (!authStore.isAuthenticated) {
-        return navigateTo('/') // Redirect to login page if not authenticated
-    }
+  if (!authStore.isAuthenticated) {
+    return navigateTo('/') // Redirect to login page if not authenticated
+  }
 })

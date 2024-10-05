@@ -2,7 +2,9 @@ import { defineStore } from 'pinia'
 
 export const useCartStore = defineStore('cart', {
   state: () => ({
-    items: [],
+    cartItems: [],
+    cartUpdated: false,
+    cartAdd: false,
   }),
 
   getters: {
@@ -15,12 +17,28 @@ export const useCartStore = defineStore('cart', {
   },
 
   actions: {
-    addItem(productId, price, quantity = 1) {
-      const item = this.items.find((item) => item.productId === productId)
-      if (item) {
-        item.quantity += quantity
-      } else {
-        this.items.push({ productId, quantity, price })
+    async addToCart(cartItem) {
+      this.cartAdd = true;
+
+      const config = useRuntimeConfig(); // Get runtime config
+      const baseURL = config.public.baseURL; // Access baseURL
+      try {
+        const response = await $fetch(`${baseURL}/cart/add-item`, {
+          method: 'POST',
+          body: cartItem,
+        });
+
+        // Handle response data
+        if (response.success) {
+          this.cartItems.push(cartItem); // Update state
+          this.cartAdd = false;
+          this.cartUpdated = true;
+        } else {
+          // Handle errors here if needed
+          console.error('Error adding to cart', response.message);
+        }
+      } catch (error) {
+        console.error('API Error:', error);
       }
     },
     
