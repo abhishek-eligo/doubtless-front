@@ -1,10 +1,18 @@
 <template>
   <div>
-    <USkeleton v-if="tabLoading" class="course_tab_loader" />
+    <USkeleton v-if="tabLoading" class="course_tab_loader mb-2" />
     <CourseTab v-else :tabs="boardNames" @tabSelected="onTabSelected" />
-    <USkeleton class="course_chip_loader" />
-    <CourseChip :items="classNames" @chipSelected="onChipSelected" :reset="resetChipIndex" />
+    <USkeleton v-if="chipLoading" class="course_chip_loader" />
+    <CourseChip v-else :items="classNames" @chipSelected="onChipSelected" :reset="resetChipIndex" />
     <!-- <TotalAcademicCourses /> -->
+    <div class="d-flex justify-between" v-if="cardLoading">
+      <div v-for="(loader, index) in cardLoaders" :key="index">
+        <USkeleton class="course_card_top_loader" />
+        <USkeleton class="course_card_middle_loader" />
+        <USkeleton class="course_card_end_loader" />
+        <USkeleton class="course_card_end_loader" />
+      </div>
+    </div>
     <div class="d-flex course_gap flex-wrap justify-between">
       <CourseCard v-for="course in courses" :key="course.id" :desc="course.description" :image="course.image"
         :title="course.title" :productVariants="course.product_variants" :rating="course.rating"
@@ -17,7 +25,10 @@
 import { ref, onMounted } from 'vue';
 const { $axios } = useNuxtApp();
 
+const cardLoaders = ref(4)
 const tabLoading = ref(true);
+const chipLoading = ref(true);
+const cardLoading = ref(true);
 
 // State to store slugs
 const selectedTabSlug = ref('');
@@ -66,6 +77,7 @@ const getAcademicCourses = async () => {
   );
 
   courses.value = filteredCourses;
+  cardLoading.value = false;
 }
 
 // Get all boards from API
@@ -102,6 +114,7 @@ const getAllClasses = async () => {
     if (classNames.value.length > 0) {
       selectedChipSlug.value = classNames.value[0].slug;
     }
+    chipLoading.value = false;
   } catch (error) {
     console.error('Error fetching classes:', error);
   }
@@ -135,17 +148,4 @@ onMounted(async () => {
 });
 </script>
 
-<style scoped>
-.course_chip_loader {
-  width: 70%;
-    height: 40px;
-    border-radius: 0;
-    background: #E4E8EB !important;
-}
-.course_tab_loader {
-    width: 70%;
-    height: 40px;
-    border-radius: 0;
-    background: #E4E8EB !important;
-}
-</style>
+<style scoped></style>

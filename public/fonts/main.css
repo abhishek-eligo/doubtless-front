@@ -1580,3 +1580,48 @@ p.add_cart_title_p {
 .tab_content .v-btn__content .v-tab__slider {
     display: none;
 }
+
+
+/* CARD SKELLETON LOADER */
+
+.course_card_top_loader {
+    width: 319px;
+    height: 200px;
+    border-radius: 4px;
+    background: #E4E8EB !important;
+    margin-bottom: 6px;
+    margin-top: 10px;
+}
+
+.course_card_middle_loader {
+    width: 319px;
+    border-radius: 4px;
+    height: 40px;
+    background: #E4E8EB !important;
+    margin-bottom: 6px;
+}
+
+.course_card_end_loader {
+    width: 319px;
+    margin-bottom: 6px;
+    border-radius: 4px;
+    height: 20px;
+    background: #E4E8EB !important;
+}
+
+.course_chip_loader {
+    width: 100%;
+    height: 71px;
+    border-radius: 0;
+    background: #E4E8EB !important;
+}
+
+.course_tab_loader {
+    width: 70%;
+    height: 40px;
+    border-radius: 0;
+    background: #E4E8EB !important;
+}
+
+
+/* CARD SKELLETON LOADER END */

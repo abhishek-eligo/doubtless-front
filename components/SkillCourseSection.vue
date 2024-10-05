@@ -1,11 +1,20 @@
 <template>
     <div>
+        <USkeleton v-if="tabLoading" class="course_tab_loader mb-2" />
         <CourseTab :tabs="skillTabs" @tabSelected="handleTabChange" />
+        <USkeleton v-if="chipLoading" class="course_chip_loader" />
         <CourseChip :items="skillCourseChip" @chipSelected="handleChipChange" :reset="resetChipIndex" />
         <!-- <TotalSkillCourses /> -->
+        <div v-if="cardLoading">
+            <USkeleton class="course_card_top_loader" />
+            <USkeleton class="course_card_middle_loader" />
+            <USkeleton class="course_card_end_loader" />
+            <USkeleton class="course_card_end_loader" />
+        </div>
         <div class="d-flex course_gap flex-wrap justify-between">
-            <CourseCard v-for="course in courses" :key="course.id" :desc="course.description" :image="course.image" :title="course.title" :productVariants="course.product_variants"
-                :rating="course.rating" :offPercent="course.offPercent" :tutorName="course.tutorName" />
+            <CourseCard v-for="course in courses" :key="course.id" :desc="course.description" :image="course.image"
+                :title="course.title" :productVariants="course.product_variants" :rating="course.rating"
+                :offPercent="course.offPercent" :tutorName="course.tutorName" />
         </div>
     </div>
 </template>
@@ -13,6 +22,10 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 const { $axios } = useNuxtApp();
+
+const tabLoading = ref(true);
+const chipLoading = ref(true);
+const cardLoading = ref(true);
 
 const courses = ref([]);
 const courseTabSlugName = ref('');
@@ -52,6 +65,7 @@ const getSkillCategoryCourse = async () => {
         newObj.slug = obj.slug;
         return newObj;
     });
+    tabLoading.value = false;
 }
 const getSkillCourses = async () => {
     courses.value = [];
@@ -85,6 +99,7 @@ const getSkillCourses = async () => {
     const filteredCourses = mappedCourses.filter(course => course.leaf_node_slug === courseChipSlugName.value && course.parent_node_slug === courseTabSlugName.value);
     console.log('filteredCourses', filteredCourses)
     courses.value = filteredCourses;
+    cardLoading.value = false;
 }
 
 onMounted(async () => {
@@ -105,6 +120,7 @@ const getSubCategory = async (slugTemp) => {
         newObj.slug = obj.slug;
         return newObj;
     });
+    chipLoading.value = false;
 }
 
 const getProduct = (tabSlug, chipSlug) => {
