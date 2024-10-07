@@ -40,7 +40,7 @@ const props = defineProps({
   },
   visibleCount: {
     type: Number,
-    default: 6,
+    default: 7,
   },
   reset: {
     type: Boolean,

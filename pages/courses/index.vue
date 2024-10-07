@@ -17,6 +17,19 @@ const selectedBoard = ref([]);
 const selectedClass = ref([]);
 const filterModalIsOpen = ref(false);
 
+const skillTabs = ref([]);
+const getSkillCategoryCourse = async () => {
+    const response = await $axios.get('/course_categories/parent_direct_child/skill');
+    const skillCourses = response.data;
+    skillTabs.value = skillCourses.map(obj => {
+        let newObj = {};
+        newObj.name = obj.name;
+        newObj.slug = obj.slug;
+        return newObj;
+    });
+    console.log('courses skillTabs', skillTabs.value)
+}
+
 const totalClassModalIsOpen = ref(false);
 
 const openBoardFilterModal = () => {
@@ -49,6 +62,7 @@ const getAllClasses = async () => {
 onMounted(() => {
     getAllBoards();
     getAllClasses();
+    getSkillCategoryCourse();
 })
 </script>
 

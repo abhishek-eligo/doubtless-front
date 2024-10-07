@@ -136,7 +136,7 @@ const courseTutorVariants = ref([
                             enhance student engagement.
                             Students appreciate my clear explanations and responsive feedback. I am committed to
                             continuous professional development to stay current with educational trends. For course
-                            inquiries or collaborations,
+                            inquiries or collaborations,<br />
                             please contact me at <span class="blue_email">amayrasinghteh32@gmail.com.</span>
                         </p>
 
@@ -148,8 +148,8 @@ const courseTutorVariants = ref([
                             <UButton class="review_more_btn">see more review</UButton>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <AddToCartCard />
+                    <div class="col-md-4 cart_card_pos_rel">
+                        <AddToCartCard class="cart_pos" />
                     </div>
                 </div>
             </div>
@@ -158,6 +158,15 @@ const courseTutorVariants = ref([
 </template>
 
 <style scoped>
+.cart_card_pos_rel {
+    position: relative;
+}
+
+.cart_pos {
+    position: sticky;
+    top: 10%;
+    box-shadow: 0 2.14px 10.57px #00000020;
+}
 .review_more_btn {
     padding: 5px 15px;
     background: #fff !important;

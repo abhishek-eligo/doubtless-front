@@ -1,11 +1,23 @@
 <template>
     <div>
+        <USkeleton v-if="tabLoading" class="course_tab_loader mb-2" />
         <CourseTab :tabs="courseTypes" @tabSelected="handleTabChange" />
+        <USkeleton v-if="chipLoading" class="course_chip_loader" />
         <CourseChip :items="competitiveCourseChip" @chipSelected="handleChipChange" :reset="resetChipIndex" />
         <!-- <TotalCompetitiveCourses /> -->
+        <div class="d-flex justify-between" v-if="cardLoading">
+            <div v-for="(loader, index) in cardLoaders" :key="index">
+                <USkeleton class="course_card_top_loader" />
+                <USkeleton class="course_card_middle_loader" />
+                <USkeleton class="course_card_end_loader" />
+                <USkeleton class="course_card_end_loader" />
+                <USkeleton class="course_card_end_loader" />
+            </div>
+        </div>
         <div class="d-flex course_gap flex-wrap justify-between">
-            <CourseCard v-for="course in courses" :key="course.id" :desc="course.description" :image="course.image" :title="course.title" :productVariants="course.product_variants"
-                :rating="course.rating" :offPercent="course.offPercent" :tutorName="course.tutorName" />
+            <CourseCard v-for="course in courses" :key="course.id" :desc="course.description" :image="course.image"
+                :title="course.title" :productVariants="course.product_variants" :rating="course.rating"
+                :offPercent="course.offPercent" :tutorName="course.tutorName" />
         </div>
     </div>
 </template>
@@ -13,6 +25,11 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 const { $axios } = useNuxtApp();
+
+const cardLoaders = ref(4);
+const tabLoading = ref(true);
+const chipLoading = ref(true);
+const cardLoading = ref(true);
 
 const courseTabSlugName = ref('');
 const courseChipSlugName = ref('');
@@ -49,6 +66,7 @@ const getCompetitiveCourses = async () => {
     const filteredCourses = mappedCourses.filter(course => course.leaf_node_slug == courseChipSlugName.value && course.parent_node_slug == courseTabSlugName.value);
     console.log('Competitve filteredCourses', filteredCourses)
     courses.value = filteredCourses;
+    cardLoading.value = false;
 }
 // Your method to handle tab change
 const handleTabChange = async (selectedTab) => {
@@ -77,6 +95,7 @@ const getCompetitiveCategoryCourse = async () => {
         return newObj;
     });
     await getSubCategory(courseTabSlugName.value);
+    tabLoading.value = false;
 }
 
 // State to reset the chip index
@@ -112,6 +131,7 @@ const getSubCategory = async (slugTemp) => {
         courseChipSlugName.value = competitiveCourseChip.value[0].slug;
         await getCompetitiveCourses(); // Call filtering after setting default chip
     }
+    chipLoading.value = false;
 }
 
 
