@@ -7,16 +7,16 @@
             <img src="/images/cart_item.png" />
           </div>
           <div class="cart_item_content">
-            <h1 class="cart_item_h">{{ item.title }}</h1>
+            <h1 class="cart_item_h">{{ item.product.name }}</h1>
             <ul class="d-flex">
-              <li class="card_text_border cart_text_font">{{ item.by }}</li>
+              <li class="card_text_border cart_text_font">{{ item.product.tutor }}</li>
               <li class="card_text_border cart_text_font">{{ item.students }}</li>
               <li class="cart_text_font">{{ item.rating }} </li>
             </ul>
             <ul class="d-flex align-center">
               <li class="cart_text_font">{{ item.hours }}</li>
               <span class="grey_circle"></span>
-              <li class="cart_text_font">{{ item.lectures }} lectures</li>
+              <li class="cart_text_font">{{ item.product.total_lectures }} lectures</li>
               <span class="grey_circle"></span>
               <li class="cart_text_font">{{ item.level }}</li>
             </ul>
