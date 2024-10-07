@@ -1,8 +1,10 @@
 <script setup>
 const { $axios, $retryRequest } = useNuxtApp();
 import { useAuthStore } from '~/stores/auth'
+import { useCartStore } from '~/stores/cart'
 
 const authStore = useAuthStore()
+const cartStore = useCartStore()
 let authUserToken = ref(null);
 let authUserData = ref(null);
 const choiceModal = ref(false);
@@ -29,7 +31,7 @@ const signupPhoneErrorMsg = ref('');
 const signupNameErrorMsg = ref('');
 const loginOTP = ref();
 const registerOTP = ref();
-const userLoginCard = ref(false); 
+const userLoginCard = ref(false);
 
 // watch([authUserToken, authUserData], ([newToken, newData]) => {
 //     if (newToken === null && newData === null) {
@@ -403,7 +405,8 @@ onMounted(async () => {
 
         <div class="bottom_header">
             <div class="wrapper">
-                <div class="d-flex flex-wrap login_card_pos justify-content-md-between justify-center align-items-center">
+                <div
+                    class="d-flex flex-wrap login_card_pos justify-content-md-between justify-center align-items-center">
                     <div class="gap-2 d-flex">
                         <!-- Logo -->
                         <nuxt-link to="/">
@@ -436,16 +439,18 @@ onMounted(async () => {
                         </div>
                     </div>
                     <div class="col-md-2 d-flex align-center justify-content-end">
-                        <nuxt-link to="/cart">
+                        <nuxt-link class="cart_link" to="/cart">
+                            <UBadge class="cart_counter" variant="solid">{{ cartStore.itemCount }}</UBadge>
                             <img class="cart_img" src="../public/images/cart.png" />
                         </nuxt-link>
 
-                        <button @click="openChoiceModal" class="hdr_btn" v-if="!authStore.isAuthenticated">Login now</button>
+                        <button @click="openChoiceModal" class="hdr_btn" v-if="!authStore.isAuthenticated">Login
+                            now</button>
                         <img @click="openLoginCard" class="user_logo" v-else src="/images/user.png" />
 
                         <!-- User Login Card -->
                         <VCard v-if="userLoginCard" class="user_login_card">
-                            
+
                             <VCardTitle class="user_login_card_title d-flex align-center">
                                 <h5>{{ authStore.user?.name.slice(0, 1) }}</h5>
                                 <div>
@@ -643,6 +648,10 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+.page_active_link {
+    border-bottom: 1px solid #fff;
+}
+
 .user_login_card_p_mb {
     margin-bottom: 10px !important;
 }

@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: false },
   modules: [// "@nuxtjs/tailwindcss",
-  "nuxt-swiper", "vuetify-nuxt-module", "nuxt-marquee", "vue3-carousel-nuxt", '@nuxt/ui', '@element-plus/nuxt', '@pinia/nuxt'],
+  "nuxt-swiper", "vuetify-nuxt-module", "nuxt-marquee", "vue3-carousel-nuxt", '@nuxt/ui', '@element-plus/nuxt', '@pinia/nuxt', '@primevue/nuxt-module'],
   plugins: [
     '~/plugins/vue3-toastify.js'
   ],

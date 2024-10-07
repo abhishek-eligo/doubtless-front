@@ -1,51 +1,31 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useCartStore } from '~/stores/cart'; // Import the cart store
 
-const cartItems = ref([
-  {
-    id: 1,
-    title: 'Union and State Governments Roles and Responsibilities',
-    by: 'by chris haroun',
-    students: '1.5 million students',
-    rating: '#1 best selling business',
-    hours: '49 total hours',
-    lectures: '307',
-    level: 'beginner',
-    valid: '6',
-    salePrice: '259',
-    originalPrice: '2199',
-  },
-  {
-    id: 2,
-    title: 'Union and State Governments Roles and Responsibilities',
-    by: 'by chris haroun',
-    students: '1.5 million students',
-    rating: '#1 best selling business',
-    hours: '57 total hours',
-    lectures: '389',
-    level: 'beginner',
-    valid: '3',
-    salePrice: '389',
-    originalPrice: '3099',
-  }
-]);
+// Use the cart store
+const cartStore = useCartStore();
 
+// Access the cartItems from the store instead of using a local ref
+const cartItems = ref(cartStore.cartItems); // Use cartStore's cartItems
+
+// Handle removing items using the store
 const handleUpdateCart = (indexToRemove) => {
-  // Remove the item from the cartItems array in the parent component
-  cartItems.value.splice(indexToRemove, 1);
+  const itemToRemove = cartItems.value[indexToRemove]; // Find the item to remove
+  cartStore.removeItem(itemToRemove.id); // Use the store's action to remove it
 };
 
+// Check if cart has items on component mount
 onMounted(() => {
     if (cartItems.value.length > 0) {
-        console.log('Bum Bum Bhole')
+        console.log('Bum Bum Bhole');
     }
-})
+});
 
+// Show cart after some time (just like your original code)
 const isCartVisible = ref(false);
 setTimeout(() => {
     isCartVisible.value = true;
 }, 100);
-
 </script>
 
 <template>
@@ -60,6 +40,7 @@ setTimeout(() => {
                                 <p class="cart_text">{{ cartItems.length }} courses in cart</p>
                             </VCardTitle>
                         </VCard>
+                        {{ cartItems }}
                         <CartCard :cartItems="cartItems" @updateCart="handleUpdateCart" />
                     </VCol>
                     <VCol md="3" cols="12">
