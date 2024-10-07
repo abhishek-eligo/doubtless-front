@@ -12,7 +12,14 @@ const doubtlessDetails = ref([
     { title: '5000', desc: 'enrollments' },
     { title: '10m', desc: 'students' },
     { title: '60', desc: 'courses' },
-])
+]);
+
+const items = ref([
+    { label: 'Plan Your Curriculum', slot: 'curriculum', defaultOpen: true },
+    { label: 'Record Your Video', slot: 'video', defaultOpen: false },
+    { label: 'Prepare Your Course PPT & PDF', slot: 'pdf', defaultOpen: false },
+    { label: 'Launch Your Courses', slot: 'launch', defaultOpen: false },
+]);
 
 </script>
 
@@ -20,20 +27,20 @@ const doubtlessDetails = ref([
     <div>
         <div class="tob_section_one">
             <div class="wrapper">
-                <v-container>
-                    <v-row>
-                        <v-col class="d-flex align-center" sm="6">
+                <div>
+                    <v-row class="align-center">
+                        <v-col class="d-flex justify-content-lg-center justify-content-md-center justify-content-sm-center" lg="6">
                             <div class="teach_us_div">
                                 <h1 class="teach_us_h">come teach with us </h1>
                                 <p class="teach_us_p">Join Our Passionate Team of Expert Educators</p>
                                 <UButton class="teach_us_btn">Get start</UButton>
                             </div>
                         </v-col>
-                        <v-col class="d-flex justify-end" sm="6" cols="12">
+                        <v-col class="d-flex justify-content-lg-center justify-content-md-center justify-content-sm-center" lg="6" cols="12">
                             <img src="/images/tob_bg.png" />
                         </v-col>
                     </v-row>
-                </v-container>
+                </div>
             </div>
         </div>
 
@@ -58,7 +65,8 @@ const doubtlessDetails = ref([
                         </VCardTitle>
                         <VCardText class="teach_card_text">
                             <h3 class="teach_card_text_h">Inspire Learners</h3>
-                            <p class="teach_card_text_p">Empower your journey with expert-led courses, unlocking new skills and possibilities for a brighter future.</p>
+                            <p class="teach_card_text_p">Empower your journey with expert-led courses, unlocking new
+                                skills and possibilities for a brighter future.</p>
                         </VCardText>
                     </VCard>
 
@@ -68,7 +76,8 @@ const doubtlessDetails = ref([
                         </VCardTitle>
                         <VCardText class="teach_card_text">
                             <h3 class="teach_card_text_h">Get Rewarded</h3>
-                            <p class="teach_card_text_p">Earn recognition and rewards as you guide students to success, making a meaningful impact on their academic journey.</p>
+                            <p class="teach_card_text_p">Earn recognition and rewards as you guide students to success,
+                                making a meaningful impact on their academic journey.</p>
                         </VCardText>
                     </VCard>
                 </div>
@@ -105,7 +114,7 @@ const doubtlessDetails = ref([
                                     </div>
                                 </VCol>
                                 <VCol class="d-flex justify-end" cols="6">
-                                    <img src="/images/curriculam.png" />
+                                    <img class="howToBeginCard_img" src="/images/curriculam.png" />
                                 </VCol>
                             </VCardText>
                         </VCard>
@@ -130,7 +139,7 @@ const doubtlessDetails = ref([
                                     </div>
                                 </VCol>
                                 <VCol class="d-flex justify-end" cols="6">
-                                    <img src="/images/launch.png" />
+                                    <img class="howToBeginCard_img" src="/images/record_video.png" />
                                 </VCol>
                             </VCardText>
                         </VCard>
@@ -155,7 +164,7 @@ const doubtlessDetails = ref([
                                     </div>
                                 </VCol>
                                 <VCol class="d-flex justify-end" cols="6">
-                                    <img src="/images/ppt_pdf.png" />
+                                    <img class="howToBeginCard_img" src="/images/ppt_pdf.png" />
                                 </VCol>
                             </VCardText>
                         </VCard>
@@ -185,7 +194,7 @@ const doubtlessDetails = ref([
                                     </div>
                                 </VCol>
                                 <VCol class="d-flex justify-end" cols="6">
-                                    <img src="/images/record_video.png" />
+                                    <img class="howToBeginCard_img" src="/images/launch.png" />
                                 </VCol>
                             </VCardText>
                         </VCard>
@@ -194,10 +203,97 @@ const doubtlessDetails = ref([
             </div>
         </div>
 
+        <div class="tob_section_accord">
+            <div class="wrapper">
+                <h1 class="tob_section_3_h">how to
+                    <span>begin</span>
+                </h1>
+                <UAccordion class="tob_accord" :items="items">
+                    <template #curriculum>
+                        <div class="d-flex p-3">
+                            <div class="tob_accord_w">
+                                <p class="tob_accord_p">
+                                    When planning your curriculum, focus on clear learning objectives and
+                                    outcomes.
+                                    Break down the content into manageable units that build on each other.
+                                    Incorporate a variety of teaching methods to cater to different learning
+                                    styles.
+                                    Ensure the curriculum is aligned with the required standards and
+                                    assessments.
+                                    Allow flexibility for adjustments based on student progress and feedback.
+                                    Lastly, include opportunities for review and reinforcement to help students
+                                    retain and apply their knowledge effectively.
+                                </p>
+                            </div>
+                            <div class=tob_accord_img_div>
+                                <img src="/images/curriculam.png" />
+                            </div>
+                        </div>
+                    </template>
+                    <template #video>
+                        <div class="d-flex p-3">
+                            <div class="tob_accord_w">
+                                <h4 class="tob_accord_h">When creating your video for the students, please keep the
+                                    following in mind:</h4>
+                                <p class="tob_accord_p">
+                                    Ensure clarity in your explanations and maintain a positive, encouraging tone. Use
+                                    simple language that's easy for students to understand. Stay on topic, focusing on
+                                    the lesson's objectives. Incorporate visual aids or examples to help illustrate key
+                                    points. Keep the video engaging but concise to hold the students' attention. Lastly,
+                                    review the video for any errors before sharing it with the students to ensure a
+                                    smooth learning experience.
+                                </p>
+                            </div>
+                            <div class=tob_accord_img_div>
+                                <img src="/images/record_video.png" />
+                            </div>
+                        </div>
+                    </template>
+                    <template #pdf>
+                        <div class="d-flex p-3">
+                            <div class="tob_accord_w">
+                                <p class="tob_accord_p">
+                                    When preparing your course PPT and PDF materials for students, please ensure that
+                                    the content is clear, concise, and engaging. Focus on key concepts, include visuals
+                                    to aid understanding, and use bullet points to highlight important information. Make
+                                    sure the material is accessible and suitable for the students' age and comprehension
+                                    level. Include examples and practice exercises to reinforce learning. Remember, the
+                                    goal is to make the content easy to understand and engaging, so students can grasp
+                                    the concepts effectively.
+                                </p>
+                            </div>
+                            <div class=tob_accord_img_div>
+                                <img src="/images/ppt_pdf.png" />
+                            </div>
+                        </div>
+                    </template>
+                    <template #launch>
+                        <div class="d-flex p-3">
+                            <div class="tob_accord_w">
+                                <h4 class="tob_accord_h">When creating your video for the students, please keep the
+                                    following in mind:</h4>
+                                <p class="tob_accord_p">
+                                    Ensure clarity in your explanations and maintain a positive, encouraging tone. Use
+                                    simple language that's easy for students to understand. Stay on topic, focusing on
+                                    the lesson's objectives. Incorporate visual aids or examples to help illustrate key
+                                    points. Keep the video engaging but concise to hold the students' attention. Lastly,
+                                    review the video for any errors before sharing it with the students to ensure a
+                                    smooth learning experience.
+                                </p>
+                            </div>
+                            <div class=tob_accord_img_div>
+                                <img src="/images/launch.png" />
+                            </div>
+                        </div>
+                    </template>
+                </UAccordion>
+            </div>
+        </div>
+
         <div class="tob_section_four">
             <div class="wrapper">
                 <VContainer class="px-0 py-0">
-                    <div class="d-flex justify-content-evenly">
+                    <div class="d-flex justify-content-evenly flex-wrap row-gap-4 gap-2">
                         <VCard v-for="item in doubtlessDetails" :key="item" class="doubtless_info_card">
                             <VCardText class="doubtless_info_card_text">
                                 <h4 class="doubtless_info_card_h">{{ item.title }}+</h4>
@@ -246,6 +342,7 @@ const doubtlessDetails = ref([
     text-transform: uppercase;
     transition: 0.3s;
 }
+
 .tob_join_tutor {
     text-align: center;
 }
@@ -263,6 +360,7 @@ p.tob_join_tutor_text {
     color: #424040;
     margin-bottom: 20px !important;
 }
+
 .tob_section_five {
     background: url(/images/tob_tutor_bg.png);
     background-repeat: no-repeat;
@@ -280,11 +378,13 @@ p.tob_join_tutor_text {
     bottom: 0;
     left: 0;
 }
+
 .begin_tab {
     padding: 4px 0 8px 0;
     border-radius: 0 0 5px 5px !important;
     border-bottom: 2px solid #f8702600 !important;
 }
+
 .begin_tab.v-tab--selected {
     border-radius: 0 0 5px 5px !important;
     border-bottom: 2px solid #F87126 !important;
@@ -383,16 +483,13 @@ h1.tob_section_3_h {
     color: #F87126;
 }
 
-.tob_section_three {
-    background: #F8F8F8;
-    padding-top: 40px;
-    padding-bottom: 40px;
-}
 
 .tob_card_outer_div {
     display: flex;
     justify-content: space-around;
     padding: 40px 0;
+    flex-wrap: wrap;
+    row-gap: 60px;
 }
 
 .before_card_curve_1 {
@@ -482,6 +579,7 @@ p.teach_card_text_p {
     width: fit-content;
     background: #fff;
     text-align: center;
+    margin-top: 20px;
 }
 
 h1.teach_us_h {

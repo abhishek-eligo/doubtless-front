@@ -11,6 +11,7 @@
         <USkeleton class="course_card_middle_loader" />
         <USkeleton class="course_card_end_loader" />
         <USkeleton class="course_card_end_loader" />
+        <USkeleton class="course_card_end_loader" />
       </div>
     </div>
     <div class="d-flex course_gap flex-wrap justify-between">
@@ -25,7 +26,7 @@
 import { ref, onMounted } from 'vue';
 const { $axios } = useNuxtApp();
 
-const cardLoaders = ref(4)
+const cardLoaders = ref(4);
 const tabLoading = ref(true);
 const chipLoading = ref(true);
 const cardLoading = ref(true);

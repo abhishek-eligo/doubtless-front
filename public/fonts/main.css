@@ -41,6 +41,10 @@ span {
     font-family: var(--Montserrat);
 }
 
+a {
+    text-decoration: none;
+}
+
 button {
     font-family: 'Roboto';
 }
@@ -356,6 +360,19 @@ img.ftr_link_icon {
     /* line-height: 18.29px; */
 }
 
+a.cart_link {
+    position: relative;
+}
+
+.cart_counter {
+    position: absolute;
+    right: 8px;
+    top: -10px;
+    border-radius: 15px;
+    background: #F87126 !important;
+    border: 1px solid #fff;
+}
+
 .playButton:hover {
     color: var(--white);
     transition: 0.3s;
@@ -508,6 +525,7 @@ img.ftr_link_icon {
     right: -121%;
     z-index: 2;
     top: -22px;
+    width: 390px;
 }
 
 .description_card .course_info {
@@ -636,6 +654,7 @@ span.off_badge {
     background-image: url('/images/learn-bg.png');
     background-size: cover;
     background-repeat: no-repeat;
+    margin-top: 60px;
 }
 
 h2.learn_text_h {
@@ -744,6 +763,7 @@ p.learn_text_p {
     width: 363px !important;
     position: relative !important;
     overflow: unset !important;
+    margin-left: 26px;
 }
 
 .overviewData {
@@ -1482,13 +1502,16 @@ button.v-chip__close {
     border: 2px solid #F87126;
     border-radius: 3px;
     width: 100%;
-    text-align: center;
     padding: 13px;
     margin-top: 12px;
     text-transform: capitalize;
     font-size: 18px;
     font-weight: 500;
     font-family: var(--Montserrat);
+    display: flex;
+    justify-content: center;
+    max-height: 47px;
+    align-items: center;
 }
 
 .add_cart_title img {
@@ -1496,7 +1519,7 @@ button.v-chip__close {
 }
 
 p.duration_month {
-    font-size: 13px;
+    font-size: 12px;
     margin-left: 18px !important;
     font-weight: 500;
     color: #000;
@@ -1625,3 +1648,73 @@ p.add_cart_title_p {
 
 
 /* CARD SKELLETON LOADER END */
+
+.tob_accord .w-full.flex.flex-col button {
+    background: transparent;
+    border-bottom: 2px solid #F87126;
+    padding: 15px 10px;
+}
+
+.tob_accord .w-full.flex.flex-col button span.text-left.break-all.line-clamp-1 {
+    color: #282828;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.tob_accord .w-full.flex.flex-col button span.iconify {
+    color: #282828;
+}
+
+.tob_accord_w {
+    width: fit-content;
+}
+
+p.tob_accord_p {
+    color: #333232;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 150%;
+}
+
+h4.tob_accord_h {
+    font-size: 22px;
+    color: #333232;
+    font-weight: 800;
+}
+
+.tob_section_three,
+.tob_section_accord {
+    background: #F8F8F8;
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+
+.tob_section_accord {
+    display: none;
+}
+
+@media(max-width:1300px) {
+    .begin_tab .v-btn__content {
+        font-size: 17px;
+    }
+    .howToBeginCard_img {
+        width: 70%;
+        height: auto;
+    }
+}
+
+@media(max-width:1160px) {
+    .contact_sec_three_div {
+        justify-content: center !important;
+        gap: 30px;
+    }
+}
+
+@media(max-width:1023px) {
+    .tob_section_three {
+        display: none;
+    }
+    .tob_section_accord {
+        display: block;
+    }
+}
