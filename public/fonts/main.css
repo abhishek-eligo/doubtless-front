@@ -388,6 +388,23 @@ a.cart_link {
     margin-bottom: 40px !important;
 }
 
+.success_div {
+    background: #FFF2E4;
+    background-image: url('/images/success_bg.png');
+    padding: 75px 0 49px 0;
+    position: relative;
+}
+
+.success_div::after {
+    content: '';
+    background-image: url(/images/success_dots.png);
+    position: absolute;
+    top: 118px;
+    right: 135px;
+    width: 14%;
+    height: 73%;
+}
+
 .section_two {
     margin-top: 60px;
 }
@@ -1710,11 +1727,14 @@ h4.tob_accord_h {
     }
 }
 
-@media(max-width:1023px) {
+@media(max-width:1024px) {
     .tob_section_three {
         display: none;
     }
     .tob_section_accord {
         display: block;
+    }
+    .success_div::after {
+        display: none;
     }
 }
