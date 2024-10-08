@@ -64,8 +64,9 @@ const emit = defineEmits(['updateCart']);
 
 // Method to remove an item
 const removeItem = (productId, variantId) => {
+  console.log("REMOVING ITEM", productId, variantId);
   // Emit the index of the item to be removed to the parent
-  emit('updateCart', productId, variantId);
+  //emit('updateCart', productId, variantId);
 };
 </script>
 

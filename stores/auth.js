@@ -102,6 +102,11 @@ export const useAuthStore = defineStore("auth", {
 
       try {
         this.otpStatus = null;
+        const cartCookie = useCookie('cartItems');
+        if (cartCookie.value) {
+          payload.cart = cartCookie.value; // Add cart cookie value to payload
+        }
+
         const response = await $fetch(`${baseURL}/verify-signup-otp`, {
           method: 'POST',
           body: payload,
@@ -143,6 +148,12 @@ export const useAuthStore = defineStore("auth", {
 
       try {
         this.otpStatus = null;
+
+        const cartCookie = useCookie('cartItems');
+        if (cartCookie.value) {
+          payload.cart = cartCookie.value; // Add cart cookie value to payload
+        }
+
         const response = await $fetch(`${baseURL}/verify-login-otp`, {
           method: 'POST',
           body: payload,

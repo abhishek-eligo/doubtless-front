@@ -9,9 +9,9 @@ const cartStore = useCartStore();
 const cartItems = ref(cartStore.cartItems); // Use cartStore's cartItems
 
 // Handle removing items using the store
-const handleUpdateCart = (indexToRemove) => {
-  const itemToRemove = cartItems.value[indexToRemove]; // Find the item to remove
-  cartStore.removeItem(itemToRemove.id); // Use the store's action to remove it
+const handleUpdateCart = (productId, variantId) => {
+    const itemToRemove = cartItems.value.find(obj => obj.variant_id === variantId && obj.product?.id === productId);
+    cartStore.removeItem(itemToRemove); // Use the store's action to remove it
 };
 
 // Check if cart has items on component mount
@@ -100,6 +100,7 @@ button.no_cart_btn:hover {
     text-transform: capitalize;
     font-family: var(--Helvetica);
 }
+
 .no_cart_img_div {
     display: flex;
     justify-content: center;
@@ -111,9 +112,11 @@ h2.no_cart_h {
     font-weight: 800;
     margin-top: 10px;
 }
+
 .no_cart_item {
     text-align: center;
 }
+
 .cart_checkout_btn {
     font-size: 18px;
     text-transform: uppercase;
