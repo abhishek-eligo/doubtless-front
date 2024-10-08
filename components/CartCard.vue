@@ -37,7 +37,7 @@
           <div class="cart_price">
             <p class="cart_sale_price">₹{{ item.salePrice }}</p>
             <p class="cart_orignal_price">₹{{ item.originalPrice }}</p>
-            <button class="cart_remove_item" @click="removeItem(index)">Remove</button>
+            <button class="cart_remove_item" @click="removeItem(item.product.id, item.variant_id)">{{item.product.id}} {{item.variant_id}}Remove</button>
           </div>
         </div>
       </VCardText>
@@ -63,9 +63,9 @@ const showVariants = () => {
 const emit = defineEmits(['updateCart']);
 
 // Method to remove an item
-const removeItem = (indexToRemove) => {
+const removeItem = (productId, variantId) => {
   // Emit the index of the item to be removed to the parent
-  emit('updateCart', indexToRemove);
+  emit('updateCart', productId, variantId);
 };
 </script>
 
