@@ -132,6 +132,8 @@ img.imgSize {
     background-color: var(--black);
     min-height: 80px;
     height: 100%;
+    z-index: 99;
+    position: relative;
 }
 
 .logo_img {
@@ -371,6 +373,11 @@ a.cart_link {
     border-radius: 15px;
     background: #F87126 !important;
     border: 1px solid #fff;
+    max-height: 23px;
+    max-width: 23px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .playButton:hover {

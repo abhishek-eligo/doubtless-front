@@ -689,8 +689,8 @@ p.user_login_card_email {
 .user_login_card {
     width: 243px;
     position: absolute;
-    top: 102px;
-    right: 50px;
+    top: 65px;
+    right: 250px;
     box-shadow: 0 4px 9px #00000010;
     padding: 10px 15px 30px 15px;
     z-index: 99;

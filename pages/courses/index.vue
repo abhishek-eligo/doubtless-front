@@ -427,7 +427,7 @@ button.course_filter_btn {
     padding: 15px;
     background: #F8F8F7;
     position: sticky;
-    top: 0;
+    top: 10%;
     box-shadow: 0 4px 11px #00000025;
 }
 
