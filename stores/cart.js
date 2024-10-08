@@ -76,10 +76,66 @@ export const useCartStore = defineStore("cart", {
       }
     },
 
-    removeItem(productId) {
-      this.cartItems = this.cartItems.filter(
-        (item) => item.productId !== productId
-      ); // Use cartItems here
+    async removeItem(productId, variantId = null) {
+      const config = useRuntimeConfig(); // Get runtime config
+      const baseURL = config.public.baseURL; // Access baseURL
+
+      const authStore = useAuthStore(); // Access the auth store
+      const token = authStore.token; // Get the token from the auth store
+
+      if (token) {
+        // Logged-in user: handle item removal via API
+        try {
+          const cartItemId = `${productId}_${variantId ? variantId : 'null'}`; // Combine productId and variantId as cartItemId
+
+          const response = await $fetch(`${baseURL}/cart/remove-item/${cartItemId}`, {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`, // Include Authorization header for logged-in users
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (response.success) {
+            // Filter out the removed item from cartItems
+            this.cartItems = this.cartItems.filter(
+              (item) => item.product.id !== productId || item.variant_id !== variantId
+            );
+
+            console.log("Item removed from cart:", response.message);
+            this.cartUpdated = true;
+          } else {
+            console.error("Error removing from cart:", response.message);
+          }
+        } catch (error) {
+          console.error("API Error:", error);
+        }
+      } else {
+        // Guest user: handle item removal using cookies
+        try {
+          const cookieCart = useCookie('cart'); // Access the cart from cookies
+          const cart = cookieCart.value ? JSON.parse(cookieCart.value) : {};
+          const productKey = productId + (variantId ? `_${variantId}` : '');
+
+          if (cart[productKey]) {
+            // Remove the item from the cart
+            delete cart[productKey];
+
+            // Update the cart cookie
+            cookieCart.value = JSON.stringify(cart);
+
+            // Update local cartItems state
+            this.cartItems = Object.values(cart);
+
+            console.log("Item removed from guest cart.");
+            this.cartUpdated = true;
+          } else {
+            console.error("Item not found in guest cart.");
+          }
+        } catch (error) {
+          console.error("Error handling guest cart:", error);
+        }
+      }
     },
 
     clearCart() {
