@@ -429,16 +429,16 @@ onMounted(async () => {
                         <div class="navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav gap-3 justify-content-center flex-row">
                                 <li class="nav-item">
-                                    <nuxt-link class="nav-link" to="/courses" active-class="active">Courses</nuxt-link>
+                                    <nuxt-link class="nav-link headerLink" to="/courses" active-class="page_active_link">Courses</nuxt-link>
                                 </li>
                                 <li class="nav-item">
-                                    <nuxt-link class="nav-link" to="/teachOnDoubtless" active-class="active">Teach on
+                                    <nuxt-link class="nav-link headerLink" to="/teachOnDoubtless" active-class="page_active_link">Teach on
                                         Doubtless</nuxt-link>
                                 </li>
                             </ul>
                         </div>
                     </div>
-                    <div class="col-md-2 d-flex align-center justify-content-end">
+                    <div class="d-flex align-center justify-content-end">
                         <nuxt-link class="cart_link" to="/cart">
                             <UBadge class="cart_counter" variant="solid">{{ cartStore.itemCount }}</UBadge>
                             <img class="cart_img" src="../public/images/cart.png" />

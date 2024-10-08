@@ -34,7 +34,7 @@
                     <h1>{{ title }}</h1>
                     <p class="orangeShade course_1_text">Updated: <span>June 2024</span></p>
                     <p class="course_2_text">by: {{ tutorName }}</p>
-                    <p v-html="desc + '...'" class="html_desc"></p>
+                    <p v-html="desc" class="html_desc"></p>
                     <div class="duration_price_div">
                         <div v-for="(variant, index) in productVariants" :key="index"
                             class="d-flex align-center duration_mt justify-between">
@@ -56,13 +56,22 @@
                     <nuxt-link class="course_card_btn_text" to="/course-info/abc">
                         <button class="course_info_btn">View more</button>
                     </nuxt-link>
-                    <button @click="addToCart" :disabled="!courseDuration || cartStore.cartAdd"
-                        :class="{ 'disabled-button': !courseDuration }" class="course_info_btn">
-                        <span v-if="cartStore.cartAdd">
-                            <img class="loader_rotate_size" src="/images/cart_loader.png" />
-                        </span>
-                        <span v-else-if="cartStore.cartUpdated">Added to cart</span>
-                        <span v-else>Add to cart</span>
+
+                    <!-- Conditionally Render Add to Cart Buttons -->
+                    <button v-if="!loading && !addedToCart" @click="addToCart"
+                        :disabled="!courseDuration" :class="{ 'disabled-button': !courseDuration }"
+                        class="course_info_btn">
+                        Add to cart
+                    </button>
+
+                    <!-- Loading state -->
+                    <button v-else-if="loading" class="course_info_btn">
+                        <img class="loader_rotate_size" src="/images/cart_loader.png" />
+                    </button>
+
+                    <!-- Added to cart state -->
+                    <button disabled v-else class="course_info_btn">
+                        Added to cart
                     </button>
                 </div>
             </v-card>
@@ -92,6 +101,8 @@ const props = defineProps({
 // State variables
 const courseDuration = ref('');
 const selectedVariant = ref({});
+const loading = ref(false); // Local loading state
+const addedToCart = ref(false); // Local added-to-cart state
 
 // Automatically select the first variant as the default
 onMounted(async () => {
@@ -108,8 +119,9 @@ watch(courseDuration, (newValue) => {
     if (variant) {
         selectedVariant.value = variant;
     }
-    // Reset cart-related state whenever a new variant is selected
-    cartStore.$reset(); // Reset store state if needed
+    // Reset local button states when selecting a new variant
+    loading.value = false;
+    addedToCart.value = false;
 });
 
 // Debounce function to avoid excessive API calls
@@ -123,9 +135,10 @@ const debounce = (func, delay) => {
     };
 };
 
+// Add to cart logic
 const addToCart = debounce(async () => {
+    loading.value = true; // Start loading
     const cartItem = {
-        //'user_id': authStore.user?.id,
         'product_id': selectedVariant.value.productId,
         'variant_id': selectedVariant.value.variantId,
         'quantity': 1,
@@ -136,14 +149,15 @@ const addToCart = debounce(async () => {
     try {
         // Use cartStore to add the item to the cart
         await cartStore.addToCart(cartItem);
-        if (cartStore.cartUpdated) {
-            console.log('Cart updated successfully');
-        }
+        addedToCart.value = true; // Mark item as added to cart
+        loading.value = false; // Stop loading
     } catch (error) {
         console.error('Error adding to cart:', error);
+        loading.value = false;
     }
 }, 3000);
 </script>
+
 
 
 <style scoped>
@@ -156,9 +170,10 @@ p.html_desc {
 
 img.course_card_image {
     height: 100%;
-    max-height: 215px;
+    min-height: 215px;
     object-fit: cover;
     object-position: center top;
+    max-height: 215px;
 }
 
 .loader_rotate_size {

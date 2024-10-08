@@ -120,15 +120,7 @@ button.success_btn_2 {
     position: relative;
 }
 
-.story_card_img::after {
-    content: '';
-    background-image: url(/images/success_dots.png);
-    position: absolute;
-    top: -58px;
-    right: -40px;
-    width: 14%;
-    height: 73%;
-}
+
 
 .pagination span {
     display: inline-block;

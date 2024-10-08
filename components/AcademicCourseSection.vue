@@ -60,7 +60,7 @@ const getAcademicCourses = async () => {
     description: course.description.slice(0, 150),
     image: course.product_image[0].file_path,
     tutorName: course.tutor.name,
-    title: course.title,
+    title: course.title.slice(0, 40),
     product_variants: course.variants.map(variant => ({
       variantId: variant.id,
       productId: variant.product_id,

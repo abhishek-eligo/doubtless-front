@@ -195,11 +195,7 @@ const tabletListData = [
     margin-bottom: 55px !important;
 }
 
-.success_div {
-    background: #FFF2E4;
-    background-image: url('/images/success_bg.png');
-    padding: 75px 0 49px 0;
-}
+
 
 .learn_big {
     font-size: 36px;
