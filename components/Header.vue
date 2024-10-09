@@ -440,7 +440,7 @@ onMounted(async () => {
                     </div>
                     <div class="d-flex align-center justify-content-end">
                         <nuxt-link class="cart_link" to="/cart">
-                            <UBadge class="cart_counter" variant="solid">{{ cartStore.itemCount }}</UBadge>
+                            <UBadge class="cart_counter" variant="solid" v-show="cartStore.itemCount">{{ cartStore.itemCount }}</UBadge>
                             <img class="cart_img" src="../public/images/cart.png" />
                         </nuxt-link>
 

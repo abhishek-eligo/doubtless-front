@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { useCartStore } from "./cart"; // Import the auth store
 import { useCookies } from "vue3-cookies";
 
 export const useAuthStore = defineStore("auth", {
@@ -29,15 +30,20 @@ export const useAuthStore = defineStore("auth", {
     },
 
     logout() {
+
       // Clear user and token from state
       this.user = null;
       this.token = null;
+      const cartStore = useCartStore();
+      cartStore.clearCart();
 
       // Clear cookie
       const authToken = useCookie('authToken');
       const userData = useCookie('userData');
+      const cartCookie = useCookie('cart');
       authToken.value = null; // Remove the token cookie
       userData.value = null; // Remove the token cookie
+      cartCookie.value = null;
     },
 
     async sendLoginOtp(payload) {
@@ -123,7 +129,10 @@ export const useAuthStore = defineStore("auth", {
           // Store user data as a string
           const userCookie = useCookie('userData');
           userCookie.value = JSON.stringify(response.user);
-          
+
+          const cartStore = useCartStore();
+          cartStore.saveCartToServer();
+          //cartStore.loadCart();
           return response; // Return the success message
         } else {
           //console.error("OTP failed:", response.message);
@@ -149,11 +158,6 @@ export const useAuthStore = defineStore("auth", {
       try {
         this.otpStatus = null;
 
-        const cartCookie = useCookie('cartItems');
-        if (cartCookie.value) {
-          payload.cart = cartCookie.value; // Add cart cookie value to payload
-        }
-
         const response = await $fetch(`${baseURL}/verify-login-otp`, {
           method: 'POST',
           body: payload,
@@ -170,6 +174,10 @@ export const useAuthStore = defineStore("auth", {
           // Store user data as a string
           const userCookie = useCookie('userData');
           userCookie.value = JSON.stringify(response.user);
+
+          const cartStore = useCartStore();
+          cartStore.saveCartToServer();
+          //cartStore.loadCart();
           
           return response; // Return the success message
         } else {
