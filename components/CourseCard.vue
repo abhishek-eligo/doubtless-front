@@ -84,6 +84,8 @@ import { ref, onMounted, watch } from 'vue';
 import { useCartStore } from '@/stores/cart';
 import { useAuthStore } from '@/stores/auth';
 
+const { $toast } = useNuxtApp();
+
 // Initialize stores
 const cartStore = useCartStore();
 const authStore = useAuthStore();
@@ -153,6 +155,7 @@ const addToCart = debounce(async () => {
         await cartStore.addToCart(cartItem);
         addedToCart.value = true; // Mark item as added to cart
         loading.value = false; // Stop loading
+        $toast.success('Some thing went wrong');
     } catch (error) {
         console.error('Error adding to cart:', error);
         loading.value = false;
@@ -181,6 +184,7 @@ img.course_card_image {
 .loader_rotate_size {
     width: 19px;
     padding: 0;
+    animation: rotate 2s linear infinite;
 }
 
 .course_info_btn {
@@ -204,6 +208,10 @@ img.course_card_image {
     color: #ffffff;
     transition: 0.3s;
     border: 2px solid #F87126;
+}
+
+.course_info_btn:hover img.loader_rotate_size {
+    filter: brightness(10);
 }
 
 .course_1_text span {

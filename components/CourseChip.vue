@@ -10,7 +10,7 @@
                 @click="setActiveChip(index, item.slug)">
                 {{ item.name }}
                 <br />
-                <span :class="selectedChip != index ? 'chip_text_color' : ''">Learn All Courses</span>
+                <span class="learn_course_text" :class="selectedChip != index ? 'chip_text_color' : ''">Learn All Courses</span>
               </v-btn>
             </div>
           </v-slide-group-item>
@@ -53,11 +53,11 @@ const selectedChip = ref(0); // Default first chip active
 //   return currentStart.value + props.visibleCount < props.items.length;
 // });
 
-// watch(() => props.reset, (newValue) => {
-//   if (newValue) {
-//     selectedChip.value = 0;
-//   }
-// });
+watch(() => props.reset, (newValue) => {
+  if (newValue) {
+    selectedChip.value = 0;
+  }
+});
 
 // const canSlideLeft = computed(() => {
 //   return currentStart.value > 0;
@@ -97,6 +97,13 @@ const setActiveChip = (index, slug) => {
 </script>
 
 <style scoped>
+
+.learn_course_text {
+    font-size: 12px !important;
+    line-height: 120%;
+    font-weight: 500;
+    letter-spacing: 0;
+}
 
 .chip-button {
   border-radius: 50px;
