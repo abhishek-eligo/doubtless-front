@@ -17,7 +17,7 @@
     <div class="d-flex course_gap flex-wrap justify-between">
       <CourseCard v-for="course in courses" :key="course.id" :desc="course.description" :image="course.image"
         :title="course.title" :productVariants="course.product_variants" :rating="course.rating"
-        :offPercent="course.offPercent" :tutorName="course.tutorName" />
+        :offPercent="course.offPercent" :tutorName="course.tutorName" :totalLectures="course.total_lectures" />
     </div>
   </div>
 </template>
@@ -50,9 +50,9 @@ const getAcademicCourses = async () => {
     return;
   }
 
-  const response = await $axios.get("/courses/all_published_course?course_category_id=1");
+  const response = await $axios.get("/courses/all_published_course?courseCategorySlug=academic");
   const courseData = response.data.data;
-
+  //console.log(courseData);
   const mappedCourses = courseData.map(course => ({
     id: course.id,
     leaf_node_slug: course.leaf_node_slug,
@@ -61,6 +61,7 @@ const getAcademicCourses = async () => {
     image: course.product_image[0].file_path,
     tutorName: course.tutor.name,
     title: course.title.slice(0, 40),
+    total_lectures: course.total_lectures,
     product_variants: course.variants.map(variant => ({
       variantId: variant.id,
       productId: variant.product_id,
@@ -124,7 +125,7 @@ const getAllClasses = async () => {
 // Handle tab selection
 const onTabSelected = async (slug) => {
   selectedTabSlug.value = slug;
-  console.log('Selected Tab Slug:', selectedTabSlug.value);
+  //console.log('Selected Tab Slug:', selectedTabSlug.value);
   await getAcademicCourses();
 
   // Reset chip index to 0 whenever a new tab is selected
@@ -137,7 +138,7 @@ const onTabSelected = async (slug) => {
 // Handle chip selection
 const onChipSelected = async (slug) => {
   selectedChipSlug.value = slug;
-  console.log('Selected Chip Slug:', selectedChipSlug.value);
+  //console.log('Selected Chip Slug:', selectedChipSlug.value);
   await getAcademicCourses();
 };
 

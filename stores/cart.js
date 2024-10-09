@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { useAuthStore } from "./auth"; // Import the auth store
+import { useCookies } from "vue3-cookies";
 
 export const useCartStore = defineStore("cart", {
   state: () => ({
@@ -30,6 +31,11 @@ export const useCartStore = defineStore("cart", {
       const authStore = useAuthStore(); // Access the auth store
       const token = authStore.token; // Get the token from the auth store
 
+      const cartCookie = useCookie('cartItems');
+      if (cartCookie.value) {
+        payload.cart = cartCookie.value; // Add cart cookie value to payload
+      }
+
       try {
         const response = await $fetch(`${baseURL}/cart/add-item`, {
           method: "POST",
@@ -42,27 +48,10 @@ export const useCartStore = defineStore("cart", {
 
         // Handle response data
         if (response.success) {
-          // Assuming response.cart is the object containing items like { "2_5": {...}, "3_6": {...} }
-          Object.entries(response.cart).forEach(([key, item]) => {
-            const existingItem = this.cartItems.find(
-              (cartItem) => cartItem.variant_id === item.variant_id // Check if the item already exists in the cart based on variant_id
-            );
-
-            if (existingItem) {
-              // If it exists, update its quantity
-              existingItem.quantity += item.quantity; // Adjust quantity based on the response
-            } else {
-              // If it doesn't exist, add the new item to the cart
-              this.cartItems.push({
-                variant_id: item.variant_id, // Ensure to include the variant_id
-                quantity: item.quantity, // Set the quantity from the response
-                price: item.price, // Include the price
-                is_digital: item.is_digital, // Include whether it is digital
-                product: item.product,
-              });
-            }
-          });
-
+          console.log(response.cart);
+          this.cartItems.push(response.cart);
+          const cart = useCookie('cartItems');
+          cart.value = this.cartItems; // Set the token in the cookie
           console.log("ITEM COUNT", this.itemCount); // Use the getter to log item count
           console.log("ITEMS IN CART", this.cartItems);
           this.cartAdd = false;

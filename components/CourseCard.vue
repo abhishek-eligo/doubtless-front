@@ -95,7 +95,8 @@ const props = defineProps({
     price: Number,
     tutorName: String,
     desc: String,
-    productVariants: Array
+    productVariants: Array,
+    totalLectures: Number,
 });
 
 // State variables
@@ -140,6 +141,7 @@ const addToCart = debounce(async () => {
     loading.value = true; // Start loading
     const cartItem = {
         'product_id': selectedVariant.value.productId,
+        'product': {'id':selectedVariant.value.productId, 'name': props.title, 'tutor': props.tutorName, 'variants': props.productVariants, 'total_lectures': props.totalLectures},
         'variant_id': selectedVariant.value.variantId,
         'quantity': 1,
         'is_digital': true,
