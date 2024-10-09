@@ -17,7 +17,7 @@
         <div class="d-flex course_gap flex-wrap justify-between">
             <CourseCard v-for="course in courses" :key="course.id" :desc="course.description" :image="course.image"
                 :title="course.title" :productVariants="course.product_variants" :rating="course.rating"
-                :offPercent="course.offPercent" :tutorName="course.tutorName" />
+                :offPercent="course.offPercent" :tutorName="course.tutorName" :totalLectures="course.total_lectures" />
         </div>
     </div>
 </template>
@@ -36,7 +36,7 @@ const courseTabSlugName = ref('');
 const courseChipSlugName = ref('');
 // Your method to handle tab change
 const handleTabChange = async (selectedTab) => {
-    console.log("TAB", selectedTab);
+    //console.log("TAB", selectedTab);
     // Execute your logic based on selectedTab
     resetChipIndex.value = true;
     setTimeout(() => {
@@ -52,7 +52,7 @@ const resetChipIndex = ref(false);
 
 const handleChipChange = async (selectedChip) => {
     // Execute your logic based on selectedTab
-    console.log("CHIP", selectedChip);
+    //console.log("CHIP", selectedChip);
     courseChipSlugName.value = selectedChip;
     getProduct(courseTabSlugName.value, courseChipSlugName.value);
     await getSkillCourses();
@@ -73,10 +73,10 @@ const getSkillCategoryCourse = async () => {
 }
 const getSkillCourses = async () => {
     courses.value = [];
-    const response = await $axios.get("/courses/all_published_course?course_category_id=3");
-    console.log('SC:- ', response.data.data);
+    const response = await $axios.get("/courses/all_published_course?courseCategorySlug=skill");
+    //console.log('SC:- ', response.data.data);
     const courseData = response.data.data;
-    console.log('Courses Data', courseData, courseChipSlugName.value)
+    //console.log('Courses Data', courseData, courseChipSlugName.value)
     let product_variants = [];
     const mappedCourses = courseData.map(course => {
         return {
@@ -87,6 +87,7 @@ const getSkillCourses = async () => {
             image: course.product_image[0].file_path,
             tutorName: course.tutor.name,
             title: course.title.slice(0, 40),
+            total_lectures: course.total_lectures,
             product_variants: course.variants.map(variant => {
                 return {
                     variantId: variant.id,
@@ -101,7 +102,7 @@ const getSkillCourses = async () => {
     })
     // console.log('mappedCourses', mappedCourses)
     const filteredCourses = mappedCourses.filter(course => course.leaf_node_slug === courseChipSlugName.value && course.parent_node_slug === courseTabSlugName.value);
-    console.log('filteredCourses', filteredCourses)
+    //console.log('filteredCourses', filteredCourses)
     courses.value = filteredCourses;
     cardLoading.value = false;
 }
@@ -128,7 +129,7 @@ const getSubCategory = async (slugTemp) => {
 }
 
 const getProduct = (tabSlug, chipSlug) => {
-    console.log(tabSlug, chipSlug);
+    //console.log(tabSlug, chipSlug);
 }
 </script>
 
