@@ -417,7 +417,7 @@ onMounted(async () => {
                         <form class="align-items-center d-flex mb-0">
                             <div class="search_field d-flex">
                                 <input class="form-control input_search" type="search"
-                                    placeholder="Find video courses, mock tests, PDF books..." aria-label="Search">
+                                    placeholder="Find courses" aria-label="Search">
                                 <button class="btn" type="submit">
                                     <i class="bi bi-search"></i>
                                 </button>
@@ -438,7 +438,7 @@ onMounted(async () => {
                             </ul>
                         </div>
                     </div>
-                    <div class="d-flex align-center justify-content-end">
+                    <div class="d-flex align-center justify-content-end user_login_card_position">
                         <nuxt-link class="cart_link" to="/cart">
                             <UBadge class="cart_counter" variant="solid" v-show="cartStore.itemCount">{{ cartStore.itemCount }}</UBadge>
                             <img class="cart_img" src="../public/images/cart.png" />
@@ -648,8 +648,12 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+.user_login_card_position {
+    position: relative;
+}
 .page_active_link {
     border-bottom: 1px solid #fff;
+    padding-bottom: 0;
 }
 
 .user_login_card_p_mb {
@@ -689,8 +693,8 @@ p.user_login_card_email {
 .user_login_card {
     width: 243px;
     position: absolute;
-    top: 65px;
-    right: 250px;
+    top: 46px;
+    right: 0;
     box-shadow: 0 4px 9px #00000010;
     padding: 10px 15px 30px 15px;
     z-index: 99;
@@ -798,6 +802,10 @@ img.modal_cancel_btn {
 
 .card_title {
     margin-bottom: 20px;
+    padding: 0 38px !important;
+    max-width: 325px;
+    margin: 0 auto;
+    width: 100%;
 }
 
 .loginModal {

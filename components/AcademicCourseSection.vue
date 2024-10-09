@@ -14,17 +14,24 @@
         <USkeleton class="course_card_end_loader" />
       </div>
     </div>
-    <div class="d-flex course_gap flex-wrap justify-between">
+    <!-- <div class="d-flex course_gap flex-wrap justify-between">
       <CourseCard v-for="course in courses" :key="course.id" :desc="course.description" :image="course.image"
         :title="course.title" :productVariants="course.product_variants" :rating="course.rating"
         :offPercent="course.offPercent" :tutorName="course.tutorName" :totalLectures="course.total_lectures" />
-    </div>
+    </div> -->
+    <v-slide-group class="course_gap">
+      <v-slide-group-item v-for="course in courses" :key="course.id">
+        <CourseCard :desc="course.description" :image="course.image" :title="course.title"
+          :productVariants="course.product_variants" :rating="course.rating" :offPercent="course.offPercent"
+          :tutorName="course.tutorName" :totalLectures="course.total_lectures" />
+      </v-slide-group-item>
+    </v-slide-group>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
-const { $axios } = useNuxtApp();
+const { $axios, $toast } = useNuxtApp();
 
 const cardLoaders = ref(4);
 const tabLoading = ref(true);
@@ -60,7 +67,7 @@ const getAcademicCourses = async () => {
     description: course.description.slice(0, 150),
     image: course.product_image[0].file_path,
     tutorName: course.tutor.name,
-    title: course.title.slice(0, 40),
+    title: course.title,
     total_lectures: course.total_lectures,
     product_variants: course.variants.map(variant => ({
       variantId: variant.id,
@@ -147,6 +154,7 @@ onMounted(async () => {
   await getAllBoards();
   await getAllClasses();
   await getAcademicCourses();
+  $toast.error('Some thing went wrong');
 });
 </script>
 
