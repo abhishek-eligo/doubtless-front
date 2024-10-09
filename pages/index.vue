@@ -1,5 +1,11 @@
 <script setup>
+import { ref, onMounted, watch } from 'vue';
+import { useCartStore } from '@/stores/cart';
+import { useAuthStore } from '@/stores/auth';
 
+// Initialize stores
+const cartStore = useCartStore();
+const authStore = useAuthStore();
 
 const courseTypes = [
     { id: '1', title: 'free courses', text: 'expert-led, and interactive.' },
@@ -16,6 +22,10 @@ const tabletListData = [
     { title: 'Preloaded courses Content', text: 'Start learning immediately with essential courses and resources preloaded on the tablet.' },
     { title: 'Extended Battery Life', text: 'Enjoy extended learning sessions without the need for frequent recharging.' },
 ]
+onMounted(async () => {
+    await authStore.restoreAuthFromCookies(); // Ensure the user is authenticated
+    await cartStore.loadCart();
+});
 </script>
 
 <template>
