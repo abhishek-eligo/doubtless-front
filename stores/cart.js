@@ -71,10 +71,7 @@ export const useCartStore = defineStore("cart", {
           });
 
           if (itemExists) {
-            toast("Sorry, Product variant already exist in cart", {
-              autoClose: 1000,
-              canTimeout: true,
-            });
+            alert("Sorry, Product variant already exist in cart");
             return;
           }
           // If the item doesn't exist, add it to the cart
@@ -136,69 +133,58 @@ export const useCartStore = defineStore("cart", {
       }
     },
 
-    async removeItem() {
+    async removeItem(productId, variantId) {
       const config = useRuntimeConfig(); // Get runtime config
       const baseURL = config.public.baseURL; // Access baseURL
 
       const authStore = useAuthStore(); // Access the auth store
       const token = authStore.token; // Get the token from the auth store
-
       if (token) {
-        // Logged-in user: handle item removal via API
+        this.cartAdd = true;
         try {
-          const cartItemId = `${productId}_${variantId ? variantId : "null"}`; // Combine productId and variantId as cartItemId
-
           const response = await $fetch(
-            `${baseURL}/cart/remove-item/${cartItemId}`,
+            `${baseURL}/cart/remove-item/${variantId}`,
             {
               method: "DELETE",
               headers: {
-                Authorization: `Bearer ${token}`, // Include Authorization header for logged-in users
-                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`, // Include the Authorization header
+                "Content-Type": "application/json", // Set content type to application/json
               },
             }
           );
-
-          if (response.success) {
-            // Filter out the removed item from cartItems
-            this.cartItems = this.cartItems.filter(
-              (item) =>
-                item.product.id !== productId || item.variant_id !== variantId
-            );
-
-            console.log("Item removed from cart:", response.message);
-            this.cartUpdated = true;
-          } else {
-            console.error("Error removing from cart:", response.message);
-          }
+          // Check response if needed
+          console.log("Item removed successfully", response);
         } catch (error) {
           console.error("API Error:", error);
         }
       } else {
-        // Guest user: handle item removal using cookies
-        try {
-          const cookieCart = useCookie("cart"); // Access the cart from cookies
-          const cart = cookieCart.value ? JSON.parse(cookieCart.value) : {};
-          const productKey = productId + (variantId ? `_${variantId}` : "");
+        console.log(productId, variantId);
+        const { cookies } = useCookies();
 
-          if (cart[productKey]) {
-            // Remove the item from the cart
-            delete cart[productKey];
+        // Get the current cart items from the cookie
+        const cartFromCookies = cookies.get("cart");
 
-            // Update the cart cookie
-            cookieCart.value = JSON.stringify(cart);
+        // Parse the cart if it exists, otherwise start with an empty array
+        let cookieCartItems = cartFromCookies
+          ? JSON.parse(cartFromCookies)
+          : [];
 
-            // Update local cartItems state
-            this.cartItems = Object.values(cart);
+        // Filter out the item with matching productId and variantId
+        let remainingCookieCartItems = cookieCartItems.filter(
+          (obj) => obj.product_id !== productId || obj.variant_id !== variantId
+        );
 
-            console.log("Item removed from guest cart.");
-            this.cartUpdated = true;
-          } else {
-            console.error("Item not found in guest cart.");
-          }
-        } catch (error) {
-          console.error("Error handling guest cart:", error);
+        // Update the cookie with the new cart items
+        if (remainingCookieCartItems.length == 0) {
+          cookies.remove("cart");
+          this.cartItems = [];
+        } else {
+          cookies.set("cart", JSON.stringify(remainingCookieCartItems), "7d"); // cookie expiry of 7 days
+          // Update the local state of cart items if needed
+          this.cartItems = remainingCookieCartItems;
         }
+
+        console.log("Updated Cart", cookieCartItems, remainingCookieCartItems);
       }
     },
 
@@ -213,12 +199,12 @@ export const useCartStore = defineStore("cart", {
       try {
         let cartItemsToSave = [];
         if (this.cartItems) {
-          cartItemsToSave = this.cartItems.map(obj => ({
-            'product_id': obj.product_id,
-            'variant_id': obj.variant_id,
-            'price': obj.price,
-            'quantity': obj.quantity,
-            'is_digital': obj.is_digital,
+          cartItemsToSave = this.cartItems.map((obj) => ({
+            product_id: obj.product_id,
+            variant_id: obj.variant_id,
+            price: obj.price,
+            quantity: obj.quantity,
+            is_digital: obj.is_digital,
           }));
         }
 
@@ -226,7 +212,7 @@ export const useCartStore = defineStore("cart", {
           console.log("No items to save.");
           return;
         }
-        console.log("cartItemsToSave",cartItemsToSave);
+        console.log("cartItemsToSave", cartItemsToSave);
         // Send the cart data to the backend
         const response = await $fetch(`${baseURL}/cart/save`, {
           method: "POST",
@@ -239,11 +225,10 @@ export const useCartStore = defineStore("cart", {
           }),
         });
 
-        if(response.success){
+        if (response.success) {
           console.log("CART DATA SAVED");
-          cookies.remove('cart');
+          cookies.remove("cart");
         }
-
       } catch (error) {
         console.error("Error while saving cart to server:", error);
       }
