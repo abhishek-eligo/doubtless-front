@@ -590,6 +590,27 @@ a.cart_link {
     gap: 4px;
 }
 
+.course_chip_slide .v-slide-group__content {
+    column-gap: 14px;
+}
+
+.course_chip_slide .v-slide-group__prev i::before,
+.course_chip_slide .v-slide-group__next i::before {
+    background: #FFD3BB;
+    border-radius: 30px;
+    color: var(--default_color);
+}
+
+.course_chip_slide .v-slide-group__next--disabled,
+.v-slide-group__prev--disabled {
+    display: none !important;
+}
+
+.course_chip_slide .v-slide-group__prev,
+.v-slide-group__next {
+    font-size: 25px !important;
+}
+
 .old_price {
     text-decoration: line-through;
     color: var(--tutorTextClr);
@@ -1223,36 +1244,41 @@ p.signUp_text {
 
 /* Course Tab */
 
-.v-slide-group__prev {
+
+/* .v-slide-group__prev {
     position: absolute !important;
     top: 15px !important;
     right: 0px !important;
     display: unset !important;
     min-width: 75px !important;
-}
+} */
 
-.v-slide-group__next {
+
+/* .v-slide-group__next {
     justify-content: end !important;
     align-items: end !important;
     min-width: 75px !important;
-}
+} */
 
-.v-slide-group__prev,
+
+/* .v-slide-group__prev,
 .v-slide-group__next {
     font-size: 20px !important;
-}
+} */
 
-.v-slide-group__prev i::before {
+
+/* .v-slide-group__prev i::before {
     background: #FFD3BB;
     border-radius: 50%;
     color: #F87126;
-}
+} */
 
-.v-slide-group__next i::before {
+
+/* .v-slide-group__next i::before {
     background: #FFD3BB;
     border-radius: 50%;
     color: #F87126;
-}
+} */
 
 
 /* Course Tab End */
