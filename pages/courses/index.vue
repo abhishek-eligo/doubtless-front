@@ -94,7 +94,7 @@ onMounted(() => {
                     <v-chip class="filter_choice_chip" closable>
                         Class - 1
                     </v-chip>
-                    <USkeleton class="w-[250px]" />
+                    <!-- <USkeleton class="w-[250px]" /> -->
                 </div>
                 <div class="row flex-wrap">
                     <div class="col-lg-3">
