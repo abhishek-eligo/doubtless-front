@@ -37,7 +37,7 @@
           <div class="cart_price">
             <p class="cart_sale_price">₹{{ item.salePrice }}</p>
             <p class="cart_orignal_price">₹{{ item.originalPrice }}</p>
-            <button class="cart_remove_item" @click="removeItem(item.product.id, item.variant_id)">{{item.product.id}} {{item.variant_id}}Remove</button>
+            <button class="cart_remove_item" @click="removeItem(item.product_id, item.variant_id)">Remove</button>
           </div>
         </div>
       </VCardText>
@@ -66,7 +66,7 @@ const emit = defineEmits(['updateCart']);
 const removeItem = (productId, variantId) => {
   console.log("REMOVING ITEM", productId, variantId);
   // Emit the index of the item to be removed to the parent
-  //emit('updateCart', productId, variantId);
+  emit('updateCart', productId, variantId);
 };
 </script>
 

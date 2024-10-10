@@ -155,7 +155,7 @@ const addToCart = debounce(async () => {
         await cartStore.addToCart(cartItem);
         addedToCart.value = true; // Mark item as added to cart
         loading.value = false; // Stop loading
-        $toast.success('Some thing went wrong');
+        //$toast.success('Some thing went wrong');
     } catch (error) {
         console.error('Error adding to cart:', error);
         loading.value = false;

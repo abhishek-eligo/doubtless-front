@@ -10,8 +10,7 @@ const cartItems = ref(cartStore.cartItems); // Use cartStore's cartItems
 
 // Handle removing items using the store
 const handleUpdateCart = (productId, variantId) => {
-    const itemToRemove = cartItems.value.find(obj => obj.variant_id === variantId && obj.product?.id === productId);
-    cartStore.removeItem(itemToRemove); // Use the store's action to remove it
+    cartStore.removeItem(productId, variantId); // Use the store's action to remove it
 };
 
 // Check if cart has items on component mount
@@ -27,7 +26,6 @@ setTimeout(() => {
     isCartVisible.value = true;
 }, 100);
 </script>
-
 <template>
     <transition name="slide-fade">
         <div v-if="isCartVisible" class="wrapper">
@@ -40,7 +38,6 @@ setTimeout(() => {
                                 <p class="cart_text">{{ cartItems.length }} courses in cart</p>
                             </VCardTitle>
                         </VCard>
-                        {{ cartItems }}
                         <CartCard :cartItems="cartItems" @updateCart="handleUpdateCart" />
                     </VCol>
                     <VCol md="3" cols="12">
