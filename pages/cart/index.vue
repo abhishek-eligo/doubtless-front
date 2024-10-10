@@ -1,12 +1,17 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useCartStore } from '~/stores/cart'; // Import the cart store
+import { ref, onMounted, watch } from 'vue';
+import { useCartStore } from '@/stores/cart';
+import { useAuthStore } from '@/stores/auth';
 
-// Use the cart store
+// Initialize stores
 const cartStore = useCartStore();
+const authStore = useAuthStore();
+
+const cartSalePriceTotal = computed(() => cartStore.cartSalePriceTotal);
+const cartActualPriceTotal = computed(() => cartStore.cartActualPriceTotal);
 
 // Access the cartItems from the store instead of using a local ref
-const cartItems = ref(cartStore.cartItems); // Use cartStore's cartItems
+const cartItems = computed(() => cartStore.cartItems); // Use cartStore's cartItems
 
 // Handle removing items using the store
 const handleUpdateCart = (productId, variantId) => {
@@ -14,10 +19,9 @@ const handleUpdateCart = (productId, variantId) => {
 };
 
 // Check if cart has items on component mount
-onMounted(() => {
-    if (cartItems.value.length > 0) {
-        console.log('Bum Bum Bhole');
-    }
+onMounted(async() => {
+    await authStore.restoreAuthFromCookies(); // Ensure the user is authenticated
+    await cartStore.loadCart();
 });
 
 // Show cart after some time (just like your original code)
@@ -44,8 +48,8 @@ setTimeout(() => {
                         <div class="checkout_card">
                             <div>
                                 <span class="items_total">Total: </span>
-                                <span class="item_sale_price">₹1,189</span>
-                                <span class="cart_ori_total">₹14,996</span>
+                                <span class="item_sale_price">₹{{ cartSalePriceTotal }}</span>
+                                <span class="cart_ori_total">₹{{ cartActualPriceTotal }}</span>
                             </div>
                             <nuxt-link to="/cart/checkout">
                                 <button class="cart_checkout_btn">Checkout</button>

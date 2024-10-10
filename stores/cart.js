@@ -10,11 +10,26 @@ export const useCartStore = defineStore("cart", {
   }),
 
   getters: {
-    cartTotal: (state) => {
+    cartSalePriceTotal: (state) => {
       return state.cartItems.reduce(
         (total, item) => total + item.price * item.quantity,
         0
       ); // Use cartItems here
+    },
+    cartActualPriceTotal: (state) => {
+      return state.cartItems.reduce((total, item) => {
+        const matchingVariant = item.product.variants.find(
+          (variant) =>
+            variant.variantId === item.variant_id &&
+            variant.productId === item.product_id
+        );
+
+        if (matchingVariant) {
+          total += matchingVariant.price * item.quantity;
+        }
+
+        return total;
+      }, 0);
     },
     itemCount: (state) => {
       return state.cartItems.reduce((count, item) => count + item.quantity, 0); // Use cartItems here
@@ -139,8 +154,19 @@ export const useCartStore = defineStore("cart", {
 
       const authStore = useAuthStore(); // Access the auth store
       const token = authStore.token; // Get the token from the auth store
+
+      const { cookies } = useCookies();
+      const cartFromCookies = cookies.get("cart");
+
+      // Parse the cart if it exists, otherwise start with an empty array
+      let cookieCartItems = cartFromCookies ? JSON.parse(cartFromCookies) : [];
+
+      // Filter out the item with matching productId and variantId
+      let remainingCookieCartItems = cookieCartItems.filter(
+        (obj) => obj.product_id !== productId || obj.variant_id !== variantId
+      );
+
       if (token) {
-        this.cartAdd = true;
         try {
           const response = await $fetch(
             `${baseURL}/cart/remove-item/${variantId}`,
@@ -152,28 +178,30 @@ export const useCartStore = defineStore("cart", {
               },
             }
           );
-          // Check response if needed
           console.log("Item removed successfully", response);
+          // Check response if needed
+          if (response.success) {
+            if (response.item_count == 0) {
+              if (remainingCookieCartItems.length == 0) {
+                cookies.remove("cart");
+                this.cartItems = [];
+              }
+            } else {
+              if (remainingCookieCartItems.length > 0) {
+                cookies.set(
+                  "cart",
+                  JSON.stringify(remainingCookieCartItems),
+                  "7d"
+                ); // cookie expiry of 7 days
+                // Update the local state of cart items if needed
+                this.cartItems = remainingCookieCartItems;
+              }
+            }
+          }
         } catch (error) {
           console.error("API Error:", error);
         }
       } else {
-        console.log(productId, variantId);
-        const { cookies } = useCookies();
-
-        // Get the current cart items from the cookie
-        const cartFromCookies = cookies.get("cart");
-
-        // Parse the cart if it exists, otherwise start with an empty array
-        let cookieCartItems = cartFromCookies
-          ? JSON.parse(cartFromCookies)
-          : [];
-
-        // Filter out the item with matching productId and variantId
-        let remainingCookieCartItems = cookieCartItems.filter(
-          (obj) => obj.product_id !== productId || obj.variant_id !== variantId
-        );
-
         // Update the cookie with the new cart items
         if (remainingCookieCartItems.length == 0) {
           cookies.remove("cart");
@@ -183,8 +211,6 @@ export const useCartStore = defineStore("cart", {
           // Update the local state of cart items if needed
           this.cartItems = remainingCookieCartItems;
         }
-
-        console.log("Updated Cart", cookieCartItems, remainingCookieCartItems);
       }
     },
 

@@ -143,11 +143,12 @@ const addToCart = debounce(async () => {
     loading.value = true; // Start loading
     const cartItem = {
         'product_id': selectedVariant.value.productId,
-        'product': {'id':selectedVariant.value.productId, 'name': props.title, 'tutor': props.tutorName, 'variants': props.productVariants, 'total_lectures': props.totalLectures},
+        'product': {'id':selectedVariant.value.productId, 'name': props.title, 'tutor': props.tutorName, 'variants': props.productVariants, 'total_lectures': props.totalLectures, 'product_image': props.image},
         'variant_id': selectedVariant.value.variantId,
         'quantity': 1,
         'is_digital': true,
-        'price': selectedVariant.value.salePrice > 0 ? selectedVariant.value.salePrice : selectedVariant.value.price
+        'price': selectedVariant.value.salePrice > 0 ? selectedVariant.value.salePrice : selectedVariant.value.price,
+        'actual_price': selectedVariant.value.price,
     };
 
     try {

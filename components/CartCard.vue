@@ -3,8 +3,8 @@
     <VCard v-for="(item, index) in cartItems" :key="index">
       <VCardText class="px-0 py-0 d-flex justify-between">
         <div class="d-flex gap-3">
-          <div>
-            <img src="/images/cart_item.png" />
+          <div class="product_cart_img">
+            <img :src="item.product.product_image" />
           </div>
           <div class="cart_item_content">
             <h1 class="cart_item_h">{{ item.product.name }}</h1>
@@ -14,29 +14,34 @@
               <li class="cart_text_font">{{ item.rating }} </li>
             </ul>
             <ul class="d-flex align-center">
-              <li class="cart_text_font">{{ item.hours }}</li>
+              <li class="cart_text_font">40 hours</li>
               <span class="grey_circle"></span>
               <li class="cart_text_font">{{ item.product.total_lectures }} lectures</li>
               <span class="grey_circle"></span>
-              <li class="cart_text_font">{{ item.level }}</li>
+              <li class="cart_text_font">Beginner</li>
             </ul>
           </div>
         </div>
         <div class="d-flex justify-content-end cart_valid_width">
           <div>
-            <p class="validity_month">{{ item.valid }} Month Validity</p>
-            <p @click="showVariants" class="change_plan_txt">Change Plan</p>
-            <div v-if="variantsIsShown" class="variant_check_div">
-              <label class="variant_container">
-                <span class="variant_check_txt">3 Month</span>
-                <input type="radio" checked="checked" name="radio">
+            <div v-for="(variant, variantIndex) in item.product.variants" :key="variantIndex">
+              <p v-if="variant.variantId === item.variant_id" class="validity_month">
+                {{ variant.title }} Validity
+              </p>
+            </div>
+            <p @click="showVariants(index)" class="change_plan_txt">Change Plan</p>{{ item.variant_id }}
+            <!-- Use index-based toggle -->
+            <div v-if="shownVariants[index]" class="variant_check_div">
+              <label v-for="(variant, index) in item.product.variants" class="variant_container">
+                <span class="variant_check_txt">{{ variant.title }}</span>
+                <input type="radio" :name="'variant' + index" v-model="item.variant_id" :value="variant.variantId" />
                 <span class="variant_checkmark"></span>
               </label>
             </div>
           </div>
           <div class="cart_price">
-            <p class="cart_sale_price">₹{{ item.salePrice }}</p>
-            <p class="cart_orignal_price">₹{{ item.originalPrice }}</p>
+            <p class="cart_sale_price">₹{{ item.price }}</p>
+            <p v-show="item.actual_price > 0" class="cart_orignal_price">₹{{ item.actual_price }}</p>
             <button class="cart_remove_item" @click="removeItem(item.product_id, item.variant_id)">Remove</button>
           </div>
         </div>
@@ -54,12 +59,23 @@ const props = defineProps({
   }
 });
 
+
+
+onMounted(() => {
+  console.log('cart items', props.cartItems)
+})
+
+const variantValue = computed(() => {
+  props.cartItems.map(obj => obj.product);
+})
+
+const shownVariants = ref(props.cartItems.map(() => false));
+
 const variantsIsShown = ref(false);
 
-const showVariants = () => {
-  variantsIsShown.value = !variantsIsShown.value;
+const showVariants = (index) => {
+  shownVariants.value[index] = !shownVariants.value[index];
 }
-
 const emit = defineEmits(['updateCart']);
 
 // Method to remove an item
@@ -72,6 +88,13 @@ const removeItem = (productId, variantId) => {
 
 
 <style scoped>
+.product_cart_img {
+    height: 109px;
+    object-fit: cover;
+    width: 194px;
+    overflow: hidden;
+}
+
 span.grey_circle {
   width: 6px;
   height: 6px;
