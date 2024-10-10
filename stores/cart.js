@@ -26,7 +26,7 @@ export const useCartStore = defineStore("cart", {
                 );
 
                 if (matchingVariant) {
-                  console.log("TOTALLLLLLLLLLLLLLLLLLLLLLLLLL"+total+"item.quantity"+item.quantity+"matchingVariant"+matchingVariant);
+                    console.log("TOTALLLLLLLLLLLLLLLLLLLLLLLLLL" + total + "item.quantity" + item.quantity + "matchingVariant" + matchingVariant);
                     total += matchingVariant.price * item.quantity;
                 }
 
@@ -89,7 +89,7 @@ export const useCartStore = defineStore("cart", {
                     });
 
                     if (itemExists) {
-                      const { $toast } = useNuxtApp();
+                        const { $toast } = useNuxtApp();
                         $toast.error('Sorry, Product variant already exist in cart');
                         return;
                     }
