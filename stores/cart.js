@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { useAuthStore } from "./auth"; // Import the auth store
 import { useCookies } from "vue3-cookies";
+import { useNuxtApp } from '#app';
 
 export const useCartStore = defineStore("cart", {
     state: () => ({
@@ -20,13 +21,15 @@ export const useCartStore = defineStore("cart", {
             return state.cartItems.reduce((total, item) => {
                 const matchingVariant = item.product.variants.find(
                     (variant) =>
-                    variant.variantId === item.variant_id &&
-                    variant.productId === item.product_id
+                    variant.id == item.variant_id &&
+                    variant.product_id == item.product_id
                 );
 
                 if (matchingVariant) {
+                    console.log("TOTALLLLLLLLLLLLLLLLLLLLLLLLLL" + total + "item.quantity" + item.quantity + "matchingVariant" + matchingVariant);
                     total += matchingVariant.price * item.quantity;
                 }
+
 
                 return total;
             }, 0);
@@ -86,7 +89,8 @@ export const useCartStore = defineStore("cart", {
                     });
 
                     if (itemExists) {
-                        alert("Sorry, Product variant already exist in cart");
+                        const { $toast } = useNuxtApp();
+                        $toast.error('Sorry, Product variant already exist in cart');
                         return;
                     }
                     // If the item doesn't exist, add it to the cart

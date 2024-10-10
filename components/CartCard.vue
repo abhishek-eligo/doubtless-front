@@ -7,12 +7,14 @@
             <img :src="item.product.product_image" />
           </div>
           <div class="cart_item_content">
-            <h1 class="cart_item_h">{{ item.product.name }}</h1>
-            <ul class="d-flex">
-              <li class="card_text_border cart_text_font">{{ item.product.tutor }}</li>
-              <li class="card_text_border cart_text_font">{{ item.students }}</li>
-              <li class="cart_text_font">{{ item.rating }} </li>
-            </ul>
+            <div>
+              <h1 class="cart_item_h">{{ item.product.name }}</h1>
+              <ul class="d-flex">
+                <li class="card_text_border cart_text_font">{{ item.product.tutor }}</li>
+                <li class="card_text_border cart_text_font">1.5 million students</li>
+                <li class="cart_text_font">#1 best selling business</li>
+              </ul>
+            </div>
             <ul class="d-flex align-center">
               <li class="cart_text_font">40 hours</li>
               <span class="grey_circle"></span>
@@ -26,22 +28,23 @@
           <div>
             <div v-for="(variant, variantIndex) in item.product.variants" :key="variantIndex">
               <p v-if="variant.variantId === item.variant_id" class="validity_month">
-                {{ variant.title }} Validity
+                {{ transformWord(variant.title) }} Validity
               </p>
             </div>
-            <p @click="showVariants(index)" class="change_plan_txt">Change Plan</p>{{ item.variant_id }}
+            <p @click="showVariants(index)" class="change_plan_txt">Change Plan</p>
             <!-- Use index-based toggle -->
             <div v-if="shownVariants[index]" class="variant_check_div">
               <label v-for="(variant, index) in item.product.variants" class="variant_container">
-                <span class="variant_check_txt">{{ variant.title }}</span>
-                <input type="radio" :name="'variant' + index" v-model="item.variant_id" :value="variant.variantId" />
+                <span class="variant_check_txt">{{ transformWord(variant.title) }}</span>
+                <input @focus="storePreviousVariant(item)" @change="updatePrice(item, variant)" type="radio"
+                  v-model="item.variant_id" :value="variant.variantId" />
                 <span class="variant_checkmark"></span>
               </label>
             </div>
           </div>
           <div class="cart_price">
-            <p class="cart_sale_price">₹{{ item.price }}</p>
-            <p v-show="item.actual_price > 0" class="cart_orignal_price">₹{{ item.actual_price }}</p>
+            <p class="cart_sale_price">₹{{ item.salePrice }}</p>
+            <p v-show="item.actual_price > 0" class="cart_orignal_price">₹{{ item.price }}</p>
             <button class="cart_remove_item" @click="removeItem(item.product_id, item.variant_id)">Remove</button>
           </div>
         </div>
@@ -51,6 +54,8 @@
 </template>
 
 <script setup>
+
+const { $toast } = useNuxtApp();
 // Define props
 const props = defineProps({
   cartItems: {
@@ -59,19 +64,61 @@ const props = defineProps({
   }
 });
 
+const transformWord = (inputWord) => {
+  const [digitPart, stringPart] = inputWord.split(' ');
+
+  // Apply transformation to the string part
+  const capitalizedString = stringPart.charAt(0).toUpperCase() + stringPart.slice(1).toLowerCase();
+
+  // Combine the digit part and the transformed string part
+  return `${digitPart} ${capitalizedString}`;
+};
+
+props.cartItems.forEach(item => {
+  const selectedVariant = item.product.variants.find(v => v.variantId === item.variant_id);
+  if (selectedVariant) {
+    item.salePrice = selectedVariant.salePrice;
+    item.price = selectedVariant.price;
+  }
+});
+
+const hasDuplicate = (item, variantId) => {
+  return props.cartItems.some(
+    cartItem =>
+      cartItem.product_id === item.product_id &&
+      cartItem.variant_id === variantId &&
+      cartItem !== item // Ensure it's a different item, not the current one
+  );
+};
+
+let previousVariantId = null;
+
+const storePreviousVariant = (item) => {
+  previousVariantId = item.variant_id;
+};
+
+// Function to update price
+const updatePrice = (item, selectedVariant) => {
+  if (hasDuplicate(item, selectedVariant.variantId)) {
+    $toast.error('This variant is already selected for another item in your cart.');
+    item.variant_id = previousVariantId;
+    return;
+  }
+
+  const variant = item.product.variants.find(v => v.variantId === selectedVariant.variantId);
+  if (variant) {
+    item.salePrice = variant.salePrice;
+    item.price = variant.price;
+    item.variant_id = variant.variantId;
+  }
+};
 
 
 onMounted(() => {
   console.log('cart items', props.cartItems)
 })
 
-const variantValue = computed(() => {
-  props.cartItems.map(obj => obj.product);
-})
-
 const shownVariants = ref(props.cartItems.map(() => false));
-
-const variantsIsShown = ref(false);
 
 const showVariants = (index) => {
   shownVariants.value[index] = !shownVariants.value[index];
@@ -89,10 +136,10 @@ const removeItem = (productId, variantId) => {
 
 <style scoped>
 .product_cart_img {
-    height: 109px;
-    object-fit: cover;
-    width: 194px;
-    overflow: hidden;
+  height: 109px;
+  object-fit: cover;
+  width: 194px;
+  overflow: hidden;
 }
 
 span.grey_circle {
@@ -109,6 +156,8 @@ span.grey_circle {
   cursor: pointer;
   padding-left: 15px;
   color: #757373;
+  font-size: 12px;
+  letter-spacing: 0;
 }
 
 .variant_container input {
@@ -134,6 +183,7 @@ span.grey_circle {
 
 .variant_container input:checked~.variant_check_txt {
   color: #F87126;
+  text-transform: capitalize;
 }
 
 .variant_checkmark:after {
@@ -204,6 +254,7 @@ p.validity_month {
   font-weight: 600;
   color: #F87126;
   margin-right: 26px !important;
+  text-transform: capitalize !important;
 }
 
 .cart_valid_width {

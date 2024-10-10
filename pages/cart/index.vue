@@ -22,6 +22,7 @@ const handleUpdateCart = (productId, variantId) => {
 onMounted(async() => {
     await authStore.restoreAuthFromCookies(); // Ensure the user is authenticated
     await cartStore.loadCart();
+    console.log('sadfsafsaf', cartActualPriceTotal.value)
 });
 
 // Show cart after some time (just like your original code)
