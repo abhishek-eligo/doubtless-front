@@ -50,15 +50,15 @@ watch(
             </div>
             <div class="mr-auto summary_card_title_div">
                 <h1 class="summary_card_title">{{ item.product.name }}</h1>
-                <p class="summary_card_text">{{ item.desc }}</p>
+                <p class="summary_card_text">{{ item.product.name }}</p>
             </div>
             <div class="text-end mr-auto">
                 <button class="summary_card_btn" @click="removeItem(item.product_id, item.variant_id)">Remove</button>
-                <!-- <p class="summary_card_validity">{{ item.product.variants.find(variant => variant.id === item.variant_id && variant.product_id === item.product_id).attribute_values }} validity</p> -->
+                <p class="summary_card_validity">{{ item.product.variants.find(variant => variant.id === item.variant_id && variant.product_id === item.product_id).attribute_values }} validity</p>
             </div>
             <div>
                 <p class="summary_card_sp">₹{{ item.price }}</p>
-                <!-- <p class="summary_card_dp">₹{{ item.product.variants.find(variant => variant.id === item.variant_id && variant.product_id === item.product_id).price }}</p> -->
+                <p class="summary_card_dp">₹{{ item.product.variants.find(variant => variant.id === item.variant_id && variant.product_id === item.product_id).price }}</p>
             </div>
         </UCard>
     </div>
