@@ -30,13 +30,11 @@ export const useAuthStore = defineStore("auth", {
     },
 
     logout() {
-
       // Clear user and token from state
       this.user = null;
       this.token = null;
       const cartStore = useCartStore();
       cartStore.clearCart();
-
       // Clear cookie
       const authToken = useCookie('authToken');
       const userData = useCookie('userData');

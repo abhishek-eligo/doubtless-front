@@ -31,7 +31,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-const { $axios, $toast } = useNuxtApp();
+const { $axios } = useNuxtApp();
 
 const cardLoaders = ref(4);
 const tabLoading = ref(true);
@@ -154,7 +154,6 @@ onMounted(async () => {
   await getAllBoards();
   await getAllClasses();
   await getAcademicCourses();
-  $toast.error('Some thing went wrong');
 });
 </script>
 

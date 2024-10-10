@@ -1,4 +1,14 @@
 <script setup>
+import { ref, onMounted, watch } from 'vue';
+import { useCartStore } from '@/stores/cart';
+import { useAuthStore } from '@/stores/auth';
+
+// Initialize stores
+const cartStore = useCartStore();
+const authStore = useAuthStore();
+
+const cartSalePriceTotal = computed(() => cartStore.cartSalePriceTotal);
+const cartActualPriceTotal = computed(() => cartStore.cartActualPriceTotal);
 const items = ref([
     { label: 'Login Or Sign Up', slot: 'login', defaultOpen: false },
     { label: 'Order Summary', slot: 'order-summary', defaultOpen: false },
@@ -70,21 +80,21 @@ const changeEmail = () => {
     requestOTP.value = true;
 }
 
-const tokenCookie = useCookie('authToken'); // Access the token cookie
-const userCookie = useCookie('userData'); // Access the user data cookie
+const isAuthenticated = computed(() => authStore.isAuthenticated);
 
 const loggedUserName = ref('');
 const loggedUserNumber = ref('');
 
-const checkLogin = () => {
-    if (tokenCookie.value && userCookie.value) {
+const checkLogin = async () => {
+    console.log(isAuthenticated.value, "isAuthenticated");
+    if (isAuthenticated.value) {
         loginComplete.value = true;
         firstAccordian.value = false;
         items.value = [
             { label: 'Order Summary', slot: 'order-summary', defaultOpen: false },
             { label: 'Payment Method', slot: 'payment-method', defaultOpen: false },
         ];
-        const responseData = userCookie.value;
+        const responseData = authStore.user;
         loggedUserName.value = responseData.name;
         loggedUserNumber.value = responseData.phone;
 
@@ -104,26 +114,11 @@ const checkLogin = () => {
     }
 }
 
-onMounted(() => {
-    checkLogin();
-})
-
-const checkToken = () => {
-    if (tokenCookie.value) {
-        console.log('Check Token', tokenCookie.value)
-    } else {
-        console.log('No Token');
-    }
-    if (userCookie.value) {
-        console.log('Check Cookie', userCookie.value)
-    } else {
-        console.log('No Cookie')
-    }
-}
-
-onMounted(() => {
-    checkToken();
-})
+onMounted(async() => {
+    await authStore.restoreAuthFromCookies(); // Ensure the user is authenticated
+    await cartStore.loadCart();
+    await checkLogin();
+});
 
 </script>
 
@@ -146,7 +141,7 @@ onMounted(() => {
                                     </div>
                                     <p>{{ loggedUserName }} <span>+91 {{ loggedUserNumber }}</span></p>
                                 </div>
-                                <UButton class="logged_in_btn">Change</UButton>
+                                <!-- <UButton class="logged_in_btn">Change</UButton> -->
                             </div>
                             <UAccordion class="checkout_accord" :items="items">
                                 <template v-if="firstAccordian" #login>
@@ -238,7 +233,7 @@ onMounted(() => {
                                         </VCardText>
                                     </VCard>
                                     <!-- <CartCard /> -->
-                                    <CheckoutSummaryCard />
+                                    <CheckoutSummaryCard :cartItems="cartStore.cartItems"/>
                                 </template>
                                 <template #payment-method>
                                     <VCard class="checkout_payment_card">
@@ -304,7 +299,7 @@ onMounted(() => {
                         <VCardText class="p-0">
                             <VCol class="d-flex justify-between px-0 py-0" cols="12">
                                 <p class="price_text">original price: </p>
-                                <p class="price_text">₹14,996</p>
+                                <p class="price_text">₹{{ cartActualPriceTotal }}</p>
                             </VCol>
                             <VCol v-if="isCouponApplied == true" class="d-flex justify-between px-0 py-0" cols="12">
                                 <p class="price_text">Coupon: </p>
@@ -312,11 +307,11 @@ onMounted(() => {
                             </VCol>
                             <VCol class="d-flex justify-between discount_border_bottom px-0 py-0" cols="12">
                                 <p class="price_text">Discounts: </p>
-                                <p class="price_text">-₹12,751</p>
+                                <p class="price_text">-₹{{ cartActualPriceTotal - cartSalePriceTotal }}</p>
                             </VCol>
                             <VCol class="d-flex justify-between sumary_total_div px-0 py-0" cols="12">
                                 <p class="summary_total_text">Total: </p>
-                                <p class="summary_total_text">₹2,245</p>
+                                <p class="summary_total_text">₹{{ cartSalePriceTotal }}</p>
                             </VCol>
                             <VCol class="px-0 py-0 check_terms_checkbox">
                                 <v-radio value="CheckTerms">
