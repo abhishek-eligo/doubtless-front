@@ -18,12 +18,12 @@
                             Enroll</p>
                     </div>
                     <div class="pricingSec px-3 d-flex justify-content-between">
-                        <p class="mb-0">₹ {{ selectedVariant.salePrice > 0 ? selectedVariant.salePrice :
+                        <p class="mb-0">₹ {{ selectedVariant.sale_price > 0 ? selectedVariant.sale_price :
                             selectedVariant.price }} /-
-                            <span v-if="selectedVariant.salePrice" class="old_price">₹ {{ selectedVariant.price }}
+                            <span v-if="selectedVariant.sale_price" class="old_price">₹ {{ selectedVariant.price }}
                                 /-</span>
                         </p>
-                        <span class="off_badge">{{ selectedVariant.offPercent }}% off</span>
+                        <span class="off_badge">{{ selectedVariant.off_percent }}% off</span>
                     </div>
                 </div>
             </div>
@@ -39,15 +39,15 @@
                         <div v-for="(variant, index) in productVariants" :key="index"
                             class="d-flex align-center duration_mt justify-between">
                             <label class="radio_container d-flex align-center">
-                                <input v-model="courseDuration" :value="variant.variantId" class="duration_radio"
+                                <input v-model="courseDuration" :value="variant.id" class="duration_radio"
                                     type="radio" />
                                 <span class="duration_radio_span checkmark"></span>
-                                <p class="duration_month">{{ variant.title }}</p>
+                                <p class="duration_month">{{ variant.attribute_values }}</p>
                             </label>
                             <div class="d-flex align-center">
-                                <p class="duration_sp">₹{{ variant.salePrice > 0 ? variant.salePrice : variant.price
+                                <p class="duration_sp">₹{{ variant.sale_price > 0 ? variant.sale_price : variant.price
                                     }}/-</p>
-                                <p v-if="variant.salePrice" class="duration_op">₹{{ variant.price }}</p>
+                                <p v-if="variant.sale_price" class="duration_op">₹{{ variant.price }}</p>
                             </div>
                         </div>
                     </div>
@@ -111,14 +111,14 @@ const addedToCart = ref(false); // Local added-to-cart state
 onMounted(async () => {
     await authStore.restoreAuthFromCookies(); // Ensure the user is authenticated
     if (props.productVariants) {
-        courseDuration.value = props.productVariants[0].variantId;
+        courseDuration.value = props.productVariants[0].id;
         selectedVariant.value = props.productVariants[0];
     }
 });
 
 // Watch for changes in courseDuration to update the selected variant details
 watch(courseDuration, (newValue) => {
-    const variant = props.productVariants.find(v => v.variantId === newValue);
+    const variant = props.productVariants.find(v => v.id === newValue);
     if (variant) {
         selectedVariant.value = variant;
     }
@@ -142,12 +142,12 @@ const debounce = (func, delay) => {
 const addToCart = debounce(async () => {
     loading.value = true; // Start loading
     const cartItem = {
-        'product_id': selectedVariant.value.productId,
-        'product': {'id':selectedVariant.value.productId, 'name': props.title, 'tutor': props.tutorName, 'variants': props.productVariants, 'total_lectures': props.totalLectures, 'product_image': props.image},
-        'variant_id': selectedVariant.value.variantId,
+        'product_id': selectedVariant.value.product_id,
+        'product': {'id':selectedVariant.value.product_id, 'name': props.title, 'tutor': props.tutorName, 'variants': props.productVariants, 'total_lectures': props.totalLectures, 'product_image': props.image},
+        'variant_id': selectedVariant.value.id,
         'quantity': 1,
         'is_digital': true,
-        'price': selectedVariant.value.salePrice > 0 ? selectedVariant.value.salePrice : selectedVariant.value.price,
+        'price': selectedVariant.value.sale_price > 0 ? selectedVariant.value.sale_price : selectedVariant.value.price,
         'actual_price': selectedVariant.value.price,
     };
 

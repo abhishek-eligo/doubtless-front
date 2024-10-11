@@ -27,24 +27,24 @@
         <div class="d-flex justify-content-end cart_valid_width">
           <div>
             <div v-for="(variant, variantIndex) in item.product.variants" :key="variantIndex">
-              <p v-if="variant.variantId === item.variant_id" class="validity_month">
-                {{ transformWord(variant.title) }} Validity
+              <p v-if="variant.id === item.variant_id" class="validity_month">
+                {{ transformWord(variant.attribute_values) }} Validity
               </p>
             </div>
             <p @click="showVariants(index)" class="change_plan_txt">Change Plan</p>
             <!-- Use index-based toggle -->
             <div v-if="shownVariants[index]" class="variant_check_div">
               <label v-for="(variant, index) in item.product.variants" class="variant_container">
-                <span class="variant_check_txt">{{ transformWord(variant.title) }}</span>
+                <span class="variant_check_txt">{{ transformWord(variant.attribute_values) }}</span>
                 <input @focus="storePreviousVariant(item)" @change="updatePrice(item, variant)" type="radio"
-                  v-model="item.variant_id" :value="variant.variantId" />
+                  v-model="item.variant_id" :value="variant.id" />
                 <span class="variant_checkmark"></span>
               </label>
             </div>
           </div>
           <div class="cart_price">
-            <p class="cart_sale_price">₹{{ item.salePrice }}</p>
-            <p v-show="item.actual_price > 0" class="cart_orignal_price">₹{{ item.price }}</p>
+            <p class="cart_sale_price">₹{{ item.price }}</p>
+            <p v-show="item.actual_price > 0" class="cart_orignal_price">₹{{ item.actual_price }}</p>
             <button class="cart_remove_item" @click="removeItem(item.product_id, item.variant_id)">Remove</button>
           </div>
         </div>
@@ -54,7 +54,6 @@
 </template>
 
 <script setup>
-
 const { $toast } = useNuxtApp();
 // Define props
 const props = defineProps({
@@ -66,21 +65,9 @@ const props = defineProps({
 
 const transformWord = (inputWord) => {
   const [digitPart, stringPart] = inputWord.split(' ');
-
-  // Apply transformation to the string part
   const capitalizedString = stringPart.charAt(0).toUpperCase() + stringPart.slice(1).toLowerCase();
-
-  // Combine the digit part and the transformed string part
   return `${digitPart} ${capitalizedString}`;
 };
-
-props.cartItems.forEach(item => {
-  const selectedVariant = item.product.variants.find(v => v.variantId === item.variant_id);
-  if (selectedVariant) {
-    item.salePrice = selectedVariant.salePrice;
-    item.price = selectedVariant.price;
-  }
-});
 
 const hasDuplicate = (item, variantId) => {
   return props.cartItems.some(
@@ -99,23 +86,24 @@ const storePreviousVariant = (item) => {
 
 // Function to update price
 const updatePrice = (item, selectedVariant) => {
-  if (hasDuplicate(item, selectedVariant.variantId)) {
-    $toast.error('This variant is already selected for another item in your cart.');
+  console.log("HELLOHELLO", item, selectedVariant);
+  if (hasDuplicate(item, selectedVariant.id)) {
+    $toast.error('This variant is already in your cart.');
     item.variant_id = previousVariantId;
     return;
   }
 
-  const variant = item.product.variants.find(v => v.variantId === selectedVariant.variantId);
+  const variant = item.product.variants.find(v => v.id === selectedVariant.id);
   if (variant) {
-    item.salePrice = variant.salePrice;
-    item.price = variant.price;
-    item.variant_id = variant.variantId;
+    item.actual_price = variant.price;
+    item.price = variant.sale_price;
+    item.variant_id = variant.id;
   }
 };
 
 
 onMounted(() => {
-  console.log('cart items', props.cartItems)
+  console.log('cartItems', props.cartItems)
 })
 
 const shownVariants = ref(props.cartItems.map(() => false));
@@ -127,8 +115,6 @@ const emit = defineEmits(['updateCart']);
 
 // Method to remove an item
 const removeItem = (productId, variantId) => {
-  console.log("REMOVING ITEM", productId, variantId);
-  // Emit the index of the item to be removed to the parent
   emit('updateCart', productId, variantId);
 };
 </script>

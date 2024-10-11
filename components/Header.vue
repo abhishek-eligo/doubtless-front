@@ -196,7 +196,7 @@ const goToDashboard = () => {
         loginEmail.value = "";
         loginEmailErrorMsg.value = "";
         loginOTP.value = "";
-        useRouter().push('/');
+        //useRouter().push('/');
     }
 
     if (signUpOtpIsVerified) {
@@ -208,7 +208,7 @@ const goToDashboard = () => {
         signupEmailErrorMsg.value = "";
         signupPhoneErrorMsg.value = "";
         registerOTP.value = "";
-        useRouter().push('/');
+        //useRouter().push('/');
     }
 }
 

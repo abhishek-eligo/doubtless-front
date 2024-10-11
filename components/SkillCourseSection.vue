@@ -22,10 +22,9 @@
 
         <v-slide-group class="course_gap">
             <v-slide-group-item v-for="course in courses" :key="course.id">
-                <CourseCard :desc="course.description" :image="course.image"
-                    :title="course.title" :productVariants="course.product_variants" :rating="course.rating"
-                    :offPercent="course.offPercent" :tutorName="course.tutorName"
-                    :totalLectures="course.total_lectures" />
+                <CourseCard :desc="course.description" :image="course.image" :title="course.title"
+                    :productVariants="course.product_variants" :rating="course.rating" :offPercent="course.off_percent"
+                    :tutorName="course.tutorName" :totalLectures="course.total_lectures" />
             </v-slide-group-item>
         </v-slide-group>
     </div>
@@ -99,12 +98,12 @@ const getSkillCourses = async () => {
             total_lectures: course.total_lectures,
             product_variants: course.variants.map(variant => {
                 return {
-                    variantId: variant.id,
-                    productId: variant.product_id,
-                    title: variant.attribute_values,
+                    id: variant.id,
+                    product_id: variant.product_id,
+                    attribute_values: variant.attribute_values,
                     price: variant.price,
-                    offPercent: variant.off_percent,
-                    salePrice: variant.sale_price
+                    off_percent: variant.off_percent,
+                    sale_price: variant.sale_price,
                 };
             })
         }
